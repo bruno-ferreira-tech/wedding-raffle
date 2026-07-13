@@ -1,0 +1,12 @@
+:root {
+  --ink: #0b1220;
+  --ink-elevated: #121a2b;
+  --champagne: #c6a75e;
+  --champagne-soft: #e6d3a3;
+  --paper: #f3efe6;
+  --muted: #9aa3b5;
+  --success: #2f6f5e;
+  --danger: #b33a3a;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Manrope", system-ui, sans-serif;
+}
