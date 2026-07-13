@@ -184,6 +184,80 @@ export class OrdersService {
     return this.toResponse(order);
   }
 
+  async markPaid(rawBody: unknown): Promise<OrderResponse> {
+    let input;
+    try {
+      input = parseCreateOrderInput(
+        (rawBody ?? {}) as { buyerName?: unknown; numberIds?: unknown },
+      );
+    } catch (err) {
+      throw new BadRequestException(
+        err instanceof Error ? err.message : 'Pedido inválido',
+      );
+    }
+
+    const [state] = await this.db.select().from(eventState).limit(1);
+    if (!state || state.salesStatus === 'closed') {
+      throw new ConflictException('Vendas encerradas');
+    }
+
+    const amount = totalCents(input.numberIds.length);
+    const paidAt = new Date();
+
+    let orderRow: typeof orders.$inferSelect;
+
+    try {
+      orderRow = await this.db.transaction(async (tx) => {
+        const [created] = await tx
+          .insert(orders)
+          .values({
+            buyerName: input.buyerName,
+            source: 'padrinho',
+            status: 'paid',
+            totalCents: amount,
+            numberIds: input.numberIds,
+            paidAt,
+          })
+          .returning();
+
+        // Atomic disponivel → pago (applyMarkPaid semantics).
+        const marked = await tx
+          .update(raffleNumbers)
+          .set({
+            status: 'pago',
+            orderId: created.id,
+            buyerName: input.buyerName,
+            updatedAt: paidAt,
+          })
+          .where(
+            and(
+              inArray(raffleNumbers.id, input.numberIds),
+              eq(raffleNumbers.status, 'disponivel'),
+            ),
+          )
+          .returning();
+
+        if (marked.length !== input.numberIds.length) {
+          throw new ConflictException('Número(s) indisponível(is)');
+        }
+
+        return created;
+      });
+    } catch (err) {
+      if (err instanceof ConflictException) {
+        throw err;
+      }
+      throw err;
+    }
+
+    this.bus.emit('sale.completed', {
+      orderId: orderRow.id,
+      numberIds: orderRow.numberIds,
+    });
+
+    return this.toResponse(orderRow);
+  }
+
   async confirmFake(id: number): Promise<OrderResponse> {
     if (process.env.PAYMENT_PROVIDER !== 'fake') {
       throw new NotFoundException();
