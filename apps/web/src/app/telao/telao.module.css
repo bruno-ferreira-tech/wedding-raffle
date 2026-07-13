@@ -1,0 +1,350 @@
+.stage {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 3.5rem)
+    clamp(2rem, 5vw, 3.5rem);
+  background:
+    radial-gradient(
+      ellipse 90% 70% at 50% -10%,
+      #1c2740 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 50% 45% at 85% 85%,
+      rgba(198, 167, 94, 0.12) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 40% 35% at 10% 70%,
+      rgba(198, 167, 94, 0.06) 0%,
+      transparent 50%
+    ),
+    var(--ink);
+  color: var(--paper);
+}
+
+.vignette {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 75% 70% at 50% 45%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+  z-index: 1;
+}
+
+.grain {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  z-index: 2;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.header,
+.counters,
+.feedSection,
+.winnersStrip {
+  position: relative;
+  z-index: 3;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: clamp(1.5rem, 4vw, 2.75rem);
+  animation: fade-up 0.7s ease both;
+}
+
+.brand {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(3rem, 9vw, 5.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: var(--champagne-soft);
+  text-shadow: 0 0 60px rgba(198, 167, 94, 0.18);
+}
+
+.live {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.liveDotOn,
+.liveDotOff {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.liveDotOn {
+  background: var(--champagne);
+  box-shadow: 0 0 10px rgba(198, 167, 94, 0.7);
+  animation: pulse-soft 1.8s ease-in-out infinite;
+}
+
+.liveDotOff {
+  background: var(--muted);
+}
+
+.counters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.counter {
+  padding: 0.35rem 0 0.75rem;
+  border-top: 1px solid rgba(198, 167, 94, 0.4);
+  animation: fade-up 0.65s ease both;
+}
+
+.counterWide {
+  grid-column: 1 / -1;
+  margin-top: 0.25rem;
+}
+
+.counterLabel {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-size: clamp(0.7rem, 1.4vw, 0.85rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.counterValue {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--paper);
+}
+
+.counterMoney {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 8vw, 5rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--champagne-soft);
+}
+
+.feedSection {
+  max-width: 48rem;
+  animation: fade-up 0.7s ease 0.2s both;
+}
+
+.feedTitle {
+  margin: 0 0 1rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  font-weight: 500;
+}
+
+.feed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  max-height: min(42vh, 28rem);
+  overflow: hidden;
+}
+
+.feedEmpty {
+  color: var(--muted);
+  font-size: 1.05rem;
+  padding: 0.5rem 0;
+}
+
+.feedItem {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(230, 211, 163, 0.1);
+  animation: fade-up 0.45s ease both;
+}
+
+.feedItemPulse {
+  animation: feed-flash 1.2s ease;
+}
+
+.feedNumber {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
+  color: var(--champagne-soft);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.feedName {
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  color: var(--paper);
+}
+
+.winnersStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(198, 167, 94, 0.25);
+  animation: fade-up 0.6s ease 0.28s both;
+}
+
+.winnerChip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 8rem;
+}
+
+.winnerChipLabel {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--champagne);
+}
+
+.winnerChipNumber {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--champagne-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.winnerChipName {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(
+      ellipse 60% 50% at 50% 45%,
+      rgba(18, 26, 43, 0.55) 0%,
+      rgba(11, 18, 32, 0.92) 100%
+    );
+  animation: reveal-in 0.45s ease both;
+}
+
+.revealInner {
+  text-align: center;
+  padding: 2rem;
+}
+
+.revealPrize {
+  margin: 0 0 1.25rem;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  animation: fade-up 0.5s ease both;
+}
+
+.revealCountdown {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 22vw, 12rem);
+  line-height: 1;
+  color: var(--champagne-soft);
+  animation: countdown-pop 0.55s ease both;
+}
+
+.revealNumber {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 18vw, 10rem);
+  line-height: 0.95;
+  letter-spacing: 0.04em;
+  color: var(--champagne-soft);
+  text-shadow: 0 0 80px rgba(198, 167, 94, 0.35);
+  animation: number-reveal 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.revealName {
+  margin: 1.25rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  color: var(--paper);
+  animation: fade-up 0.7s ease 0.1s both;
+}
+
+@keyframes feed-flash {
+  0% {
+    background: rgba(198, 167, 94, 0.22);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes countdown-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes number-reveal {
+  from {
+    opacity: 0;
+    transform: scale(1.35) translateY(1rem);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@media (max-width: 720px) {
+  .counters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .feed {
+    max-height: 36vh;
+  }
+}
