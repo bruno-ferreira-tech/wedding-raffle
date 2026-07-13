@@ -1,10 +1,8 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import {
   FormEvent,
   KeyboardEvent,
-  useEffect,
   useId,
   useState,
   useTransition,
@@ -12,55 +10,56 @@ import {
 import {
   ApiError,
   checkNumbers,
-  createOrder,
-  fetchState,
-  type SalesStatus,
+  loginPadrinho,
+  markPaid,
 } from '@/lib/api';
 import {
-  formatBRL,
   formatRaffleNumber,
   MAX_NUMBER_ID,
   MIN_NUMBER_ID,
   parseNumberInput,
-  PRICE_CENTS,
-  totalCents,
 } from '@/lib/money';
-import styles from './purchase.module.css';
+import styles from './padrinho.module.css';
 
-export function PurchaseForm() {
-  const router = useRouter();
+export function PadrinhoConsole() {
+  const passwordId = useId();
   const nameId = useId();
   const numberId = useId();
-  const [salesStatus, setSalesStatus] = useState<SalesStatus | null>(null);
-  const [disponivel, setDisponivel] = useState<number | null>(null);
+
+  const [authed, setAuthed] = useState(false);
+  const [password, setPassword] = useState('');
   const [selected, setSelected] = useState<number[]>([]);
   const [numberDraft, setNumberDraft] = useState('');
   const [buyerName, setBuyerName] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [checking, setChecking] = useState(false);
   const [pending, startTransition] = useTransition();
 
-  const salesClosed = salesStatus === 'closed';
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchState()
-      .then((state) => {
-        if (cancelled) return;
-        setSalesStatus(state.salesStatus);
-        setDisponivel(state.counts.disponivel);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setError('Não foi possível carregar o estado das vendas.');
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  function onLogin(e: FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+    startTransition(async () => {
+      try {
+        await loginPadrinho(password);
+        setAuthed(true);
+        setPassword('');
+      } catch (err) {
+        const message =
+          err instanceof ApiError && err.status === 401
+            ? 'Senha incorreta.'
+            : err instanceof Error
+              ? err.message
+              : 'Falha no login.';
+        setError(message);
+      }
+    });
+  }
 
   async function addNumber() {
     setError(null);
+    setSuccess(null);
     const id = parseNumberInput(numberDraft);
     if (id === null) {
       setError(`Digite um número entre ${MIN_NUMBER_ID} e ${MAX_NUMBER_ID}.`);
@@ -98,14 +97,11 @@ export function PurchaseForm() {
     }
   }
 
-  function onSubmit(e: FormEvent) {
+  function onMarkPaid(e: FormEvent) {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
 
-    if (salesClosed) {
-      setError('Vendas encerradas.');
-      return;
-    }
     if (!buyerName.trim()) {
       setError('Informe o nome do comprador.');
       return;
@@ -115,48 +111,89 @@ export function PurchaseForm() {
       return;
     }
 
+    const numbers = [...selected];
+    const name = buyerName.trim();
+
     startTransition(async () => {
       try {
-        const order = await createOrder({
-          buyerName: buyerName.trim(),
-          numberIds: selected,
-        });
-        router.push(`/pedido/${order.id}`);
+        await markPaid({ buyerName: name, numberIds: numbers });
+        setSuccess(
+          `Pago: ${numbers.map(formatRaffleNumber).join(', ')} — ${name}`,
+        );
+        setSelected([]);
+        setBuyerName('');
+        setNumberDraft('');
       } catch (err) {
+        if (err instanceof ApiError && err.status === 401) {
+          setAuthed(false);
+          setError('Sessão expirada. Entre novamente.');
+          return;
+        }
         const message =
           err instanceof ApiError
             ? err.message
             : err instanceof Error
               ? err.message
-              : 'Não foi possível criar o pedido.';
+              : 'Não foi possível marcar como pago.';
         setError(message);
       }
     });
   }
 
-  const total = selected.length > 0 ? totalCents(selected.length) : 0;
   const busy = pending || checking;
+
+  if (!authed) {
+    return (
+      <div className={styles.page}>
+        <header className={styles.hero}>
+          <p className={styles.eyebrow}>Dia do casamento</p>
+          <h1 className={styles.brand}>Padrinho</h1>
+          <p className={styles.tagline}>
+            Marque números pagos em dinheiro ou PIX presencial.
+          </p>
+        </header>
+
+        <form className={styles.form} onSubmit={onLogin}>
+          <div>
+            <label className={styles.fieldLabel} htmlFor={passwordId}>
+              Senha
+            </label>
+            <input
+              id={passwordId}
+              className={styles.input}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={pending}
+              autoComplete="current-password"
+              required
+              autoFocus
+            />
+          </div>
+          {error ? (
+            <p className={styles.error} role="alert">
+              {error}
+            </p>
+          ) : null}
+          <button type="submit" className={styles.cta} disabled={pending}>
+            {pending ? 'Entrando…' : 'Entrar'}
+          </button>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>
-      {salesClosed ? (
-        <p className={styles.closedBanner} role="status">
-          Vendas encerradas — não é mais possível comprar números.
-        </p>
-      ) : null}
-
       <header className={styles.hero}>
-        <h1 className={styles.brand}>Corta-Gravata</h1>
+        <p className={styles.eyebrow}>Padrinho</p>
+        <h1 className={styles.brand}>Marcar pago</h1>
         <p className={styles.tagline}>
-          Escolha seus números e pague com PIX. Cada número custa{' '}
-          {formatBRL(PRICE_CENTS)}.
+          Selecione os números, confirme o nome e registre o pagamento.
         </p>
-        {disponivel !== null && !salesClosed ? (
-          <p className={styles.meta}>{disponivel} disponíveis</p>
-        ) : null}
       </header>
 
-      <form className={styles.form} onSubmit={onSubmit}>
+      <form className={styles.form} onSubmit={onMarkPaid}>
         <div>
           <label className={styles.fieldLabel} htmlFor={numberId}>
             Número
@@ -170,21 +207,18 @@ export function PurchaseForm() {
               value={numberDraft}
               onChange={(e) => setNumberDraft(e.target.value)}
               onKeyDown={onNumberKeyDown}
-              disabled={salesClosed || busy}
+              disabled={busy}
               autoComplete="off"
             />
             <button
               type="button"
               className={styles.ghostBtn}
               onClick={() => void addNumber()}
-              disabled={salesClosed || busy}
+              disabled={busy}
             >
-              Adicionar
+              Add
             </button>
           </div>
-          <p className={styles.hint}>
-            Busque pelo número e adicione à sua seleção.
-          </p>
         </div>
 
         <div>
@@ -214,7 +248,7 @@ export function PurchaseForm() {
 
         <div>
           <label className={styles.fieldLabel} htmlFor={nameId}>
-            Nome
+            Nome do comprador
           </label>
           <input
             id={nameId}
@@ -222,18 +256,11 @@ export function PurchaseForm() {
             style={{ width: '100%' }}
             value={buyerName}
             onChange={(e) => setBuyerName(e.target.value)}
-            disabled={salesClosed || busy}
+            disabled={busy}
             required
             autoComplete="name"
-            placeholder="Seu nome completo"
+            placeholder="Quem pagou"
           />
-        </div>
-
-        <div className={styles.totalRow}>
-          <span className={styles.totalLabel}>Total</span>
-          <span className={styles.totalValue}>
-            {selected.length === 0 ? formatBRL(0) : formatBRL(total)}
-          </span>
         </div>
 
         {error ? (
@@ -241,13 +268,18 @@ export function PurchaseForm() {
             {error}
           </p>
         ) : null}
+        {success ? (
+          <p className={styles.success} role="status">
+            {success}
+          </p>
+        ) : null}
 
         <button
           type="submit"
           className={styles.cta}
-          disabled={salesClosed || busy || selected.length === 0}
+          disabled={busy || selected.length === 0}
         >
-          {pending ? 'Criando pedido…' : 'Pagar com PIX'}
+          {pending ? 'Registrando…' : 'Marcar como pago'}
         </button>
       </form>
     </div>

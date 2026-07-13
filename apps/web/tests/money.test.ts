@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { formatBRL, formatRaffleNumber, PRICE_CENTS } from '../src/lib/money';
+import {
+  formatBRL,
+  formatRaffleNumber,
+  parseNumberInput,
+  PRICE_CENTS,
+} from '../src/lib/money';
 
 describe('money helpers', () => {
   it('pads raffle numbers to 4 digits', () => {
@@ -11,5 +16,14 @@ describe('money helpers', () => {
   it('formats cents as BRL', () => {
     expect(formatBRL(PRICE_CENTS)).toMatch(/R\$\s*20,00/);
     expect(formatBRL(4000)).toMatch(/R\$\s*40,00/);
+  });
+
+  it('parses raffle number input', () => {
+    expect(parseNumberInput('42')).toBe(42);
+    expect(parseNumberInput(' 7 ')).toBe(7);
+    expect(parseNumberInput('')).toBeNull();
+    expect(parseNumberInput('0')).toBeNull();
+    expect(parseNumberInput('2001')).toBeNull();
+    expect(parseNumberInput('12.5')).toBeNull();
   });
 });

@@ -3,6 +3,20 @@ const API_BASE =
 
 export type SalesStatus = 'open' | 'closed';
 
+export type DrawResult = {
+  prizeIndex: number;
+  prizeLabel: string;
+  numberId: number;
+  buyerName: string;
+  drawnAt: string;
+};
+
+export type RecentSale = {
+  numberId: number;
+  buyerName: string;
+  updatedAt: string;
+};
+
 export type StateSnapshot = {
   salesStatus: SalesStatus;
   counts: {
@@ -11,6 +25,8 @@ export type StateSnapshot = {
     pago: number;
   };
   arrecadadoCents: number;
+  recentSales: RecentSale[];
+  drawResults: DrawResult[];
 };
 
 export type NumberCheck = {
@@ -68,12 +84,19 @@ async function parseError(res: Response): Promise<string> {
   return res.statusText || 'Erro na API';
 }
 
-async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+type ApiFetchOptions = RequestInit & {
+  /** Cookie auth for padrinho/admin routes */
+  withCredentials?: boolean;
+};
+
+async function apiFetch<T>(path: string, init?: ApiFetchOptions): Promise<T> {
+  const { withCredentials, ...rest } = init ?? {};
   const res = await fetch(`${API_BASE}${path}`, {
-    ...init,
+    ...rest,
+    credentials: withCredentials ? 'include' : rest.credentials,
     headers: {
       'Content-Type': 'application/json',
-      ...(init?.headers ?? {}),
+      ...(rest.headers ?? {}),
     },
   });
 
@@ -81,11 +104,19 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
     throw new ApiError(await parseError(res), res.status);
   }
 
+  if (res.status === 204) {
+    return undefined as T;
+  }
+
   return res.json() as Promise<T>;
 }
 
 export function getApiBase(): string {
   return API_BASE;
+}
+
+export function getEventsUrl(): string {
+  return `${API_BASE}/events`;
 }
 
 export function fetchState(): Promise<StateSnapshot> {
@@ -115,6 +146,53 @@ export function confirmFakePayment(id: number): Promise<OrderResponse> {
   return apiFetch<OrderResponse>(`/orders/${id}/confirm-fake`, {
     method: 'POST',
     body: '{}',
+  });
+}
+
+export function loginPadrinho(password: string): Promise<{ ok: true }> {
+  return apiFetch<{ ok: true }>('/auth/padrinho', {
+    method: 'POST',
+    body: JSON.stringify({ password }),
+    withCredentials: true,
+  });
+}
+
+export function loginAdmin(password: string): Promise<{ ok: true }> {
+  return apiFetch<{ ok: true }>('/auth/admin', {
+    method: 'POST',
+    body: JSON.stringify({ password }),
+    withCredentials: true,
+  });
+}
+
+export function markPaid(input: {
+  buyerName: string;
+  numberIds: number[];
+}): Promise<OrderResponse> {
+  return apiFetch<OrderResponse>('/padrinho/mark-paid', {
+    method: 'POST',
+    body: JSON.stringify(input),
+    withCredentials: true,
+  });
+}
+
+export function setSalesStatus(
+  status: SalesStatus,
+): Promise<{ salesStatus: SalesStatus }> {
+  return apiFetch<{ salesStatus: SalesStatus }>('/admin/sales', {
+    method: 'POST',
+    body: JSON.stringify({ status }),
+    withCredentials: true,
+  });
+}
+
+export function drawNext(input?: {
+  prizeLabel?: string;
+}): Promise<DrawResult> {
+  return apiFetch<DrawResult>('/admin/draw', {
+    method: 'POST',
+    body: JSON.stringify(input?.prizeLabel ? { prizeLabel: input.prizeLabel } : {}),
+    withCredentials: true,
   });
 }
 
