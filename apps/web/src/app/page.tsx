@@ -1,7 +1,5 @@
+import { PurchaseForm } from './_components/PurchaseForm';
+
 export default function HomePage() {
-  return (
-    <main>
-      <h1>Corta-Gravata</h1>
-    </main>
-  );
+  return <PurchaseForm />;
 }

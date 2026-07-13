@@ -1,0 +1,178 @@
+.page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 2.5rem)
+    clamp(2rem, 5vw, 3.5rem);
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.brandLink {
+  margin: 0 0 1.5rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--champagne);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  animation: fade-up 0.4s ease both;
+}
+
+.brandLink:hover {
+  color: var(--champagne-soft);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 6vw, 2.75rem);
+  line-height: 1.05;
+  color: var(--champagne-soft);
+  animation: fade-up 0.45s ease 0.05s both;
+}
+
+.status {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  animation: fade-up 0.45s ease 0.1s both;
+}
+
+.statusPaid {
+  color: #7dbaa8;
+}
+
+.statusExpired {
+  color: #f0c4c4;
+}
+
+.statusPending {
+  color: var(--champagne);
+  animation: pulse-soft 2s ease infinite;
+}
+
+.message {
+  margin: 1.25rem 0 0;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--paper);
+  animation: fade-up 0.45s ease 0.12s both;
+}
+
+.section {
+  margin-top: 1.75rem;
+  animation: fade-up 0.5s ease 0.16s both;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--champagne);
+}
+
+.numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgba(198, 167, 94, 0.35);
+  background: rgba(198, 167, 94, 0.08);
+  color: var(--champagne-soft);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  animation: chip-in 0.35s ease both;
+}
+
+.total {
+  margin: 0.85rem 0 0;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--champagne-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.95rem;
+}
+
+.pixBox {
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid rgba(230, 211, 163, 0.22);
+  background: rgba(18, 26, 43, 0.65);
+  color: var(--paper);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  word-break: break-all;
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+}
+
+.ghostBtn {
+  padding: 0.75rem 1.1rem;
+  border: 1px solid rgba(198, 167, 94, 0.45);
+  background: transparent;
+  color: var(--champagne-soft);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.ghostBtn:hover:not(:disabled) {
+  background: rgba(198, 167, 94, 0.12);
+  border-color: var(--champagne);
+}
+
+.ghostBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.primaryBtn {
+  padding: 0.75rem 1.1rem;
+  border: none;
+  background: linear-gradient(135deg, var(--champagne) 0%, #a88b45 100%);
+  color: var(--ink);
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.primaryBtn:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.primaryBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.error {
+  margin: 1rem 0 0;
+  color: #f0c4c4;
+  font-size: 0.9rem;
+}
+
+.loading {
+  margin: 2rem 0;
+  color: var(--muted);
+  animation: pulse-soft 1.6s ease infinite;
+}

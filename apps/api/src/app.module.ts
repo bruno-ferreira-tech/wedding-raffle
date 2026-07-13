@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
+import { NumbersModule } from './numbers/numbers.module';
 import { OrdersModule } from './orders/orders.module';
 import { PadrinhoModule } from './padrinho/padrinho.module';
 import { PaymentsModule } from './payments/payments.module';
@@ -19,6 +20,7 @@ import { StateModule } from './state/state.module';
     AuthModule,
     PaymentsModule,
     OrdersModule,
+    NumbersModule,
     PadrinhoModule,
     AdminModule,
     StateModule,
