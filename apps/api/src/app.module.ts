@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { join } from 'node:path';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
       envFilePath: join(__dirname, '..', '.env'),
     }),
     AuthModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [],
