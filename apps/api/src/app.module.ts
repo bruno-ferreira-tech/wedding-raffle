@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { OrdersModule } from './orders/orders.module';
 import { PadrinhoModule } from './padrinho/padrinho.module';
 import { PaymentsModule } from './payments/payments.module';
+import { RealtimeModule } from './realtime/realtime.module';
+import { StateModule } from './state/state.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { PaymentsModule } from './payments/payments.module';
     OrdersModule,
     PadrinhoModule,
     AdminModule,
+    StateModule,
+    RealtimeModule,
   ],
   controllers: [AppController],
   providers: [],
