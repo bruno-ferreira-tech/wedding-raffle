@@ -1,32 +1,12 @@
 {
   "name": "wedding-raffle",
-  "version": "0.1.0",
   "private": true,
+  "workspaces": ["apps/*"],
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint .",
-    "test": "vitest run"
-  },
-  "dependencies": {
-    "drizzle-orm": "^0.44.2",
-    "next": "^15.3.4",
-    "postgres": "^3.4.7",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "stripe": "^18.2.1",
-    "zod": "^3.25.67"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
-    "@types/node": "^22.15.32",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.5.2",
-    "eslint": "^9.29.0",
-    "eslint-config-next": "^15.3.4",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "dev": "npm run dev --workspace=@wedding/web",
+    "dev:web": "npm run dev --workspace=@wedding/web",
+    "dev:api": "npm run start:dev --workspace=@wedding/api",
+    "test": "npm run test --workspaces --if-present",
+    "db:seed": "npm run db:seed --workspace=@wedding/api"
   }
 }
