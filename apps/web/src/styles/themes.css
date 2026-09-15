@@ -1,0 +1,63 @@
+/* ==============================================================================
+   Curated Luxury Wedding Themes for Corta-Gravata
+   ============================================================================== */
+
+/* 1. Champagne & Navy (Ceremonial Luxury) */
+[data-theme="champagne-navy"] {
+  --background: oklch(0.12 0.03 260);
+  --foreground: oklch(0.96 0.01 260);
+  --card: oklch(0.16 0.03 260);
+  --card-foreground: oklch(0.96 0.01 260);
+  --primary: oklch(0.78 0.14 85); /* Champagne Gold */
+  --primary-foreground: oklch(0.14 0.03 260);
+  --border: oklch(0.78 0.14 85 / 22%);
+  --ring: oklch(0.78 0.14 85);
+  --glow: rgba(198, 167, 94, 0.45);
+  --champagne: #c6a75e;
+  --champagne-soft: #f4e8c1;
+}
+
+/* 2. Rose Gold & Velvet */
+[data-theme="rose-gold"] {
+  --background: oklch(0.12 0.03 340);
+  --foreground: oklch(0.97 0.01 340);
+  --card: oklch(0.16 0.035 340);
+  --card-foreground: oklch(0.97 0.01 340);
+  --primary: oklch(0.75 0.12 40); /* Rose Gold */
+  --primary-foreground: oklch(0.14 0.03 340);
+  --border: oklch(0.75 0.12 40 / 24%);
+  --ring: oklch(0.75 0.12 40);
+  --glow: rgba(212, 163, 115, 0.45);
+  --champagne: #d4a373;
+  --champagne-soft: #f5dcc4;
+}
+
+/* 3. Emerald & Brass (Forest Elegance) */
+[data-theme="emerald-brass"] {
+  --background: oklch(0.12 0.03 160);
+  --foreground: oklch(0.96 0.01 160);
+  --card: oklch(0.16 0.035 160);
+  --card-foreground: oklch(0.96 0.01 160);
+  --primary: oklch(0.76 0.15 88); /* Brass Gold */
+  --primary-foreground: oklch(0.14 0.03 160);
+  --border: oklch(0.76 0.15 88 / 24%);
+  --ring: oklch(0.76 0.15 88);
+  --glow: rgba(212, 178, 111, 0.45);
+  --champagne: #d4b26f;
+  --champagne-soft: #faebc7;
+}
+
+/* 4. Monochrome & Ivory (Minimalist Chic) */
+[data-theme="monochrome-slate"] {
+  --background: oklch(0.12 0.01 240);
+  --foreground: oklch(0.97 0.01 240);
+  --card: oklch(0.17 0.01 240);
+  --card-foreground: oklch(0.97 0.01 240);
+  --primary: oklch(0.88 0.02 240); /* Silver Ivory */
+  --primary-foreground: oklch(0.12 0.01 240);
+  --border: oklch(0.88 0.02 240 / 25%);
+  --ring: oklch(0.88 0.02 240);
+  --glow: rgba(226, 232, 240, 0.35);
+  --champagne: #e2e8f0;
+  --champagne-soft: #ffffff;
+}

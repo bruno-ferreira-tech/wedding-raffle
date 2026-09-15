@@ -10,6 +10,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CoupleGuard, type AuthenticatedCoupleRequest } from '../auth/couple.guard';
+import { DrawService } from '../draw/draw.service';
+import { OrdersService } from '../orders/orders.service';
 import {
   EventsService,
   type CreateEventDto,
@@ -18,7 +20,11 @@ import {
 
 @Controller()
 export class EventsController {
-  constructor(private readonly eventsService: EventsService) {}
+  constructor(
+    private readonly eventsService: EventsService,
+    private readonly ordersService: OrdersService,
+    private readonly drawService: DrawService,
+  ) {}
 
   @Get('events/by-slug/:slug')
   async getPublicEvent(@Param('slug') slug: string) {
@@ -31,6 +37,24 @@ export class EventsController {
     @Body('pin') pin: string,
   ) {
     return this.eventsService.verifyPadrinhoPin(slug, pin || '');
+  }
+
+  @Post('events/by-slug/:slug/padrinho/mark-paid')
+  async padrinhoMarkPaid(
+    @Param('slug') slug: string,
+    @Body()
+    body: {
+      pin: string;
+      buyerName: string;
+      numberIds: number[];
+    },
+  ) {
+    await this.eventsService.verifyPadrinhoPin(slug, body.pin || '');
+    return this.ordersService.markPaid({
+      buyerName: body.buyerName,
+      numberIds: body.numberIds,
+      slug,
+    });
   }
 
   @Get('dashboard/events')
@@ -75,5 +99,20 @@ export class EventsController {
     @Body('status') status: 'open' | 'closed',
   ) {
     return this.eventsService.setSalesStatus(req.user.userId, id, status);
+  }
+
+  @Post('dashboard/events/:id/draw')
+  @UseGuards(CoupleGuard)
+  async drawEvent(
+    @Req() req: AuthenticatedCoupleRequest,
+    @Param('id', ParseIntPipe) id: number,
+    @Body('prizeLabel') prizeLabel?: string,
+  ) {
+    // Verifies ownership
+    await this.eventsService.getDashboardEvent(req.user.userId, id);
+    return this.drawService.drawNext({
+      eventId: id,
+      prizeLabel,
+    });
   }
 }

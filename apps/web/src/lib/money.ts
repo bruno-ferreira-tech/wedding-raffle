@@ -23,6 +23,6 @@ export function formatBRL(cents: number): string {
   }).format(cents / 100);
 }
 
-export function totalCents(count: number): number {
-  return count * PRICE_CENTS;
+export function totalCents(count: number, unitPriceCents: number = PRICE_CENTS): number {
+  return count * unitPriceCents;
 }

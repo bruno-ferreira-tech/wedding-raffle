@@ -30,6 +30,8 @@ import { formatBRL, formatRaffleNumber } from '@/lib/money';
 
 type Props = {
   orderId: number;
+  backHref?: string;
+  themeId?: string;
 };
 
 function formatCountdown(ms: number): string {
@@ -75,7 +77,7 @@ function statusVariant(
   }
 }
 
-export function OrderStatus({ orderId }: Props) {
+export function OrderStatus({ orderId, backHref = '/', themeId }: Props) {
   const [order, setOrder] = useState<OrderResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -99,75 +101,73 @@ export function OrderStatus({ orderId }: Props) {
   }, [orderId]);
 
   useEffect(() => {
-    void refresh();
-  }, [refresh]);
+    let cancelled = false;
+    refresh().catch(() => undefined);
 
-  useEffect(() => {
-    if (!order || order.status !== 'pending') return;
-    const id = window.setInterval(() => {
+    const interval = window.setInterval(() => {
+      setNow(Date.now());
       void refresh();
     }, 2000);
-    return () => window.clearInterval(id);
-  }, [order, refresh]);
 
-  useEffect(() => {
-    if (!order || order.status !== 'pending' || !order.expiresAt) return;
-    const id = window.setInterval(() => setNow(Date.now()), 1000);
-    return () => window.clearInterval(id);
-  }, [order]);
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, [refresh]);
 
-  async function copyPix() {
+  async function onCopyPix() {
     if (!order?.pixCopyPaste) return;
     try {
       await navigator.clipboard.writeText(order.pixCopyPaste);
       setCopied(true);
-      toast.success('PIX copiado');
-      window.setTimeout(() => setCopied(false), 2000);
+      toast.success('Código PIX copiado!');
+      window.setTimeout(() => setCopied(false), 2500);
     } catch {
-      setError('Não foi possível copiar o código PIX.');
+      toast.error('Não foi possível copiar o código PIX.');
     }
   }
 
   async function onConfirmFake() {
     setConfirming(true);
-    setError(null);
     try {
       const next = await confirmFakePayment(orderId);
       setOrder(next);
-      toast.success('Pagamento confirmado');
+      toast.success('Pagamento simulado com sucesso!');
     } catch (err) {
-      const message =
-        err instanceof ApiError
-          ? err.message
-          : err instanceof Error
-            ? err.message
-            : 'Falha ao simular pagamento.';
-      setError(message);
+      toast.error(
+        err instanceof Error ? err.message : 'Falha ao simular pagamento.',
+      );
     } finally {
       setConfirming(false);
     }
   }
 
+  const themeAttr = themeId ? { 'data-theme': themeId } : {};
+
   if (!order && !error) {
     return (
-      <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-4 px-4 py-8">
-        <Skeleton className="h-6 w-40" />
-        <Skeleton className="h-10 w-56" />
-        <Skeleton className="h-40 w-full" />
+      <div {...themeAttr} className="min-h-dvh w-full text-foreground bg-background">
+        <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-4 px-4 py-8">
+          <Skeleton className="h-6 w-40" />
+          <Skeleton className="h-10 w-56" />
+          <Skeleton className="h-40 w-full" />
+        </div>
       </div>
     );
   }
 
   if (!order) {
     return (
-      <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-4 px-4 py-8">
-        <Button variant="link" asChild className="w-fit px-0 font-heading">
-          <Link href="/">Corta-Gravata</Link>
-        </Button>
-        <Alert variant="destructive">
-          <AlertTitle>Erro</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
+      <div {...themeAttr} className="min-h-dvh w-full text-foreground bg-background">
+        <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-4 px-4 py-8">
+          <Button variant="link" asChild className="w-fit px-0 font-heading">
+            <Link href={backHref}>← Voltar para a cartela</Link>
+          </Button>
+          <Alert variant="destructive">
+            <AlertTitle>Erro</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        </div>
       </div>
     );
   }
@@ -179,19 +179,20 @@ export function OrderStatus({ orderId }: Props) {
     order.status === 'pending' && isFakePaymentProvider(order.pixCopyPaste);
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
-      <Button variant="link" asChild className="w-fit px-0 font-heading text-primary">
-        <Link href="/">Corta-Gravata</Link>
-      </Button>
+    <div {...themeAttr} className="min-h-dvh w-full text-foreground bg-background transition-colors duration-300">
+      <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
+        <Button variant="link" asChild className="w-fit px-0 font-heading text-primary">
+          <Link href={backHref}>← Voltar para a cartela</Link>
+        </Button>
 
-      <div className="flex flex-col gap-3">
-        <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-          Pedido #{order.id}
-        </h1>
-        <Badge variant={statusVariant(order.status)} className="w-fit font-mono uppercase tracking-wider">
-          {statusLabel(order.status)}
-        </Badge>
-      </div>
+        <div className="flex flex-col gap-3">
+          <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+            Pedido #{order.id}
+          </h1>
+          <Badge variant={statusVariant(order.status)} className="w-fit font-mono uppercase tracking-wider">
+            {statusLabel(order.status)}
+          </Badge>
+        </div>
 
       {order.status === 'paid' ? (
         <Alert>
@@ -292,6 +293,7 @@ export function OrderStatus({ orderId }: Props) {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       ) : null}
+      </div>
     </div>
   );
 }

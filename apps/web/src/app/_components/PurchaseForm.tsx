@@ -38,6 +38,7 @@ import {
   getEventsUrl,
   type NumberBoardCell,
   type SalesStatus,
+  type EventPublicData,
 } from '@/lib/api';
 import {
   formatBRL,
@@ -47,10 +48,18 @@ import {
 } from '@/lib/money';
 import { parseRealtimeEvent } from '@/lib/sse';
 
-export function PurchaseForm() {
+type PurchaseFormProps = {
+  event?: EventPublicData;
+};
+
+export function PurchaseForm({ event }: PurchaseFormProps = {}) {
   const router = useRouter();
   const nameId = useId();
-  const [salesStatus, setSalesStatus] = useState<SalesStatus | null>(null);
+  const slug = event?.slug;
+  const unitPrice = event?.ticketPriceCents ?? PRICE_CENTS;
+  const [salesStatus, setSalesStatus] = useState<SalesStatus | null>(
+    event?.salesStatus ?? null,
+  );
   const [board, setBoard] = useState<NumberBoardCell[] | null>(null);
   const [boardLoading, setBoardLoading] = useState(true);
   const [selected, setSelected] = useState<number[]>([]);
@@ -61,7 +70,10 @@ export function PurchaseForm() {
   const salesClosed = salesStatus === 'closed';
 
   const loadBoard = useCallback(async () => {
-    const [state, cells] = await Promise.all([fetchState(), fetchNumberBoard()]);
+    const [state, cells] = await Promise.all([
+      fetchState(slug ? { slug } : undefined),
+      fetchNumberBoard(slug ? { slug } : undefined),
+    ]);
     setSalesStatus(state.salesStatus);
     setBoard(cells);
     setSelected((prev) =>
@@ -89,14 +101,14 @@ export function PurchaseForm() {
   }, [loadBoard]);
 
   useEffect(() => {
-    const es = new EventSource(getEventsUrl());
+    const es = new EventSource(getEventsUrl(slug ? { slug } : undefined));
     es.onmessage = (msg) => {
-      const event = parseRealtimeEvent(msg.data);
-      if (!event) return;
+      const data = parseRealtimeEvent(msg.data);
+      if (!data) return;
       if (
-        event.type === 'order.reserved' ||
-        event.type === 'sale.completed' ||
-        event.type === 'sales.updated'
+        data.type === 'order.reserved' ||
+        data.type === 'sale.completed' ||
+        data.type === 'sales.updated'
       ) {
         void loadBoard().catch(() => {
           /* keep last board */
@@ -104,7 +116,7 @@ export function PurchaseForm() {
       }
     };
     return () => es.close();
-  }, [loadBoard]);
+  }, [loadBoard, slug]);
 
   function toggleNumber(id: number) {
     setError(null);
@@ -142,9 +154,14 @@ export function PurchaseForm() {
         const order = await createOrder({
           buyerName: buyerName.trim(),
           numberIds: selected,
+          slug,
         });
         toast.success('Pedido criado — continue no PIX');
-        router.push(`/pedido/${order.id}`);
+        if (slug) {
+          router.push(`/e/${slug}/pedido/${order.id}`);
+        } else {
+          router.push(`/pedido/${order.id}`);
+        }
       } catch (err) {
         const message =
           err instanceof ApiError
@@ -158,47 +175,76 @@ export function PurchaseForm() {
     });
   }
 
-  const total = selected.length > 0 ? totalCents(selected.length) : 0;
+  const total = selected.length > 0 ? totalCents(selected.length, unitPrice) : 0;
   const livres =
     board?.filter((c) => c.status === 'disponivel').length ?? null;
 
-  return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
-      {salesClosed ? (
-        <Alert variant="destructive">
-          <AlertTitle>Vendas encerradas</AlertTitle>
-          <AlertDescription>
-            Não é mais possível comprar números neste momento.
-          </AlertDescription>
-        </Alert>
-      ) : null}
+  const themeAttr = event?.themeId ? { 'data-theme': event.themeId } : {};
 
-      <header className="flex flex-col gap-3 animate-[fade-up_0.55s_ease_both]">
-        <Badge
-          variant="secondary"
-          className="w-fit font-mono tracking-[0.18em] uppercase"
-        >
-          <span
-            className="size-1.5 animate-pulse rounded-full bg-primary"
-            aria-hidden
-          />
-          Sistema ao vivo
-        </Badge>
-        <h1 className="font-heading text-5xl font-bold tracking-tight text-balance sm:text-6xl">
-          <span className="bg-gradient-to-br from-foreground to-primary bg-clip-text text-transparent">
-            Corta-Gravata
-          </span>
-        </h1>
-        <p className="max-w-[36ch] text-base text-muted-foreground">
-          Toque nos números da cartela como num bingo. Cada um custa{' '}
-          {formatBRL(PRICE_CENTS)}.
-        </p>
-        {livres !== null && !salesClosed ? (
-          <Badge variant="outline" className="w-fit font-mono">
-            {livres.toLocaleString('pt-BR')} slots livres
-          </Badge>
+  return (
+    <div {...themeAttr} className="min-h-dvh w-full text-foreground bg-background transition-colors duration-300">
+      <div className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
+        {salesClosed ? (
+          <Alert variant="destructive">
+            <AlertTitle>Vendas encerradas</AlertTitle>
+            <AlertDescription>
+              Não é mais possível comprar números neste momento.
+            </AlertDescription>
+          </Alert>
         ) : null}
-      </header>
+
+        <header className="flex flex-col gap-3 animate-[fade-up_0.55s_ease_both]">
+          <Badge
+            variant="secondary"
+            className="w-fit font-mono tracking-[0.18em] uppercase"
+          >
+            <span
+              className="size-1.5 animate-pulse rounded-full bg-primary"
+              aria-hidden
+            />
+            {event?.salesStatus === 'closed' ? 'Sorteio em andamento' : 'Rifa ao vivo'}
+          </Badge>
+          <h1 className="font-heading text-4xl font-bold tracking-tight text-balance sm:text-6xl">
+            <span className="bg-gradient-to-br from-foreground to-primary bg-clip-text text-transparent">
+              {event?.coupleNames ? `Corta-Gravata · ${event.coupleNames}` : 'Corta-Gravata'}
+            </span>
+          </h1>
+          <p className="max-w-[48ch] text-base text-muted-foreground">
+            {event?.welcomeMessage ||
+              `Toque nos números da cartela como num bingo. Cada um custa ${formatBRL(unitPrice)}.`}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3">
+            {livres !== null && !salesClosed ? (
+              <Badge variant="outline" className="w-fit font-mono">
+                {livres.toLocaleString('pt-BR')} slots livres · {formatBRL(unitPrice)} cada
+              </Badge>
+            ) : null}
+
+            {event?.eventDate ? (
+              <Badge variant="secondary" className="w-fit font-mono">
+                📅 {new Date(event.eventDate).toLocaleDateString('pt-BR')}
+              </Badge>
+            ) : null}
+          </div>
+
+          {event?.prizes && event.prizes.length > 0 ? (
+            <div className="mt-2 flex flex-wrap gap-2">
+              <span className="text-xs font-mono tracking-wider uppercase text-muted-foreground self-center mr-1">
+                Prêmios:
+              </span>
+              {event.prizes.map((p) => (
+                <Badge
+                  key={p.prizeIndex}
+                  variant="default"
+                  className="bg-primary/20 text-primary border border-primary/30 font-sans"
+                >
+                  #{p.prizeIndex + 1} {p.label}
+                </Badge>
+              ))}
+            </div>
+          ) : null}
+        </header>
 
       <Card className="border-primary/20 bg-card/70 shadow-[0_0_40px_-16px_var(--glow)] backdrop-blur-md animate-[fade-up_0.55s_ease_0.12s_both]">
         <CardHeader>
@@ -291,6 +337,7 @@ export function PurchaseForm() {
           </Button>
         </CardFooter>
       </Card>
+      </div>
     </div>
   );
 }

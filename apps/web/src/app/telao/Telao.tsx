@@ -6,6 +6,7 @@ import {
   getEventsUrl,
   type RecentSale,
   type StateSnapshot,
+  type EventPublicData,
 } from '@/lib/api';
 import { formatBRL, formatRaffleNumber } from '@/lib/money';
 import { parseRealtimeEvent } from '@/lib/sse';
@@ -32,7 +33,12 @@ const INITIAL_REVEAL: RevealState = {
   winner: null,
 };
 
-export function Telao() {
+type TelaoProps = {
+  event?: EventPublicData;
+};
+
+export function Telao({ event }: TelaoProps = {}) {
+  const slug = event?.slug;
   const [state, setState] = useState<StateSnapshot | null>(null);
   const [feedPulse, setFeedPulse] = useState<number | null>(null);
   const [reveal, setReveal] = useState<RevealState>(INITIAL_REVEAL);
@@ -47,10 +53,10 @@ export function Telao() {
   }, []);
 
   const refreshState = useCallback(async () => {
-    const next = await fetchState();
+    const next = await fetchState(slug ? { slug } : undefined);
     setState(next);
     return next;
-  }, []);
+  }, [slug]);
 
   const startReveal = useCallback(
     (winner: RevealWinner) => {
@@ -100,7 +106,7 @@ export function Telao() {
   }, [refreshState]);
 
   useEffect(() => {
-    const es = new EventSource(getEventsUrl());
+    const es = new EventSource(getEventsUrl(slug ? { slug } : undefined));
 
     es.onopen = () => setLive(true);
     es.onerror = () => setLive(false);
@@ -162,13 +168,15 @@ export function Telao() {
   const revealing = reveal.phase !== 'idle' && reveal.winner;
 
   return (
-    <div className={styles.stage}>
+    <div className={styles.stage} data-theme={event?.themeId}>
       <div className={styles.vignette} aria-hidden />
       <div className={styles.grain} aria-hidden />
       <div className={styles.scanline} aria-hidden />
 
       <header className={styles.header}>
-        <h1 className={styles.brand}>Corta-Gravata</h1>
+        <h1 className={styles.brand}>
+          {event?.coupleNames ? `Corta-Gravata · ${event.coupleNames}` : 'Corta-Gravata'}
+        </h1>
         <p className={styles.live}>
           <span
             className={live ? styles.liveDotOn : styles.liveDotOff}
