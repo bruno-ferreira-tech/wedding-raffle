@@ -127,3 +127,24 @@ Para que os pagamentos PIX sejam confirmados automaticamente no telão:
 3. [ ] Abrir `/padrinho` no celular dos padrinhos com a `PADRINHO_PASSWORD` e simular uma venda presencial.
 4. [ ] Conectar o notebook do projetor na rota `/telao` em tela cheia (`F11`).
 5. [ ] Na hora do sorteio: entrar no `/admin`, clicar em **Encerrar vendas** e sortear os prêmios na sequência!
+
+---
+
+## 🌐 Modo SaaS Multi-Tenant (Estilo Casar.com)
+
+A plataforma opera nativamente como **SaaS Multi-Tenant comercial** com total isolamento de eventos, temas e carteira digital:
+
+### 1. Rotas do SaaS
+* **`/`**: Landing Page de alta conversão com simulador interativo de arrecadação.
+* **`/cadastro`** & **`/login`**: Autenticação de noivos com criação instantânea do casamento.
+* **`/dashboard`**: Painel financeiro do casal com saldo líquido em tempo real e botão de **Saque PIX Instantâneo**.
+* **`/dashboard/configurar`**: Seletor de 4 temas luxuosos de casamento (`champagne-navy`, `rose-gold`, `emerald-brass`, `monochrome-slate`), cadastro dinâmico de prêmios, PIN dos padrinhos e chave PIX para saques.
+* **`/dashboard/sorteio`**: Trava de vendas e sorteio eletrônico ao vivo com broadcast SSE.
+* **`/e/[slug]`**: Rifa pública dos convidados com cartela responsiva tipo bingo e checkout PIX integrado.
+* **`/e/[slug]/telao`**: Telão ao vivo exclusivo do evento para projetores/TVs.
+* **`/e/[slug]/padrinho`**: Console de vendas assistidas para padrinhos com autenticação por PIN de 4 dígitos.
+
+### 2. Variáveis de Configuração do SaaS
+* `PLATFORM_FEE_PERCENT`: Porcentagem da taxa retida pela plataforma (padrão: `4.9`).
+* `PAYOUT_TRANSFER_PROVIDER`: Provedor de transferências bancárias PIX para saques automáticos (`fake`, `asaas`, `mercadopago`).
+
