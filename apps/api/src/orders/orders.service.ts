@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { and, eq, inArray, isNotNull, lt } from 'drizzle-orm';
 import { DB, type Db } from '../db/db.module';
-import { eventState, orders, raffleNumbers } from '../db/schema';
+import { eventState, events, orders, raffleNumbers } from '../db/schema';
 import { totalCents } from '../domain/money';
 import {
   PAYMENT_PROVIDER,
@@ -61,12 +61,26 @@ export class OrdersService {
 
     await this.expirePendingOrders();
 
-    const [state] = await this.db.select().from(eventState).limit(1);
-    if (!state || state.salesStatus === 'closed') {
-      throw new ConflictException('Vendas encerradas');
+    const rawAny = (rawBody ?? {}) as Record<string, unknown>;
+    const event = await this.resolveEvent(
+      (rawAny.slug as string) ?? (rawAny.eventId as string | number),
+    );
+    const eventId = event?.id ?? 1;
+    const ticketPrice = event?.ticketPriceCents ?? 2000;
+
+    if (event) {
+      if (event.salesStatus === 'closed') {
+        throw new ConflictException('Vendas encerradas');
+      }
+    } else {
+      const [state] = await this.db.select().from(eventState).limit(1);
+      if (!state || state.salesStatus === 'closed') {
+        throw new ConflictException('Vendas encerradas');
+      }
     }
 
-    const amount = totalCents(input.numberIds.length);
+    const amount = totalCents(input.numberIds.length, ticketPrice);
+    const feeCents = this.computeFee(amount);
     const now = new Date();
     const expiresAt = reservationExpiresAt(now);
 
@@ -77,10 +91,12 @@ export class OrdersService {
         const [created] = await tx
           .insert(orders)
           .values({
+            eventId,
             buyerName: input.buyerName,
             source: 'convidado',
             status: 'pending',
             totalCents: amount,
+            feeCents,
             numberIds: input.numberIds,
             expiresAt,
           })
@@ -96,6 +112,7 @@ export class OrdersService {
           })
           .where(
             and(
+              eq(raffleNumbers.eventId, eventId),
               inArray(raffleNumbers.id, input.numberIds),
               eq(raffleNumbers.status, 'disponivel'),
             ),
@@ -124,7 +141,7 @@ export class OrdersService {
         expiresAt,
       });
     } catch (err) {
-      await this.rollbackReservation(orderRow.id, input.numberIds);
+      await this.rollbackReservation(orderRow.id, input.numberIds, eventId);
       throw new ServiceUnavailableException(
         err instanceof Error
           ? `Falha ao criar cobrança PIX: ${err.message}`
@@ -147,6 +164,7 @@ export class OrdersService {
     this.bus.emit('order.reserved', {
       orderId: updated.id,
       numberIds: updated.numberIds,
+      eventId,
     });
 
     return this.toResponse(updated);
@@ -196,12 +214,26 @@ export class OrdersService {
       );
     }
 
-    const [state] = await this.db.select().from(eventState).limit(1);
-    if (!state || state.salesStatus === 'closed') {
-      throw new ConflictException('Vendas encerradas');
+    const rawAny = (rawBody ?? {}) as Record<string, unknown>;
+    const event = await this.resolveEvent(
+      (rawAny.slug as string) ?? (rawAny.eventId as string | number),
+    );
+    const eventId = event?.id ?? 1;
+    const ticketPrice = event?.ticketPriceCents ?? 2000;
+
+    if (event) {
+      if (event.salesStatus === 'closed') {
+        throw new ConflictException('Vendas encerradas');
+      }
+    } else {
+      const [state] = await this.db.select().from(eventState).limit(1);
+      if (!state || state.salesStatus === 'closed') {
+        throw new ConflictException('Vendas encerradas');
+      }
     }
 
-    const amount = totalCents(input.numberIds.length);
+    const amount = totalCents(input.numberIds.length, ticketPrice);
+    const feeCents = this.computeFee(amount);
     const paidAt = new Date();
 
     let orderRow: typeof orders.$inferSelect;
@@ -211,10 +243,12 @@ export class OrdersService {
         const [created] = await tx
           .insert(orders)
           .values({
+            eventId,
             buyerName: input.buyerName,
             source: 'padrinho',
             status: 'paid',
             totalCents: amount,
+            feeCents,
             numberIds: input.numberIds,
             paidAt,
           })
@@ -231,6 +265,7 @@ export class OrdersService {
           })
           .where(
             and(
+              eq(raffleNumbers.eventId, eventId),
               inArray(raffleNumbers.id, input.numberIds),
               eq(raffleNumbers.status, 'disponivel'),
             ),
@@ -253,6 +288,7 @@ export class OrdersService {
     this.bus.emit('sale.completed', {
       orderId: orderRow.id,
       numberIds: orderRow.numberIds,
+      eventId,
     });
 
     return this.toResponse(orderRow);
@@ -352,6 +388,7 @@ export class OrdersService {
         })
         .where(
           and(
+            eq(raffleNumbers.eventId, order.eventId),
             eq(raffleNumbers.orderId, order.id),
             eq(raffleNumbers.status, 'reservado'),
           ),
@@ -371,6 +408,7 @@ export class OrdersService {
       this.bus.emit('sale.completed', {
         orderId: order.id,
         numberIds: order.numberIds,
+        eventId: order.eventId,
       });
     }
 
@@ -405,6 +443,7 @@ export class OrdersService {
         })
         .where(
           and(
+            eq(raffleNumbers.eventId, order.eventId),
             eq(raffleNumbers.orderId, order.id),
             eq(raffleNumbers.status, 'reservado'),
           ),
@@ -415,6 +454,7 @@ export class OrdersService {
   private async rollbackReservation(
     orderId: number,
     numberIds: number[],
+    eventId: number = 1,
   ): Promise<void> {
     await this.db.transaction(async (tx) => {
       await tx
@@ -427,6 +467,7 @@ export class OrdersService {
         })
         .where(
           and(
+            eq(raffleNumbers.eventId, eventId),
             inArray(raffleNumbers.id, numberIds),
             eq(raffleNumbers.orderId, orderId),
             eq(raffleNumbers.status, 'reservado'),
@@ -450,7 +491,12 @@ export class OrdersService {
         buyerName: raffleNumbers.buyerName,
       })
       .from(raffleNumbers)
-      .where(inArray(raffleNumbers.id, order.numberIds));
+      .where(
+        and(
+          eq(raffleNumbers.eventId, order.eventId),
+          inArray(raffleNumbers.id, order.numberIds),
+        ),
+      );
 
     numbers.sort((a, b) => a.id - b.id);
 
@@ -468,5 +514,35 @@ export class OrdersService {
       createdAt: order.createdAt.toISOString(),
       numbers,
     };
+  }
+
+  private async resolveEvent(slugOrId?: string | number) {
+    if (!slugOrId) {
+      const [first] = await this.db
+        .select()
+        .from(events)
+        .where(eq(events.id, 1))
+        .limit(1);
+      return first ?? null;
+    }
+    if (typeof slugOrId === 'number' || /^\d+$/.test(String(slugOrId))) {
+      const [byNum] = await this.db
+        .select()
+        .from(events)
+        .where(eq(events.id, Number(slugOrId)))
+        .limit(1);
+      return byNum ?? null;
+    }
+    const [bySlug] = await this.db
+      .select()
+      .from(events)
+      .where(eq(events.slug, String(slugOrId)))
+      .limit(1);
+    return bySlug ?? null;
+  }
+
+  private computeFee(amountCents: number): number {
+    const feePercent = parseFloat(process.env.PLATFORM_FEE_PERCENT ?? '4.9');
+    return Math.round(amountCents * (feePercent / 100));
   }
 }

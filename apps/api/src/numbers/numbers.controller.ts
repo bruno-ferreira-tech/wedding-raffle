@@ -6,12 +6,19 @@ export class NumbersController {
   constructor(private readonly numbers: NumbersService) {}
 
   @Get('board')
-  board() {
-    return this.numbers.board();
+  board(
+    @Query('slug') slug?: string,
+    @Query('eventId') eventId?: string,
+  ) {
+    return this.numbers.board(slug || eventId);
   }
 
   @Get('check')
-  check(@Query('ids') ids: string | undefined) {
-    return this.numbers.check(ids);
+  check(
+    @Query('ids') ids: string | undefined,
+    @Query('slug') slug?: string,
+    @Query('eventId') eventId?: string,
+  ) {
+    return this.numbers.check(ids, slug || eventId);
   }
 }

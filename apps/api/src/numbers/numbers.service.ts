@@ -3,9 +3,9 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { asc, inArray } from 'drizzle-orm';
+import { and, asc, eq, inArray } from 'drizzle-orm';
 import { DB, type Db } from '../db/db.module';
-import { raffleNumbers } from '../db/schema';
+import { events, raffleNumbers } from '../db/schema';
 import { parseCheckIds } from './parse-check-ids';
 
 export type NumberCheckResult = {
@@ -22,13 +22,31 @@ export type NumberBoardCell = {
 export class NumbersService {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  async board(): Promise<NumberBoardCell[]> {
+  async resolveEventId(slugOrId?: string | number): Promise<number> {
+    if (!slugOrId) return 1;
+
+    if (typeof slugOrId === 'number' || /^\d+$/.test(String(slugOrId))) {
+      return Number(slugOrId);
+    }
+
+    const [event] = await this.db
+      .select({ id: events.id })
+      .from(events)
+      .where(eq(events.slug, String(slugOrId)))
+      .limit(1);
+
+    return event?.id ?? 1;
+  }
+
+  async board(slugOrId?: string | number): Promise<NumberBoardCell[]> {
+    const eventId = await this.resolveEventId(slugOrId);
     const rows = await this.db
       .select({
         id: raffleNumbers.id,
         status: raffleNumbers.status,
       })
       .from(raffleNumbers)
+      .where(eq(raffleNumbers.eventId, eventId))
       .orderBy(asc(raffleNumbers.id));
 
     return rows.map((r) => ({
@@ -37,7 +55,10 @@ export class NumbersService {
     }));
   }
 
-  async check(idsQuery: string | undefined): Promise<NumberCheckResult[]> {
+  async check(
+    idsQuery: string | undefined,
+    slugOrId?: string | number,
+  ): Promise<NumberCheckResult[]> {
     let ids: number[];
     try {
       ids = parseCheckIds(idsQuery);
@@ -47,13 +68,16 @@ export class NumbersService {
       );
     }
 
+    const eventId = await this.resolveEventId(slugOrId);
     const rows = await this.db
       .select({
         id: raffleNumbers.id,
         status: raffleNumbers.status,
       })
       .from(raffleNumbers)
-      .where(inArray(raffleNumbers.id, ids));
+      .where(
+        and(eq(raffleNumbers.eventId, eventId), inArray(raffleNumbers.id, ids)),
+      );
 
     const byId = new Map(rows.map((r) => [r.id, r.status]));
 
