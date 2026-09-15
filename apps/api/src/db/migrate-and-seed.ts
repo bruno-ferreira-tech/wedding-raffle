@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { join } from 'node:path';
+import { sql } from 'drizzle-orm';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { db } from './client';
 import { eventState, events, raffleNumbers, users } from './schema';
@@ -51,6 +52,14 @@ async function setup() {
 
   await db.insert(raffleNumbers).values(numbers).onConflictDoNothing();
   await db.insert(eventState).values({ id: 1 }).onConflictDoNothing();
+
+  // Synchronize Postgres sequences so future auto-increment IDs don't collide with seeded IDs
+  await db.execute(
+    sql`SELECT setval(pg_get_serial_sequence('users', 'id'), COALESCE((SELECT MAX(id) FROM "users"), 1));`,
+  );
+  await db.execute(
+    sql`SELECT setval(pg_get_serial_sequence('events', 'id'), COALESCE((SELECT MAX(id) FROM "events"), 1));`,
+  );
 
   console.log(
     `Database setup complete: event 1 (demo) + raffle_numbers 1..${TOTAL_NUMBERS} ready.`,
