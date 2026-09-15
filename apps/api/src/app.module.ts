@@ -9,6 +9,7 @@ import { NumbersModule } from './numbers/numbers.module';
 import { OrdersModule } from './orders/orders.module';
 import { PadrinhoModule } from './padrinho/padrinho.module';
 import { PaymentsModule } from './payments/payments.module';
+import { PayoutsModule } from './payouts/payouts.module';
 import { RealtimeModule } from './realtime/realtime.module';
 import { StateModule } from './state/state.module';
 
@@ -27,6 +28,7 @@ import { StateModule } from './state/state.module';
     AdminModule,
     StateModule,
     RealtimeModule,
+    PayoutsModule,
   ],
   controllers: [AppController],
   providers: [],
