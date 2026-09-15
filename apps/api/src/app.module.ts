@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
+import { EventsModule } from './events/events.module';
 import { NumbersModule } from './numbers/numbers.module';
 import { OrdersModule } from './orders/orders.module';
 import { PadrinhoModule } from './padrinho/padrinho.module';
@@ -18,6 +19,7 @@ import { StateModule } from './state/state.module';
       envFilePath: join(__dirname, '..', '.env'),
     }),
     AuthModule,
+    EventsModule,
     PaymentsModule,
     OrdersModule,
     NumbersModule,
