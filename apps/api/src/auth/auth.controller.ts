@@ -1,12 +1,20 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
+  Req,
   Res,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { timingSafeEqual } from 'node:crypto';
 import type { Response } from 'express';
+import {
+  COUPLE_SESSION_COOKIE,
+} from './couple-session';
+import { CoupleAuthService, type CoupleUserDto } from './couple-auth.service';
+import { CoupleGuard, type AuthenticatedCoupleRequest } from './couple.guard';
 import {
   SESSION_COOKIE_NAME,
   createSessionCookie,
@@ -15,6 +23,17 @@ import {
 } from './session';
 
 type LoginBody = {
+  password?: string;
+};
+
+type CoupleRegisterBody = {
+  name?: string;
+  email?: string;
+  password?: string;
+};
+
+type CoupleLoginBody = {
+  email?: string;
   password?: string;
 };
 
@@ -40,6 +59,42 @@ function passwordsMatch(provided: string | undefined, expected: string): boolean
 
 @Controller('auth')
 export class AuthController {
+  constructor(private readonly coupleAuth: CoupleAuthService) {}
+
+  @Post('register')
+  async registerCouple(
+    @Body() body: CoupleRegisterBody,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ ok: true; user: CoupleUserDto }> {
+    const result = await this.coupleAuth.register(body);
+    res.cookie(COUPLE_SESSION_COOKIE, result.token, sessionCookieOptions());
+    return { ok: true, user: result.user };
+  }
+
+  @Post('login')
+  async loginCouple(
+    @Body() body: CoupleLoginBody,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ ok: true; user: CoupleUserDto }> {
+    const result = await this.coupleAuth.login(body);
+    res.cookie(COUPLE_SESSION_COOKIE, result.token, sessionCookieOptions());
+    return { ok: true, user: result.user };
+  }
+
+  @Get('me')
+  @UseGuards(CoupleGuard)
+  async getMe(@Req() req: AuthenticatedCoupleRequest): Promise<{ ok: true; user: CoupleUserDto }> {
+    const user = await this.coupleAuth.getProfile(req.user.userId);
+    return { ok: true, user };
+  }
+
+  @Post('logout')
+  logout(@Res({ passthrough: true }) res: Response): { ok: true } {
+    res.clearCookie(COUPLE_SESSION_COOKIE, { path: '/' });
+    res.clearCookie(SESSION_COOKIE_NAME, { path: '/' });
+    return { ok: true };
+  }
+
   @Post('padrinho')
   loginPadrinho(
     @Body() body: LoginBody,
