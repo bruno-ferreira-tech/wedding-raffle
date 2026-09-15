@@ -1,14 +1,26 @@
-CREATE TYPE "public"."payout_status" AS ENUM('pending', 'completed', 'failed');--> statement-breakpoint
-CREATE TYPE "public"."user_role" AS ENUM('couple', 'platform_admin');--> statement-breakpoint
-CREATE TABLE "event_prizes" (
+DO $$ BEGIN
+    CREATE TYPE "public"."payout_status" AS ENUM('pending', 'completed', 'failed');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."user_role" AS ENUM('couple', 'platform_admin');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "users" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"event_id" integer NOT NULL,
-	"prize_index" integer NOT NULL,
-	"label" text NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
+	"email" text NOT NULL,
+	"password_hash" text NOT NULL,
+	"name" text NOT NULL,
+	"role" "user_role" DEFAULT 'couple' NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
-CREATE TABLE "events" (
+CREATE TABLE IF NOT EXISTS "events" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" integer NOT NULL,
 	"slug" text NOT NULL,
@@ -29,7 +41,15 @@ CREATE TABLE "events" (
 	CONSTRAINT "events_slug_unique" UNIQUE("slug")
 );
 --> statement-breakpoint
-CREATE TABLE "payouts" (
+CREATE TABLE IF NOT EXISTS "event_prizes" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"event_id" integer NOT NULL,
+	"prize_index" integer NOT NULL,
+	"label" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "payouts" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"event_id" integer NOT NULL,
 	"amount_cents" integer NOT NULL,
@@ -43,40 +63,52 @@ CREATE TABLE "payouts" (
 	"completed_at" timestamp
 );
 --> statement-breakpoint
-CREATE TABLE "users" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"email" text NOT NULL,
-	"password_hash" text NOT NULL,
-	"name" text NOT NULL,
-	"role" "user_role" DEFAULT 'couple' NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "users_email_unique" UNIQUE("email")
-);
+ALTER TABLE "draw_results" ADD COLUMN IF NOT EXISTS "event_id" integer DEFAULT 1 NOT NULL;
 --> statement-breakpoint
-/* 
-    Unfortunately in current drizzle-kit version we can't automatically get name for primary key.
-    We are working on making it available!
-
-    Meanwhile you can:
-        1. Check pk name in your database, by running
-            SELECT constraint_name FROM information_schema.table_constraints
-            WHERE table_schema = 'public'
-                AND table_name = 'raffle_numbers'
-                AND constraint_type = 'PRIMARY KEY';
-        2. Uncomment code below and paste pk name manually
-        
-    Hope to release this update as soon as possible
-*/
-
--- ALTER TABLE "raffle_numbers" DROP CONSTRAINT "<constraint_name>";--> statement-breakpoint
-ALTER TABLE "raffle_numbers" ADD CONSTRAINT "raffle_numbers_event_id_id_pk" PRIMARY KEY("event_id","id");--> statement-breakpoint
-ALTER TABLE "draw_results" ADD COLUMN "event_id" integer DEFAULT 1 NOT NULL;--> statement-breakpoint
-ALTER TABLE "orders" ADD COLUMN "event_id" integer DEFAULT 1 NOT NULL;--> statement-breakpoint
-ALTER TABLE "orders" ADD COLUMN "fee_cents" integer DEFAULT 0 NOT NULL;--> statement-breakpoint
-ALTER TABLE "raffle_numbers" ADD COLUMN "event_id" integer DEFAULT 1 NOT NULL;--> statement-breakpoint
-ALTER TABLE "event_prizes" ADD CONSTRAINT "event_prizes_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "events" ADD CONSTRAINT "events_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "payouts" ADD CONSTRAINT "payouts_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "draw_results" ADD CONSTRAINT "draw_results_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "orders" ADD CONSTRAINT "orders_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "raffle_numbers" ADD CONSTRAINT "raffle_numbers_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS "event_id" integer DEFAULT 1 NOT NULL;
+--> statement-breakpoint
+ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS "fee_cents" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
+ALTER TABLE "raffle_numbers" ADD COLUMN IF NOT EXISTS "event_id" integer DEFAULT 1 NOT NULL;
+--> statement-breakpoint
+ALTER TABLE "raffle_numbers" DROP CONSTRAINT IF EXISTS "raffle_numbers_pkey";
+--> statement-breakpoint
+ALTER TABLE "raffle_numbers" DROP CONSTRAINT IF EXISTS "raffle_numbers_event_id_id_pk";
+--> statement-breakpoint
+ALTER TABLE "raffle_numbers" ADD CONSTRAINT "raffle_numbers_event_id_id_pk" PRIMARY KEY("event_id","id");
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "event_prizes" ADD CONSTRAINT "event_prizes_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "events" ADD CONSTRAINT "events_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "payouts" ADD CONSTRAINT "payouts_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "draw_results" ADD CONSTRAINT "draw_results_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "orders" ADD CONSTRAINT "orders_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "raffle_numbers" ADD CONSTRAINT "raffle_numbers_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
