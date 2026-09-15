@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import { EventPadrinhoConsole } from './EventPadrinhoConsole';
 import { fetchPublicEvent } from '@/lib/api';
 

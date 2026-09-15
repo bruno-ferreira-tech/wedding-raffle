@@ -101,8 +101,7 @@ export function OrderStatus({ orderId, backHref = '/', themeId }: Props) {
   }, [orderId]);
 
   useEffect(() => {
-    let cancelled = false;
-    refresh().catch(() => undefined);
+    void refresh();
 
     const interval = window.setInterval(() => {
       setNow(Date.now());
@@ -110,7 +109,6 @@ export function OrderStatus({ orderId, backHref = '/', themeId }: Props) {
     }, 2000);
 
     return () => {
-      cancelled = true;
       window.clearInterval(interval);
     };
   }, [refresh]);
@@ -263,7 +261,7 @@ export function OrderStatus({ orderId, backHref = '/', themeId }: Props) {
             <Button
               type="button"
               variant="outline"
-              onClick={() => void copyPix()}
+              onClick={() => void onCopyPix()}
               disabled={!order.pixCopyPaste}
             >
               {copied ? (

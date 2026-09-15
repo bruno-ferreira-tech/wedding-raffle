@@ -40,6 +40,7 @@ export type UpdateEventDto = {
   coverImageUrl?: string;
   welcomeMessage?: string;
   themeId?: string;
+  ticketPriceCents?: number;
   padrinhoPin?: string;
   pixKey?: string;
   pixKeyType?: string;
@@ -240,6 +241,7 @@ export class EventsService {
         coverImageUrl: dto.coverImageUrl !== undefined ? dto.coverImageUrl : existing.coverImageUrl,
         welcomeMessage: dto.welcomeMessage !== undefined ? dto.welcomeMessage : existing.welcomeMessage,
         themeId: dto.themeId || existing.themeId,
+        ticketPriceCents: dto.ticketPriceCents ? Math.max(100, dto.ticketPriceCents) : existing.ticketPriceCents,
         padrinhoPin: dto.padrinhoPin?.trim() || existing.padrinhoPin,
         pixKey: dto.pixKey !== undefined ? dto.pixKey?.trim() : existing.pixKey,
         pixKeyType: dto.pixKeyType || existing.pixKeyType,

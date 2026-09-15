@@ -155,7 +155,7 @@ export function Telao({ event }: TelaoProps = {}) {
       es.close();
       clearRevealTimers();
     };
-  }, [clearRevealTimers, refreshState, startReveal]);
+  }, [clearRevealTimers, refreshState, slug, startReveal]);
 
   useEffect(() => {
     if (feedPulse === null) return;

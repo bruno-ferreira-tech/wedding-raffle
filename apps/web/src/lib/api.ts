@@ -370,6 +370,7 @@ export function updateDashboardEvent(
     coverImageUrl: string | null;
     welcomeMessage: string | null;
     themeId: string;
+    ticketPriceCents: number;
     padrinhoPin: string;
     pixKey: string | null;
     pixKeyType: string | null;

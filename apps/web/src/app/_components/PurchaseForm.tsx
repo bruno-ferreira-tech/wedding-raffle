@@ -82,7 +82,7 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
         return cell?.status === 'disponivel';
       }),
     );
-  }, []);
+  }, [slug]);
 
   useEffect(() => {
     let cancelled = false;

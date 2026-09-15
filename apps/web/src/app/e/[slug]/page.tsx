@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import { PurchaseForm } from '@/app/_components/PurchaseForm';
 import { fetchPublicEvent } from '@/lib/api';
 

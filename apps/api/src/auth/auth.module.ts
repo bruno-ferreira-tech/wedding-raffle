@@ -1,3 +1,4 @@
+import { Module } from '@nestjs/common';
 import { DbModule } from '../db/db.module';
 import { AdminGuard } from './admin.guard';
 import { AuthController } from './auth.controller';
