@@ -1,12 +1,42 @@
 import 'dotenv/config';
 
 import { db } from './client';
-import { eventState, raffleNumbers } from './schema';
+import { eventState, events, raffleNumbers, users } from './schema';
 
 const TOTAL_NUMBERS = 2000;
 
 async function seed() {
+  // Ensure default demo user exists (id: 1)
+  await db
+    .insert(users)
+    .values({
+      id: 1,
+      name: 'Noivos Demo',
+      email: 'demo@corta-gravata.local',
+      passwordHash:
+        'c454e99f0e1f744e27f1c1f72782e4e16447be5fcf3f835b6c86a349bc1f2e10', // demo123
+      role: 'couple',
+    })
+    .onConflictDoNothing();
+
+  // Ensure default event exists (id: 1, slug: 'demo')
+  await db
+    .insert(events)
+    .values({
+      id: 1,
+      userId: 1,
+      slug: 'demo',
+      title: 'Casamento Bruno & Carol',
+      coupleNames: 'Bruno & Carol',
+      themeId: 'champagne-navy',
+      totalNumbers: TOTAL_NUMBERS,
+      ticketPriceCents: 2000,
+      padrinhoPin: '1234',
+    })
+    .onConflictDoNothing();
+
   const numbers = Array.from({ length: TOTAL_NUMBERS }, (_, i) => ({
+    eventId: 1,
     id: i + 1,
   }));
 
@@ -14,7 +44,7 @@ async function seed() {
   await db.insert(eventState).values({ id: 1 }).onConflictDoNothing();
 
   console.log(
-    `Seed complete: raffle_numbers 1..${TOTAL_NUMBERS} + event_state (idempotent).`,
+    `Seed complete: user 1, event 1 (slug: demo), raffle_numbers 1..${TOTAL_NUMBERS} (idempotent).`,
   );
 }
 
