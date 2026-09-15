@@ -5,14 +5,15 @@ export type RealtimeEventName =
   | 'draw.winner';
 
 export type RealtimePayloadByEvent = {
-  'order.reserved': { orderId: number; numberIds: number[] };
-  'sale.completed': { orderId: number; numberIds: number[] };
-  'sales.updated': { salesStatus: 'open' | 'closed' };
+  'order.reserved': { orderId: number; numberIds: number[]; eventId?: number };
+  'sale.completed': { orderId: number; numberIds: number[]; eventId?: number };
+  'sales.updated': { salesStatus: 'open' | 'closed'; eventId?: number };
   'draw.winner': {
     prizeIndex: number;
     prizeLabel: string;
     numberId: number;
     buyerName: string;
+    eventId?: number;
   };
 };
 
