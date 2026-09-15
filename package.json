@@ -6,7 +6,9 @@
     "dev": "npm run dev --workspace=@wedding/web",
     "dev:web": "npm run dev --workspace=@wedding/web",
     "dev:api": "npm run start:dev --workspace=@wedding/api",
+    "build": "npm run build --workspaces",
     "test": "npm run test --workspaces --if-present",
-    "db:seed": "npm run db:seed --workspace=@wedding/api"
+    "db:seed": "npm run db:seed --workspace=@wedding/api",
+    "db:setup": "npm run db:setup --workspace=@wedding/api"
   }
 }

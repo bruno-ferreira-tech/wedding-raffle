@@ -54,8 +54,52 @@ export class WebhooksController {
 
   @Post('mercadopago')
   @HttpCode(200)
-  mercadoPago(): { ok: true } {
-    // Stub: wire MP signature + payment lookup when provider goes live.
+  async mercadoPago(
+    @Req() req: Request,
+  ): Promise<{ ok: true }> {
+    const body = req.body as {
+      action?: string;
+      type?: string;
+      data?: { id?: string | number };
+      id?: string | number;
+    };
+    const query = req.query as Record<string, string | undefined>;
+
+    const paymentId =
+      body?.data?.id ??
+      body?.id ??
+      query?.['data.id'] ??
+      query?.id;
+
+    if (!paymentId) {
+      return { ok: true };
+    }
+
+    const token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
+    if (!token) {
+      return { ok: true };
+    }
+
+    try {
+      const res = await fetch(
+        `https://api.mercadopago.com/v1/payments/${paymentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (res.ok) {
+        const payment = (await res.json()) as { status?: string };
+        if (payment.status === 'approved') {
+          await this.orders.confirmPaidByProviderChargeId(String(paymentId));
+        }
+      }
+    } catch {
+      // Ignore webhook fetch errors to avoid 500 response on retries
+    }
+
     return { ok: true };
   }
 }

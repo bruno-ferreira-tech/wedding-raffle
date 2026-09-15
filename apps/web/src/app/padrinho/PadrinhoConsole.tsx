@@ -1,45 +1,102 @@
 'use client';
 
+import { CheckIcon, LogInIcon } from 'lucide-react';
 import {
   FormEvent,
-  KeyboardEvent,
+  useCallback,
+  useEffect,
   useId,
   useState,
   useTransition,
 } from 'react';
+import { toast } from 'sonner';
+import { BingoBoard } from '@/app/_components/BingoBoard';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import { Spinner } from '@/components/ui/spinner';
 import {
   ApiError,
-  checkNumbers,
+  fetchNumberBoard,
+  getEventsUrl,
   loginPadrinho,
   markPaid,
+  type NumberBoardCell,
 } from '@/lib/api';
-import {
-  formatRaffleNumber,
-  MAX_NUMBER_ID,
-  MIN_NUMBER_ID,
-  parseNumberInput,
-} from '@/lib/money';
-import styles from './padrinho.module.css';
+import { formatRaffleNumber } from '@/lib/money';
+import { parseRealtimeEvent } from '@/lib/sse';
 
 export function PadrinhoConsole() {
   const passwordId = useId();
   const nameId = useId();
-  const numberId = useId();
 
   const [authed, setAuthed] = useState(false);
   const [password, setPassword] = useState('');
+  const [board, setBoard] = useState<NumberBoardCell[] | null>(null);
+  const [boardLoading, setBoardLoading] = useState(false);
   const [selected, setSelected] = useState<number[]>([]);
-  const [numberDraft, setNumberDraft] = useState('');
   const [buyerName, setBuyerName] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [checking, setChecking] = useState(false);
   const [pending, startTransition] = useTransition();
+
+  const loadBoard = useCallback(async () => {
+    const cells = await fetchNumberBoard();
+    setBoard(cells);
+    setSelected((prev) =>
+      prev.filter((id) => {
+        const cell = cells.find((c) => c.id === id);
+        return cell?.status === 'disponivel';
+      }),
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!authed) return;
+    let cancelled = false;
+    setBoardLoading(true);
+    loadBoard()
+      .catch(() => {
+        if (!cancelled) setError('Não foi possível carregar a cartela.');
+      })
+      .finally(() => {
+        if (!cancelled) setBoardLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [authed, loadBoard]);
+
+  useEffect(() => {
+    if (!authed) return;
+    const es = new EventSource(getEventsUrl());
+    es.onmessage = (msg) => {
+      const event = parseRealtimeEvent(msg.data);
+      if (!event) return;
+      if (
+        event.type === 'order.reserved' ||
+        event.type === 'sale.completed' ||
+        event.type === 'sales.updated'
+      ) {
+        void loadBoard().catch(() => undefined);
+      }
+    };
+    return () => es.close();
+  }, [authed, loadBoard]);
 
   function onLogin(e: FormEvent) {
     e.preventDefault();
     setError(null);
-    setSuccess(null);
     startTransition(async () => {
       try {
         await loginPadrinho(password);
@@ -57,57 +114,30 @@ export function PadrinhoConsole() {
     });
   }
 
-  async function addNumber() {
+  function toggleNumber(id: number) {
     setError(null);
-    setSuccess(null);
-    const id = parseNumberInput(numberDraft);
-    if (id === null) {
-      setError(`Digite um número entre ${MIN_NUMBER_ID} e ${MAX_NUMBER_ID}.`);
+    const cell = board?.find((c) => c.id === id);
+    if (!cell || cell.status !== 'disponivel') {
+      setError(`Número ${formatRaffleNumber(id)} indisponível.`);
       return;
     }
-    if (selected.includes(id)) {
-      setError(`O número ${formatRaffleNumber(id)} já está na lista.`);
-      return;
-    }
-
-    setChecking(true);
-    try {
-      const [result] = await checkNumbers([id]);
-      if (!result || result.status !== 'disponivel') {
-        setError(`Número ${formatRaffleNumber(id)} indisponível.`);
-        return;
-      }
-      setSelected((prev) => [...prev, id].sort((a, b) => a - b));
-      setNumberDraft('');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Falha ao verificar número.');
-    } finally {
-      setChecking(false);
-    }
-  }
-
-  function removeNumber(id: number) {
-    setSelected((prev) => prev.filter((n) => n !== id));
-  }
-
-  function onNumberKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      void addNumber();
-    }
+    setSelected((prev) =>
+      prev.includes(id)
+        ? prev.filter((n) => n !== id)
+        : [...prev, id].sort((a, b) => a - b),
+    );
   }
 
   function onMarkPaid(e: FormEvent) {
     e.preventDefault();
     setError(null);
-    setSuccess(null);
 
     if (!buyerName.trim()) {
       setError('Informe o nome do comprador.');
       return;
     }
     if (selected.length === 0) {
-      setError('Selecione ao menos um número.');
+      setError('Selecione ao menos um número na cartela.');
       return;
     }
 
@@ -117,12 +147,12 @@ export function PadrinhoConsole() {
     startTransition(async () => {
       try {
         await markPaid({ buyerName: name, numberIds: numbers });
-        setSuccess(
+        toast.success(
           `Pago: ${numbers.map(formatRaffleNumber).join(', ')} — ${name}`,
         );
         setSelected([]);
         setBuyerName('');
-        setNumberDraft('');
+        await loadBoard();
       } catch (err) {
         if (err instanceof ApiError && err.status === 401) {
           setAuthed(false);
@@ -136,152 +166,193 @@ export function PadrinhoConsole() {
               ? err.message
               : 'Não foi possível marcar como pago.';
         setError(message);
+        void loadBoard().catch(() => undefined);
       }
     });
   }
 
-  const busy = pending || checking;
-
   if (!authed) {
     return (
-      <div className={styles.page}>
-        <header className={styles.hero}>
-          <p className={styles.eyebrow}>Dia do casamento</p>
-          <h1 className={styles.brand}>Padrinho</h1>
-          <p className={styles.tagline}>
+      <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
+        <header className="flex flex-col gap-3 animate-[fade-up_0.55s_ease_both]">
+          <Badge
+            variant="secondary"
+            className="w-fit font-mono tracking-[0.18em] uppercase"
+          >
+            Operação assistida
+          </Badge>
+          <h1 className="font-heading text-5xl font-bold tracking-tight text-balance sm:text-6xl">
+            <span className="bg-gradient-to-br from-foreground to-primary bg-clip-text text-transparent">
+              Padrinho
+            </span>
+          </h1>
+          <p className="max-w-[36ch] text-base text-muted-foreground">
             Marque números pagos em dinheiro ou PIX presencial.
           </p>
         </header>
 
-        <form className={styles.form} onSubmit={onLogin}>
-          <div>
-            <label className={styles.fieldLabel} htmlFor={passwordId}>
-              Senha
-            </label>
-            <input
-              id={passwordId}
-              className={styles.input}
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+        <Card className="border-primary/20 bg-card/70 shadow-[0_0_40px_-16px_var(--glow)] backdrop-blur-md animate-[fade-up_0.55s_ease_0.12s_both]">
+          <CardHeader>
+            <CardTitle className="font-heading">Entrar</CardTitle>
+            <CardDescription>
+              Acesso do padrinho ao console de pagamento.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form
+              id="padrinho-login"
+              className="flex flex-col gap-5"
+              onSubmit={onLogin}
+            >
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor={passwordId}>Senha</FieldLabel>
+                  <Input
+                    id={passwordId}
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={pending}
+                    autoComplete="current-password"
+                    required
+                    autoFocus
+                  />
+                </Field>
+              </FieldGroup>
+              {error ? (
+                <Alert variant="destructive">
+                  <AlertTitle>Atenção</AlertTitle>
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              ) : null}
+            </form>
+          </CardContent>
+          <CardFooter>
+            <Button
+              type="submit"
+              form="padrinho-login"
+              size="lg"
+              className="h-11 w-full font-heading tracking-wide uppercase"
               disabled={pending}
-              autoComplete="current-password"
-              required
-              autoFocus
-            />
-          </div>
-          {error ? (
-            <p className={styles.error} role="alert">
-              {error}
-            </p>
-          ) : null}
-          <button type="submit" className={styles.cta} disabled={pending}>
-            {pending ? 'Entrando…' : 'Entrar'}
-          </button>
-        </form>
+            >
+              {pending ? (
+                <Spinner data-icon="inline-start" />
+              ) : (
+                <LogInIcon data-icon="inline-start" />
+              )}
+              {pending ? 'Entrando…' : 'Entrar'}
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className={styles.page}>
-      <header className={styles.hero}>
-        <p className={styles.eyebrow}>Padrinho</p>
-        <h1 className={styles.brand}>Marcar pago</h1>
-        <p className={styles.tagline}>
-          Selecione os números, confirme o nome e registre o pagamento.
+    <div className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
+      <header className="flex flex-col gap-3 animate-[fade-up_0.55s_ease_both]">
+        <Badge
+          variant="secondary"
+          className="w-fit font-mono tracking-[0.18em] uppercase"
+        >
+          Operação assistida
+        </Badge>
+        <h1 className="font-heading text-5xl font-bold tracking-tight text-balance sm:text-6xl">
+          <span className="bg-gradient-to-br from-foreground to-primary bg-clip-text text-transparent">
+            Marcar pago
+          </span>
+        </h1>
+        <p className="max-w-[40ch] text-base text-muted-foreground">
+          Toque na cartela, confirme o nome e registre o pagamento.
         </p>
       </header>
 
-      <form className={styles.form} onSubmit={onMarkPaid}>
-        <div>
-          <label className={styles.fieldLabel} htmlFor={numberId}>
-            Número
-          </label>
-          <div className={styles.row}>
-            <input
-              id={numberId}
-              className={styles.input}
-              inputMode="numeric"
-              placeholder="0001 – 2000"
-              value={numberDraft}
-              onChange={(e) => setNumberDraft(e.target.value)}
-              onKeyDown={onNumberKeyDown}
-              disabled={busy}
-              autoComplete="off"
-            />
-            <button
-              type="button"
-              className={styles.ghostBtn}
-              onClick={() => void addNumber()}
-              disabled={busy}
-            >
-              Add
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <span className={styles.fieldLabel}>Selecionados</span>
-          {selected.length === 0 ? (
-            <p className={styles.emptyHint}>Nenhum número ainda.</p>
-          ) : (
-            <div className={styles.selected} aria-live="polite">
-              {selected.map((id, index) => (
-                <button
-                  key={id}
-                  type="button"
-                  className={styles.chip}
-                  style={{ animationDelay: `${index * 40}ms` }}
-                  onClick={() => removeNumber(id)}
-                  aria-label={`Remover ${formatRaffleNumber(id)}`}
-                >
-                  {formatRaffleNumber(id)}
-                  <span className={styles.chipRemove} aria-hidden>
-                    ×
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div>
-          <label className={styles.fieldLabel} htmlFor={nameId}>
-            Nome do comprador
-          </label>
-          <input
-            id={nameId}
-            className={styles.input}
-            style={{ width: '100%' }}
-            value={buyerName}
-            onChange={(e) => setBuyerName(e.target.value)}
-            disabled={busy}
-            required
-            autoComplete="name"
-            placeholder="Quem pagou"
+      <Card className="border-primary/20 bg-card/70 shadow-[0_0_40px_-16px_var(--glow)] backdrop-blur-md animate-[fade-up_0.55s_ease_0.12s_both]">
+        <CardHeader>
+          <CardTitle className="font-heading">Cartela presencial</CardTitle>
+          <CardDescription>
+            Mesma grade do convidado — ideal para quem paga no caixa.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-5">
+          <BingoBoard
+            cells={board}
+            selected={selected}
+            loading={boardLoading}
+            disabled={pending}
+            onToggle={toggleNumber}
           />
-        </div>
 
-        {error ? (
-          <p className={styles.error} role="alert">
-            {error}
-          </p>
-        ) : null}
-        {success ? (
-          <p className={styles.success} role="status">
-            {success}
-          </p>
-        ) : null}
+          <Separator />
 
-        <button
-          type="submit"
-          className={styles.cta}
-          disabled={busy || selected.length === 0}
-        >
-          {pending ? 'Registrando…' : 'Marcar como pago'}
-        </button>
-      </form>
+          <form
+            id="padrinho-mark-paid"
+            className="flex flex-col gap-5"
+            onSubmit={onMarkPaid}
+          >
+            <FieldGroup>
+              <Field
+                data-invalid={
+                  Boolean(error && !buyerName.trim()) || undefined
+                }
+              >
+                <FieldLabel htmlFor={nameId}>Nome do comprador</FieldLabel>
+                <Input
+                  id={nameId}
+                  value={buyerName}
+                  onChange={(e) => setBuyerName(e.target.value)}
+                  disabled={pending}
+                  required
+                  autoComplete="name"
+                  placeholder="Quem pagou"
+                  aria-invalid={
+                    Boolean(error && !buyerName.trim()) || undefined
+                  }
+                />
+              </Field>
+            </FieldGroup>
+
+            <div className="flex items-end justify-between gap-3">
+              <div className="flex flex-col gap-1">
+                <span className="font-mono text-xs tracking-[0.16em] text-muted-foreground uppercase">
+                  Selecionados
+                </span>
+                <span className="font-mono text-sm text-foreground">
+                  {selected.length === 0
+                    ? 'Nenhum'
+                    : `${selected.length} · ${selected
+                        .slice(0, 8)
+                        .map(formatRaffleNumber)
+                        .join(' ')}${selected.length > 8 ? '…' : ''}`}
+                </span>
+              </div>
+            </div>
+
+            {error ? (
+              <Alert variant="destructive">
+                <AlertTitle>Atenção</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            ) : null}
+          </form>
+        </CardContent>
+        <CardFooter>
+          <Button
+            type="submit"
+            form="padrinho-mark-paid"
+            size="lg"
+            className="h-11 w-full font-heading tracking-wide uppercase"
+            disabled={pending || selected.length === 0}
+          >
+            {pending ? (
+              <Spinner data-icon="inline-start" />
+            ) : (
+              <CheckIcon data-icon="inline-start" />
+            )}
+            {pending ? 'Registrando…' : 'Marcar como pago'}
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

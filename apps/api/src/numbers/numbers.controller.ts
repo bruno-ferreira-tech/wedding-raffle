@@ -5,6 +5,11 @@ import { NumbersService } from './numbers.service';
 export class NumbersController {
   constructor(private readonly numbers: NumbersService) {}
 
+  @Get('board')
+  board() {
+    return this.numbers.board();
+  }
+
   @Get('check')
   check(@Query('ids') ids: string | undefined) {
     return this.numbers.check(ids);

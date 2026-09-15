@@ -7,8 +7,12 @@ async function bootstrap() {
   // rawBody required for Stripe webhook signature verification
   const app = await NestFactory.create(AppModule, { rawBody: true });
   app.use(cookieParser());
-  const webOrigin = process.env.WEB_ORIGIN ?? 'http://localhost:3000';
-  app.enableCors({ origin: webOrigin, credentials: true });
-  await app.listen(process.env.PORT ?? 3001);
+  const webOriginEnv = process.env.WEB_ORIGIN ?? 'http://localhost:3000';
+  const origins = webOriginEnv.includes(',')
+    ? webOriginEnv.split(',').map((o) => o.trim())
+    : webOriginEnv;
+  app.enableCors({ origin: origins, credentials: true });
+  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
+  await app.listen(port, '0.0.0.0');
 }
 void bootstrap();

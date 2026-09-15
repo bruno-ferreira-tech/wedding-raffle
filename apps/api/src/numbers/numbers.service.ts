@@ -3,7 +3,7 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { inArray } from 'drizzle-orm';
+import { asc, inArray } from 'drizzle-orm';
 import { DB, type Db } from '../db/db.module';
 import { raffleNumbers } from '../db/schema';
 import { parseCheckIds } from './parse-check-ids';
@@ -13,9 +13,29 @@ export type NumberCheckResult = {
   status: string;
 };
 
+export type NumberBoardCell = {
+  id: number;
+  status: 'disponivel' | 'reservado' | 'pago';
+};
+
 @Injectable()
 export class NumbersService {
   constructor(@Inject(DB) private readonly db: Db) {}
+
+  async board(): Promise<NumberBoardCell[]> {
+    const rows = await this.db
+      .select({
+        id: raffleNumbers.id,
+        status: raffleNumbers.status,
+      })
+      .from(raffleNumbers)
+      .orderBy(asc(raffleNumbers.id));
+
+    return rows.map((r) => ({
+      id: r.id,
+      status: r.status,
+    }));
+  }
 
   async check(idsQuery: string | undefined): Promise<NumberCheckResult[]> {
     let ids: number[];

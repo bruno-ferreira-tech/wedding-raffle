@@ -34,6 +34,18 @@ describe('parseRealtimeEvent', () => {
     });
   });
 
+  it('parses order.reserved', () => {
+    expect(
+      parseRealtimeEvent(
+        JSON.stringify({ type: 'order.reserved', orderId: 3, numberIds: [7, 8] }),
+      ),
+    ).toEqual({
+      type: 'order.reserved',
+      orderId: 3,
+      numberIds: [7, 8],
+    });
+  });
+
   it('returns null for garbage', () => {
     expect(parseRealtimeEvent('not-json')).toBeNull();
     expect(parseRealtimeEvent('{"type":"unknown"}')).toBeNull();

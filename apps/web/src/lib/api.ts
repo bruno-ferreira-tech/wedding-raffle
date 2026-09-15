@@ -34,6 +34,13 @@ export type NumberCheck = {
   status: string;
 };
 
+export type NumberBoardStatus = 'disponivel' | 'reservado' | 'pago';
+
+export type NumberBoardCell = {
+  id: number;
+  status: NumberBoardStatus;
+};
+
 export type OrderStatusValue =
   | 'pending'
   | 'paid'
@@ -126,6 +133,10 @@ export function fetchState(): Promise<StateSnapshot> {
 export function checkNumbers(ids: number[]): Promise<NumberCheck[]> {
   const qs = ids.join(',');
   return apiFetch<NumberCheck[]>(`/numbers/check?ids=${encodeURIComponent(qs)}`);
+}
+
+export function fetchNumberBoard(): Promise<NumberBoardCell[]> {
+  return apiFetch<NumberBoardCell[]>('/numbers/board');
 }
 
 export function createOrder(input: {

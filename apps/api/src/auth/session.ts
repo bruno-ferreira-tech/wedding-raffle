@@ -57,12 +57,21 @@ export function verifySessionCookie(cookie: string | undefined): SessionRole | n
 
 export function sessionCookieOptions(): {
   httpOnly: true;
-  sameSite: 'lax';
+  sameSite: 'lax' | 'none' | 'strict';
+  secure: boolean;
   path: '/';
+  maxAge: number;
 } {
+  const isProd = process.env.NODE_ENV === 'production';
+  const forceSecure = process.env.COOKIE_SECURE === 'true';
+  const sameSiteEnv =
+    (process.env.COOKIE_SAME_SITE as 'lax' | 'none' | 'strict') || 'lax';
+
   return {
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: sameSiteEnv,
+    secure: forceSecure || (isProd && sameSiteEnv === 'none'),
     path: '/',
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   };
 }

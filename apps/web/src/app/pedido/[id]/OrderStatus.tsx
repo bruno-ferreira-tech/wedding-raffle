@@ -1,7 +1,23 @@
 'use client';
 
 import Link from 'next/link';
+import { CheckIcon, CopyIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Spinner } from '@/components/ui/spinner';
 import {
   ApiError,
   confirmFakePayment,
@@ -11,7 +27,6 @@ import {
   type OrderStatusValue,
 } from '@/lib/api';
 import { formatBRL, formatRaffleNumber } from '@/lib/money';
-import styles from './pedido.module.css';
 
 type Props = {
   orderId: number;
@@ -42,15 +57,17 @@ function statusLabel(status: OrderStatusValue): string {
   }
 }
 
-function statusClass(status: OrderStatusValue): string {
+function statusVariant(
+  status: OrderStatusValue,
+): 'default' | 'secondary' | 'destructive' | 'outline' {
   switch (status) {
     case 'paid':
-      return styles.statusPaid;
+      return 'default';
+    case 'pending':
+      return 'outline';
     case 'expired':
     case 'cancelled':
-      return styles.statusExpired;
-    case 'pending':
-      return styles.statusPending;
+      return 'destructive';
     default: {
       const _exhaustive: never = status;
       return _exhaustive;
@@ -104,6 +121,7 @@ export function OrderStatus({ orderId }: Props) {
     try {
       await navigator.clipboard.writeText(order.pixCopyPaste);
       setCopied(true);
+      toast.success('PIX copiado');
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       setError('Não foi possível copiar o código PIX.');
@@ -116,6 +134,7 @@ export function OrderStatus({ orderId }: Props) {
     try {
       const next = await confirmFakePayment(orderId);
       setOrder(next);
+      toast.success('Pagamento confirmado');
     } catch (err) {
       const message =
         err instanceof ApiError
@@ -131,21 +150,24 @@ export function OrderStatus({ orderId }: Props) {
 
   if (!order && !error) {
     return (
-      <div className={styles.page}>
-        <p className={styles.loading}>Carregando pedido…</p>
+      <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-4 px-4 py-8">
+        <Skeleton className="h-6 w-40" />
+        <Skeleton className="h-10 w-56" />
+        <Skeleton className="h-40 w-full" />
       </div>
     );
   }
 
   if (!order) {
     return (
-      <div className={styles.page}>
-        <Link href="/" className={styles.brandLink}>
-          Corta-Gravata
-        </Link>
-        <p className={styles.error} role="alert">
-          {error}
-        </p>
+      <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-4 px-4 py-8">
+        <Button variant="link" asChild className="w-fit px-0 font-heading">
+          <Link href="/">Corta-Gravata</Link>
+        </Button>
+        <Alert variant="destructive">
+          <AlertTitle>Erro</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       </div>
     );
   }
@@ -157,94 +179,118 @@ export function OrderStatus({ orderId }: Props) {
     order.status === 'pending' && isFakePaymentProvider(order.pixCopyPaste);
 
   return (
-    <div className={styles.page}>
-      <Link href="/" className={styles.brandLink}>
-        Corta-Gravata
-      </Link>
+    <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
+      <Button variant="link" asChild className="w-fit px-0 font-heading text-primary">
+        <Link href="/">Corta-Gravata</Link>
+      </Button>
 
-      <h1 className={styles.title}>Pedido #{order.id}</h1>
-      <p className={`${styles.status} ${statusClass(order.status)}`}>
-        {statusLabel(order.status)}
-      </p>
+      <div className="flex flex-col gap-3">
+        <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+          Pedido #{order.id}
+        </h1>
+        <Badge variant={statusVariant(order.status)} className="w-fit font-mono uppercase tracking-wider">
+          {statusLabel(order.status)}
+        </Badge>
+      </div>
 
       {order.status === 'paid' ? (
-        <p className={styles.message}>
-          Pagamento confirmado. Obrigado, {order.buyerName}!
-        </p>
+        <Alert>
+          <AlertTitle>Pagamento confirmado</AlertTitle>
+          <AlertDescription>Obrigado, {order.buyerName}!</AlertDescription>
+        </Alert>
       ) : null}
 
       {order.status === 'expired' ? (
-        <p className={styles.message}>
-          Este pedido expirou. Os números voltaram a ficar disponíveis — você
-          pode escolher de novo na página inicial.
-        </p>
+        <Alert variant="destructive">
+          <AlertTitle>Pedido expirado</AlertTitle>
+          <AlertDescription>
+            Os números voltaram a ficar disponíveis — escolha de novo na página inicial.
+          </AlertDescription>
+        </Alert>
       ) : null}
 
       {order.status === 'cancelled' ? (
-        <p className={styles.message}>
-          Este pedido foi cancelado. Tente novamente com outros números.
-        </p>
+        <Alert variant="destructive">
+          <AlertTitle>Pedido cancelado</AlertTitle>
+          <AlertDescription>Tente novamente com outros números.</AlertDescription>
+        </Alert>
       ) : null}
 
-      <section className={styles.section}>
-        <span className={styles.label}>Números</span>
-        <div className={styles.numbers}>
-          {order.numberIds
-            .slice()
-            .sort((a, b) => a - b)
-            .map((id, index) => (
-              <span
-                key={id}
-                className={styles.chip}
-                style={{ animationDelay: `${index * 40}ms` }}
-              >
-                {formatRaffleNumber(id)}
-              </span>
-            ))}
-        </div>
-        <p className={styles.total}>{formatBRL(order.totalCents)}</p>
-      </section>
+      <Card className="border-primary/20 bg-card/70 backdrop-blur-md">
+        <CardHeader>
+          <CardTitle className="font-heading">Números</CardTitle>
+          <CardDescription>{order.buyerName}</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <div className="flex flex-wrap gap-2">
+            {order.numberIds
+              .slice()
+              .sort((a, b) => a - b)
+              .map((id) => (
+                <Badge key={id} variant="secondary" className="font-mono">
+                  {formatRaffleNumber(id)}
+                </Badge>
+              ))}
+          </div>
+          <p className="font-mono text-2xl font-semibold text-primary tabular-nums">
+            {formatBRL(order.totalCents)}
+          </p>
+        </CardContent>
+      </Card>
 
       {order.status === 'pending' ? (
-        <section className={styles.section}>
-          <span className={styles.label}>PIX copia e cola</span>
-          {order.pixCopyPaste ? (
-            <pre className={styles.pixBox}>{order.pixCopyPaste}</pre>
-          ) : (
-            <p className={styles.message}>Aguardando código PIX…</p>
-          )}
-          {order.expiresAt ? (
-            <p className={styles.countdown}>
-              Expira em {formatCountdown(remainingMs)}
-            </p>
-          ) : null}
-          <div className={styles.actions}>
-            <button
+        <Card className="border-primary/20 bg-card/70 backdrop-blur-md">
+          <CardHeader>
+            <CardTitle className="font-heading">PIX copia e cola</CardTitle>
+            <CardDescription>
+              {order.expiresAt
+                ? `Expira em ${formatCountdown(remainingMs)}`
+                : 'Aguardando código'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3">
+            {order.pixCopyPaste ? (
+              <pre className="overflow-x-auto rounded-lg border border-border bg-background/60 p-3 font-mono text-xs leading-relaxed wrap-break-word whitespace-pre-wrap">
+                {order.pixCopyPaste}
+              </pre>
+            ) : (
+              <p className="text-sm text-muted-foreground">Aguardando código PIX…</p>
+            )}
+            <Separator />
+          </CardContent>
+          <CardFooter className="flex flex-wrap gap-2">
+            <Button
               type="button"
-              className={styles.ghostBtn}
+              variant="outline"
               onClick={() => void copyPix()}
               disabled={!order.pixCopyPaste}
             >
+              {copied ? (
+                <CheckIcon data-icon="inline-start" />
+              ) : (
+                <CopyIcon data-icon="inline-start" />
+              )}
               {copied ? 'Copiado' : 'Copiar PIX'}
-            </button>
+            </Button>
             {showFake ? (
-              <button
+              <Button
                 type="button"
-                className={styles.primaryBtn}
                 onClick={() => void onConfirmFake()}
                 disabled={confirming}
               >
+                {confirming ? <Spinner data-icon="inline-start" /> : null}
                 {confirming ? 'Confirmando…' : 'Simular pagamento'}
-              </button>
+              </Button>
             ) : null}
-          </div>
-        </section>
+          </CardFooter>
+        </Card>
       ) : null}
 
       {error ? (
-        <p className={styles.error} role="alert">
-          {error}
-        </p>
+        <Alert variant="destructive">
+          <AlertTitle>Erro</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       ) : null}
     </div>
   );

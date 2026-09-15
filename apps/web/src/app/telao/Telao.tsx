@@ -112,7 +112,9 @@ export function Telao() {
       switch (event.type) {
         case 'connected':
         case 'heartbeat':
+          break;
         case 'order.reserved':
+          void refreshState();
           break;
         case 'sales.updated':
           setState((prev) =>
@@ -163,6 +165,7 @@ export function Telao() {
     <div className={styles.stage}>
       <div className={styles.vignette} aria-hidden />
       <div className={styles.grain} aria-hidden />
+      <div className={styles.scanline} aria-hidden />
 
       <header className={styles.header}>
         <h1 className={styles.brand}>Corta-Gravata</h1>
@@ -171,13 +174,11 @@ export function Telao() {
             className={live ? styles.liveDotOn : styles.liveDotOff}
             aria-hidden
           />
-          {live ? 'Ao vivo' : 'Reconectando…'}
+          {live ? 'Ao vivo · sync' : 'Reconectando…'}
           {state ? (
             <>
               {' · '}
-              {state.salesStatus === 'open'
-                ? 'Vendas abertas'
-                : 'Vendas encerradas'}
+              {state.salesStatus === 'open' ? 'Vendas abertas' : 'Vendas travadas'}
             </>
           ) : null}
         </p>
