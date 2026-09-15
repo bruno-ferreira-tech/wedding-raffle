@@ -33,6 +33,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
 import {
   ApiError,
+  createDashboardEvent,
   fetchDashboardEvents,
   fetchEventBalance,
   fetchMe,
@@ -68,7 +69,23 @@ export default function DashboardOverviewPage() {
       const meRes = await fetchMe();
       setUser(meRes.user);
 
-      const eventsList = await fetchDashboardEvents();
+      let eventsList = await fetchDashboardEvents();
+      if (eventsList.length === 0) {
+        try {
+          await createDashboardEvent({
+            coupleNames: meRes.user.name,
+            title: `Casamento ${meRes.user.name}`,
+            ticketPriceCents: 2000,
+            totalNumbers: 1000,
+            themeId: 'champagne-navy',
+            padrinhoPin: '1234',
+          });
+          eventsList = await fetchDashboardEvents();
+        } catch (createErr) {
+          console.error('Failed to auto-create event:', createErr);
+        }
+      }
+
       if (eventsList.length > 0) {
         const currentEvent = eventsList[0];
         setEvent(currentEvent);
@@ -110,6 +127,10 @@ export default function DashboardOverviewPage() {
   }
 
   function copyToClipboard(text: string, label: string) {
+    if (!text) {
+      toast.error('O link ainda está sendo carregado.');
+      return;
+    }
     void navigator.clipboard.writeText(text);
     setCopiedLink(label);
     toast.success(`${label} copiado!`);
@@ -325,6 +346,7 @@ export default function DashboardOverviewPage() {
                     variant="ghost"
                     size="icon"
                     className="size-8"
+                    disabled={!guestUrl}
                     onClick={() => copyToClipboard(guestUrl, 'Link dos Convidados')}
                   >
                     {copiedLink === 'Link dos Convidados' ? (
@@ -335,14 +357,22 @@ export default function DashboardOverviewPage() {
                   </Button>
                 </div>
                 <CardTitle className="font-heading text-lg mt-2">Página da Rifa</CardTitle>
-                <CardDescription className="text-xs line-clamp-1">{guestUrl}</CardDescription>
+                <CardDescription className="text-xs line-clamp-1">
+                  {guestUrl || 'Gerando link da rifa...'}
+                </CardDescription>
               </CardHeader>
               <CardFooter className="pt-0">
-                <Button asChild variant="outline" size="sm" className="w-full">
-                  <a href={guestUrl} target="_blank" rel="noopener noreferrer">
-                    Abrir Rifa <ExternalLinkIcon className="size-3.5 ml-1.5" />
-                  </a>
-                </Button>
+                {guestUrl ? (
+                  <Button asChild variant="outline" size="sm" className="w-full">
+                    <a href={guestUrl} target="_blank" rel="noopener noreferrer">
+                      Abrir Rifa <ExternalLinkIcon className="size-3.5 ml-1.5" />
+                    </a>
+                  </Button>
+                ) : (
+                  <Button variant="outline" size="sm" className="w-full" disabled>
+                    <Spinner className="size-3.5 mr-1.5" /> Carregando...
+                  </Button>
+                )}
               </CardFooter>
             </Card>
 
@@ -357,6 +387,7 @@ export default function DashboardOverviewPage() {
                     variant="ghost"
                     size="icon"
                     className="size-8"
+                    disabled={!telaoUrl}
                     onClick={() => copyToClipboard(telaoUrl, 'Link do Telão')}
                   >
                     {copiedLink === 'Link do Telão' ? (
@@ -367,14 +398,22 @@ export default function DashboardOverviewPage() {
                   </Button>
                 </div>
                 <CardTitle className="font-heading text-lg mt-2">Telão ao Vivo</CardTitle>
-                <CardDescription className="text-xs line-clamp-1">{telaoUrl}</CardDescription>
+                <CardDescription className="text-xs line-clamp-1">
+                  {telaoUrl || 'Gerando link do telão...'}
+                </CardDescription>
               </CardHeader>
               <CardFooter className="pt-0">
-                <Button asChild variant="outline" size="sm" className="w-full">
-                  <a href={telaoUrl} target="_blank" rel="noopener noreferrer">
-                    Abrir Telão <TvIcon className="size-3.5 ml-1.5" />
-                  </a>
-                </Button>
+                {telaoUrl ? (
+                  <Button asChild variant="outline" size="sm" className="w-full">
+                    <a href={telaoUrl} target="_blank" rel="noopener noreferrer">
+                      Abrir Telão <TvIcon className="size-3.5 ml-1.5" />
+                    </a>
+                  </Button>
+                ) : (
+                  <Button variant="outline" size="sm" className="w-full" disabled>
+                    <Spinner className="size-3.5 mr-1.5" /> Carregando...
+                  </Button>
+                )}
               </CardFooter>
             </Card>
 
@@ -389,6 +428,7 @@ export default function DashboardOverviewPage() {
                     variant="ghost"
                     size="icon"
                     className="size-8"
+                    disabled={!padrinhoUrl}
                     onClick={() => copyToClipboard(padrinhoUrl, 'Link dos Padrinhos')}
                   >
                     {copiedLink === 'Link dos Padrinhos' ? (
@@ -399,14 +439,22 @@ export default function DashboardOverviewPage() {
                   </Button>
                 </div>
                 <CardTitle className="font-heading text-lg mt-2">Venda Assistida</CardTitle>
-                <CardDescription className="text-xs line-clamp-1">{padrinhoUrl}</CardDescription>
+                <CardDescription className="text-xs line-clamp-1">
+                  {padrinhoUrl || 'Gerando link dos padrinhos...'}
+                </CardDescription>
               </CardHeader>
               <CardFooter className="pt-0">
-                <Button asChild variant="outline" size="sm" className="w-full">
-                  <a href={padrinhoUrl} target="_blank" rel="noopener noreferrer">
-                    Abrir Console <ShieldCheckIcon className="size-3.5 ml-1.5" />
-                  </a>
-                </Button>
+                {padrinhoUrl ? (
+                  <Button asChild variant="outline" size="sm" className="w-full">
+                    <a href={padrinhoUrl} target="_blank" rel="noopener noreferrer">
+                      Abrir Console <ShieldCheckIcon className="size-3.5 ml-1.5" />
+                    </a>
+                  </Button>
+                ) : (
+                  <Button variant="outline" size="sm" className="w-full" disabled>
+                    <Spinner className="size-3.5 mr-1.5" /> Carregando...
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           </div>
