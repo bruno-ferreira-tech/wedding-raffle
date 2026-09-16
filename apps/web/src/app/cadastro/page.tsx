@@ -79,8 +79,14 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md space-y-6">
+    <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-x-hidden bg-background px-4 py-12 text-foreground transition-colors duration-500">
+      {/* Ambient background glow */}
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-32 left-1/2 h-96 w-[36rem] -translate-x-1/2 rounded-full bg-primary/10 blur-[140px]" />
+        <div className="absolute bottom-10 -left-20 h-80 w-80 rounded-full bg-primary/5 blur-[120px]" />
+      </div>
+
+      <div className="w-full max-w-md space-y-6 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_both]">
         <div className="text-center space-y-2">
           <Link href="/" className="inline-block font-heading text-3xl font-bold tracking-tight text-primary">
             Corta-Gravata
@@ -90,16 +96,20 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <Card className="border-primary/20 bg-card/80 shadow-2xl backdrop-blur-md">
-          <CardHeader>
-            <CardTitle className="font-heading text-xl">Criar Rifa dos Noivos</CardTitle>
-            <CardDescription>Sem mensalidade, sem taxa fixa de adesão</CardDescription>
+        <Card className="apple-glass rounded-3xl border-white/15 shadow-2xl p-4 sm:p-6">
+          <CardHeader className="text-center pb-4">
+            <CardTitle className="font-heading text-2xl font-bold">Criar Rifa dos Noivos</CardTitle>
+            <CardDescription className="text-xs text-muted-foreground mt-0.5">
+              Sem mensalidade, sem taxa fixa de adesão
+            </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-2">
             <form id="register-form" className="space-y-4" onSubmit={onSubmit}>
               <FieldGroup>
                 <Field data-invalid={Boolean(error && !name.trim()) || undefined}>
-                  <FieldLabel htmlFor="name">Nome dos Noivos</FieldLabel>
+                  <FieldLabel htmlFor="name" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Nome dos Noivos
+                  </FieldLabel>
                   <Input
                     id="name"
                     required
@@ -107,11 +117,14 @@ export default function RegisterPage() {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Ex: Marina & Bruno"
                     disabled={pending}
+                    className="h-12 rounded-xl bg-black/30 border-white/15 px-4 text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                   />
                 </Field>
 
                 <Field data-invalid={Boolean(error && !email.trim()) || undefined}>
-                  <FieldLabel htmlFor="email">E-mail</FieldLabel>
+                  <FieldLabel htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    E-mail
+                  </FieldLabel>
                   <Input
                     id="email"
                     type="email"
@@ -121,11 +134,14 @@ export default function RegisterPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="noivos@exemplo.com"
                     disabled={pending}
+                    className="h-12 rounded-xl bg-black/30 border-white/15 px-4 text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                   />
                 </Field>
 
                 <Field data-invalid={Boolean(error && password.length < 6) || undefined}>
-                  <FieldLabel htmlFor="password">Senha de Acesso</FieldLabel>
+                  <FieldLabel htmlFor="password" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Senha de Acesso
+                  </FieldLabel>
                   <Input
                     id="password"
                     type="password"
@@ -133,13 +149,16 @@ export default function RegisterPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Mínimo 6 dígitos"
+                    placeholder="Mínimo 6 caracteres"
                     disabled={pending}
+                    className="h-12 rounded-xl bg-black/30 border-white/15 px-4 text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                   />
                 </Field>
 
                 <Field>
-                  <FieldLabel htmlFor="phone">WhatsApp (opcional)</FieldLabel>
+                  <FieldLabel htmlFor="phone" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    WhatsApp (opcional)
+                  </FieldLabel>
                   <Input
                     id="phone"
                     type="tel"
@@ -147,24 +166,25 @@ export default function RegisterPage() {
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="(11) 99999-9999"
                     disabled={pending}
+                    className="h-12 rounded-xl bg-black/30 border-white/15 px-4 text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                   />
                 </Field>
               </FieldGroup>
 
               {error ? (
-                <Alert variant="destructive">
+                <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
                   <AlertTitle>Atenção</AlertTitle>
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               ) : null}
             </form>
           </CardContent>
-          <CardFooter className="flex flex-col gap-3">
+          <CardFooter className="flex flex-col gap-4 pt-2">
             <Button
               type="submit"
               form="register-form"
               size="lg"
-              className="w-full font-heading uppercase tracking-wider"
+              className="apple-pressable h-12 w-full rounded-2xl font-heading text-xs font-semibold uppercase tracking-wider bg-primary text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50"
               disabled={pending}
             >
               {pending ? <Spinner data-icon="inline-start" /> : null}
@@ -172,7 +192,7 @@ export default function RegisterPage() {
             </Button>
             <p className="text-center text-xs text-muted-foreground">
               Já tem uma conta?{' '}
-              <Link href="/login" className="font-semibold text-primary underline underline-offset-4">
+              <Link href="/login" className="font-semibold text-primary underline underline-offset-4 hover:text-primary/80 transition-colors">
                 Entrar no painel
               </Link>
             </p>

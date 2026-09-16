@@ -13,7 +13,6 @@ import {
 import { useCallback, useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -196,11 +195,17 @@ export default function ConfigureEventPage() {
   }
 
   return (
-    <div className="min-h-dvh w-full bg-background text-foreground">
-      <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-md">
+    <div className="relative min-h-dvh w-full overflow-x-hidden bg-background text-foreground transition-colors duration-500">
+      {/* Ambient background glow */}
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-40 left-1/3 h-[32rem] w-[32rem] rounded-full bg-primary/10 blur-[140px]" />
+        <div className="absolute top-1/2 -right-40 h-96 w-96 rounded-full bg-primary/5 blur-[120px]" />
+      </div>
+
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-background/70 backdrop-blur-2xl">
         <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <Button asChild variant="ghost" size="icon" className="size-8">
+            <Button asChild variant="ghost" size="icon" className="apple-pressable size-8 rounded-full border border-white/10 hover:bg-white/10">
               <Link href="/dashboard">
                 <ArrowLeftIcon className="size-4" />
               </Link>
@@ -213,9 +218,9 @@ export default function ConfigureEventPage() {
             form="config-form"
             size="sm"
             disabled={pending}
-            className="font-heading uppercase tracking-wider"
+            className="apple-pressable h-9 px-4 rounded-full font-heading text-xs font-semibold uppercase tracking-wider bg-primary text-primary-foreground shadow-lg shadow-primary/20"
           >
-            {pending ? <Spinner data-icon="inline-start" /> : <SaveIcon className="size-4 mr-1.5" />}
+            {pending ? <Spinner data-icon="inline-start" /> : <SaveIcon className="size-3.5 mr-1.5" />}
             {pending ? 'Salvando…' : 'Salvar Alterações'}
           </Button>
         </div>
@@ -223,26 +228,28 @@ export default function ConfigureEventPage() {
 
       <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
         {error ? (
-          <Alert variant="destructive" className="mb-6">
+          <Alert variant="destructive" className="mb-6 rounded-2xl border-destructive/30 bg-destructive/10">
             <AlertTitle>Erro</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         ) : null}
 
-        <form id="config-form" onSubmit={onSubmit} className="space-y-8">
+        <form id="config-form" onSubmit={onSubmit} className="space-y-8 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_both]">
           {/* Section 1: Informações Gerais */}
-          <Card className="border-border/60 bg-card/70 backdrop-blur-md">
-            <CardHeader>
-              <CardTitle className="font-heading text-xl">Informações Gerais</CardTitle>
-              <CardDescription>
-                Personalize os dados que aparecem para seus convidados.
+          <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-6 sm:p-7">
+            <CardHeader className="p-0 pb-5">
+              <CardTitle className="font-heading text-xl font-bold">Informações Gerais</CardTitle>
+              <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                Personalize os dados de apresentação que aparecem na rifa e no telão.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="p-0 space-y-4">
               <FieldGroup>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field>
-                    <FieldLabel htmlFor="coupleNames">Nome dos Noivos *</FieldLabel>
+                    <FieldLabel htmlFor="coupleNames" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Nome dos Noivos *
+                    </FieldLabel>
                     <Input
                       id="coupleNames"
                       required
@@ -250,40 +257,50 @@ export default function ConfigureEventPage() {
                       onChange={(e) => setCoupleNames(e.target.value)}
                       placeholder="Ex: Marina & Bruno"
                       disabled={pending}
+                      className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                     />
                   </Field>
 
                   <Field>
-                    <FieldLabel htmlFor="eventDate">Data do Casamento</FieldLabel>
+                    <FieldLabel htmlFor="eventDate" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Data do Casamento
+                    </FieldLabel>
                     <Input
                       id="eventDate"
                       type="date"
                       value={eventDate}
                       onChange={(e) => setEventDate(e.target.value)}
                       disabled={pending}
+                      className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                     />
                   </Field>
                 </div>
 
                 <Field>
-                  <FieldLabel htmlFor="title">Título da Rifa</FieldLabel>
+                  <FieldLabel htmlFor="title" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Título da Rifa
+                  </FieldLabel>
                   <Input
                     id="title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Ex: Corta-Gravata dos Noivos Marina & Bruno"
                     disabled={pending}
+                    className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                   />
                 </Field>
 
                 <Field>
-                  <FieldLabel htmlFor="welcomeMessage">Mensagem de Boas-Vindas</FieldLabel>
+                  <FieldLabel htmlFor="welcomeMessage" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Mensagem de Boas-Vindas
+                  </FieldLabel>
                   <Input
                     id="welcomeMessage"
                     value={welcomeMessage}
                     onChange={(e) => setWelcomeMessage(e.target.value)}
                     placeholder="Ex: Ajude os noivos na lua de mel e concorra a prêmios incríveis!"
                     disabled={pending}
+                    className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                   />
                 </Field>
               </FieldGroup>
@@ -291,28 +308,32 @@ export default function ConfigureEventPage() {
           </Card>
 
           {/* Section 2: Temas Visuais */}
-          <Card className="border-border/60 bg-card/70 backdrop-blur-md">
-            <CardHeader>
+          <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-6 sm:p-7">
+            <CardHeader className="p-0 pb-5">
               <div className="flex items-center gap-2">
-                <PaletteIcon className="size-5 text-primary" />
-                <CardTitle className="font-heading text-xl">Tema Visual da Festa</CardTitle>
+                <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary">
+                  <PaletteIcon className="size-4" />
+                </div>
+                <div>
+                  <CardTitle className="font-heading text-xl font-bold">Tema Visual da Festa</CardTitle>
+                  <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                    Selecione a paleta cromática que combina com a decoração do seu casamento.
+                  </CardDescription>
+                </div>
               </div>
-              <CardDescription>
-                Selecione a paleta cromática sofisticada que combina com a decoração do seu casamento.
-              </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <CardContent className="p-0">
+              <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
                 {THEMES.map((theme) => {
                   const isSelected = themeId === theme.id;
                   return (
                     <div
                       key={theme.id}
                       onClick={() => setThemeId(theme.id)}
-                      className={`cursor-pointer rounded-xl border p-4 transition-all ${
+                      className={`apple-pressable cursor-pointer rounded-2xl border p-4 transition-all duration-300 ${
                         isSelected
-                          ? 'border-primary ring-2 ring-primary/40 bg-primary/5'
-                          : 'border-border/60 hover:border-border hover:bg-muted/10'
+                          ? 'border-primary ring-2 ring-primary/40 bg-primary/10 shadow-lg shadow-primary/10'
+                          : 'border-white/10 hover:border-white/20 bg-black/20 hover:bg-white/5'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-3">
@@ -320,10 +341,14 @@ export default function ConfigureEventPage() {
                           <p className="font-semibold text-sm">{theme.name}</p>
                           <p className="text-xs text-muted-foreground">{theme.subtitle}</p>
                         </div>
-                        {isSelected ? <CheckIcon className="size-5 text-primary" /> : null}
+                        {isSelected ? (
+                          <div className="flex size-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                            <CheckIcon className="size-3.5" />
+                          </div>
+                        ) : null}
                       </div>
 
-                      <div className="flex h-8 w-full overflow-hidden rounded-md border border-border/40">
+                      <div className="flex h-7 w-full overflow-hidden rounded-xl border border-white/10">
                         <div style={{ backgroundColor: theme.bg }} className="flex-1" />
                         <div style={{ backgroundColor: theme.primary }} className="w-1/3" />
                       </div>
@@ -335,41 +360,46 @@ export default function ConfigureEventPage() {
           </Card>
 
           {/* Section 3: Regras da Rifa e Valores */}
-          <Card className="border-border/60 bg-card/70 backdrop-blur-md">
-            <CardHeader>
-              <CardTitle className="font-heading text-xl">Regras e Valores</CardTitle>
-              <CardDescription>
-                Defina o preço de cada número e a quantidade da cartela.
+          <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-6 sm:p-7">
+            <CardHeader className="p-0 pb-5">
+              <CardTitle className="font-heading text-xl font-bold">Regras e Valores</CardTitle>
+              <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                Defina o preço de cada número e a chave de segurança dos padrinhos.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="p-0 space-y-4">
               <FieldGroup>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field>
-                    <FieldLabel htmlFor="ticketPrice">Valor por Número (R$)</FieldLabel>
+                    <FieldLabel htmlFor="ticketPrice" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Valor por Número (R$)
+                    </FieldLabel>
                     <Input
                       id="ticketPrice"
                       value={ticketPriceReais}
                       onChange={(e) => setTicketPriceReais(e.target.value)}
                       placeholder="20.00"
                       disabled={pending}
+                      className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 apple-numeral font-semibold"
                     />
                   </Field>
 
                   <Field>
-                    <FieldLabel htmlFor="totalNumbers">Total de Números na Cartela (fixo)</FieldLabel>
+                    <FieldLabel htmlFor="totalNumbers" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Total de Números na Cartela
+                    </FieldLabel>
                     <Input
                       id="totalNumbers"
                       type="number"
                       value={totalNumbers}
                       disabled
-                      className="bg-muted/40 cursor-not-allowed"
+                      className="h-11 rounded-xl bg-white/5 border-white/10 opacity-75 cursor-not-allowed apple-numeral"
                     />
                   </Field>
                 </div>
 
                 <Field>
-                  <FieldLabel htmlFor="padrinhoPin">
+                  <FieldLabel htmlFor="padrinhoPin" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     PIN dos Padrinhos (4 dígitos)
                   </FieldLabel>
                   <Input
@@ -379,10 +409,10 @@ export default function ConfigureEventPage() {
                     onChange={(e) => setPadrinhoPin(e.target.value)}
                     placeholder="1234"
                     disabled={pending}
-                    className="font-mono tracking-widest sm:max-w-xs"
+                    className="h-11 font-mono tracking-widest sm:max-w-xs rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                   />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Código de segurança que os padrinhos usarão para registrar vendas em dinheiro vivo pelo celular.
+                  <p className="text-xs text-muted-foreground mt-1.5">
+                    Código que os padrinhos usarão para registrar vendas em dinheiro vivo pelo smartphone.
                   </p>
                 </Field>
               </FieldGroup>
@@ -390,37 +420,44 @@ export default function ConfigureEventPage() {
           </Card>
 
           {/* Section 4: Cadastro de Prêmios */}
-          <Card className="border-border/60 bg-card/70 backdrop-blur-md">
-            <CardHeader className="flex flex-row items-center justify-between">
+          <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-6 sm:p-7">
+            <CardHeader className="p-0 pb-5 flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="font-heading text-xl">Prêmios do Sorteio</CardTitle>
-                <CardDescription>
-                  Adicione os prêmios que serão sorteados no final da festa.
+                <CardTitle className="font-heading text-xl font-bold">Prêmios do Sorteio</CardTitle>
+                <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                  Adicione os prêmios que serão sorteados ao vivo na festa.
                 </CardDescription>
               </div>
-              <Button type="button" variant="outline" size="sm" onClick={addPrize}>
-                <PlusIcon className="size-4 mr-1" />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addPrize}
+                className="apple-pressable rounded-full border-white/15 bg-white/5 text-xs font-semibold"
+              >
+                <PlusIcon className="size-3.5 mr-1" />
                 Adicionar Prêmio
               </Button>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="p-0 space-y-3">
               {prizes.map((prize, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <Badge variant="secondary" className="font-mono text-xs w-20 justify-center">
+                <div key={idx} className="flex items-center gap-2.5 bg-black/20 p-2 rounded-2xl border border-white/10">
+                  <span className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 font-mono text-xs font-semibold text-primary px-3 py-2 min-w-[5rem]">
                     #{idx + 1} Lugar
-                  </Badge>
+                  </span>
                   <Input
                     value={prize.label}
                     onChange={(e) => updatePrizeLabel(idx, e.target.value)}
                     placeholder={`Ex: Whisky 12 anos, Caixa de Som JBL, Airfryer…`}
                     disabled={pending}
+                    className="h-10 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                   />
                   {prizes.length > 1 ? (
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="text-destructive hover:bg-destructive/10"
+                      className="apple-pressable size-9 rounded-xl text-destructive hover:bg-destructive/10"
                       onClick={() => removePrize(idx)}
                     >
                       <TrashIcon className="size-4" />
@@ -432,23 +469,23 @@ export default function ConfigureEventPage() {
           </Card>
 
           {/* Section 5: Chave PIX para Recebimento */}
-          <Card className="border-border/60 bg-card/70 backdrop-blur-md">
-            <CardHeader>
-              <CardTitle className="font-heading text-xl">Chave PIX dos Noivos</CardTitle>
-              <CardDescription>
-                Chave cadastrada para transferências automáticas de saldo.
+          <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-6 sm:p-7">
+            <CardHeader className="p-0 pb-5">
+              <CardTitle className="font-heading text-xl font-bold">Chave PIX dos Noivos</CardTitle>
+              <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                Chave cadastrada para transferências automáticas dos seus saques.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="p-0 space-y-4">
               <FieldGroup>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <Field className="sm:col-span-1">
-                    <FieldLabel>Tipo da Chave</FieldLabel>
+                    <FieldLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tipo da Chave</FieldLabel>
                     <select
                       aria-label="Tipo de Chave PIX"
                       value={pixKeyType}
                       onChange={(e) => setPixKeyType(e.target.value)}
-                      className="h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none"
+                      className="h-11 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-1 text-sm shadow-xs transition-all focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 outline-none"
                     >
                       <option value="cpf">CPF</option>
                       <option value="cnpj">CNPJ</option>
@@ -459,23 +496,24 @@ export default function ConfigureEventPage() {
                   </Field>
 
                   <Field className="sm:col-span-2">
-                    <FieldLabel htmlFor="pixKey">Chave PIX</FieldLabel>
+                    <FieldLabel htmlFor="pixKey" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Chave PIX</FieldLabel>
                     <Input
                       id="pixKey"
                       value={pixKey}
                       onChange={(e) => setPixKey(e.target.value)}
                       placeholder="Insira sua chave PIX principal"
                       disabled={pending}
+                      className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                     />
                   </Field>
                 </div>
               </FieldGroup>
             </CardContent>
-            <CardFooter className="flex justify-end">
+            <CardFooter className="p-0 pt-6 flex justify-end">
               <Button
                 type="submit"
                 disabled={pending}
-                className="font-heading uppercase tracking-wider"
+                className="apple-pressable h-12 px-8 rounded-2xl font-heading text-xs font-semibold uppercase tracking-wider bg-primary text-primary-foreground shadow-lg shadow-primary/20"
               >
                 {pending ? <Spinner data-icon="inline-start" /> : <SaveIcon className="size-4 mr-1.5" />}
                 {pending ? 'Salvando…' : 'Salvar Todas as Configurações'}

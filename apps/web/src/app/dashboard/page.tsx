@@ -16,7 +16,6 @@ import {
 import { useCallback, useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -191,24 +190,36 @@ export default function DashboardOverviewPage() {
   const padrinhoUrl = event ? `${origin}/e/${event.slug}/padrinho` : '';
 
   return (
-    <div className="min-h-dvh w-full bg-background text-foreground">
-      <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-md">
+    <div className="relative min-h-dvh w-full overflow-x-hidden bg-background text-foreground transition-colors duration-500">
+      {/* Ambient background glow */}
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-40 left-1/4 h-[32rem] w-[32rem] rounded-full bg-primary/10 blur-[140px]" />
+        <div className="absolute top-1/3 -right-40 h-96 w-96 rounded-full bg-primary/5 blur-[120px]" />
+        <div className="absolute bottom-10 left-10 h-80 w-80 rounded-full bg-primary/5 blur-[100px]" />
+      </div>
+
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-background/70 backdrop-blur-2xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-8">
           <div className="flex items-center gap-3">
             <Link href="/" className="font-heading text-xl font-bold tracking-tight text-primary">
               Corta-Gravata
             </Link>
-            <Badge variant="outline" className="font-mono text-xs hidden sm:inline-flex">
+            <span className="hidden sm:inline-flex items-center rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-muted-foreground uppercase">
               Painel dos Noivos
-            </Badge>
+            </span>
           </div>
 
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium hidden md:inline text-muted-foreground">
-              Olá, {user?.name}
+              Olá, <strong className="text-foreground">{user?.name}</strong>
             </span>
-            <Button variant="ghost" size="sm" onClick={onLogout} className="text-muted-foreground">
-              <LogOutIcon className="size-4 mr-1.5" />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onLogout}
+              className="apple-pressable rounded-full border-white/15 bg-white/5 text-xs text-muted-foreground hover:text-foreground"
+            >
+              <LogOutIcon className="size-3.5 mr-1.5" />
               Sair
             </Button>
           </div>
@@ -217,33 +228,38 @@ export default function DashboardOverviewPage() {
 
       <main className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 sm:px-8">
         {error ? (
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
             <AlertTitle>Atenção</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         ) : null}
 
         {/* Overview Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_both]">
           <div>
+            <span className="font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Visão Geral
+            </span>
             <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-              {event?.coupleNames ? `Casamento ${event.coupleNames}` : 'Seu Casamento'}
+              <span className="bg-gradient-to-br from-foreground via-foreground to-primary bg-clip-text text-transparent">
+                {event?.coupleNames ? `Casamento ${event.coupleNames}` : 'Seu Casamento'}
+              </span>
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Acompanhe a arrecadação em tempo real e realize saques automatizados para sua conta.
+            <p className="text-sm text-muted-foreground mt-1 max-w-[54ch] leading-relaxed">
+              Acompanhe a arrecadação em tempo real e realize saques instantâneos via PIX para sua conta.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <Button asChild variant="outline" size="sm">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Button asChild variant="outline" size="sm" className="apple-pressable rounded-full border-white/15 bg-white/5 text-xs font-medium h-9">
               <Link href="/dashboard/configurar">
-                <SettingsIcon className="size-4 mr-1.5" />
+                <SettingsIcon className="size-3.5 mr-1.5 text-muted-foreground" />
                 Configurar Rifa
               </Link>
             </Button>
-            <Button asChild variant="secondary" size="sm">
+            <Button asChild variant="secondary" size="sm" className="apple-pressable rounded-full border border-primary/20 bg-primary/10 hover:bg-primary/20 text-xs font-semibold text-primary h-9">
               <Link href="/dashboard/sorteio">
-                <PartyPopperIcon className="size-4 mr-1.5 text-primary" />
+                <PartyPopperIcon className="size-3.5 mr-1.5 text-primary" />
                 Sorteio ao Vivo
               </Link>
             </Button>
@@ -251,25 +267,31 @@ export default function DashboardOverviewPage() {
         </div>
 
         {/* Financial Cards Grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_0.1s_both]">
           {/* Card 1: Saldo Disponível para Saque */}
-          <Card className="border-primary/40 bg-gradient-to-br from-card to-primary/10 shadow-[0_0_40px_-16px_var(--glow)] lg:col-span-1">
-            <CardHeader className="pb-2">
-              <CardDescription className="text-xs uppercase tracking-wider font-mono">
-                Saldo Disponível para Saque
-              </CardDescription>
-              <CardTitle className="font-mono text-4xl font-bold text-primary tabular-nums">
+          <Card className="apple-glass rounded-3xl border-primary/30 shadow-2xl p-6 lg:col-span-1 flex flex-col justify-between relative overflow-hidden">
+            <div className="absolute top-0 right-0 h-28 w-28 bg-primary/10 rounded-full blur-2xl pointer-events-none" />
+            <CardHeader className="p-0 pb-3">
+              <div className="flex items-center justify-between">
+                <CardDescription className="text-xs uppercase tracking-wider font-mono font-semibold text-muted-foreground">
+                  Saldo Disponível
+                </CardDescription>
+                <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-primary">
+                  Livre para Saque
+                </span>
+              </div>
+              <CardTitle className="font-mono text-4xl sm:text-5xl font-bold text-primary apple-numeral mt-2">
                 {balance ? formatBRL(balance.availableBalanceCents) : 'R$ 0,00'}
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-xs text-muted-foreground">
-                Livre de taxas. Transferência instantânea via PIX para sua conta.
+            <CardContent className="p-0 py-2">
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Livre de taxas adicionais. Transferência instantânea via PIX para a sua chave cadastrada.
               </p>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="p-0 pt-4">
               <Button
-                className="w-full font-heading tracking-wide uppercase shadow-md"
+                className="apple-pressable w-full h-12 rounded-2xl font-heading text-sm font-semibold tracking-wider uppercase bg-primary text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50"
                 disabled={!balance || balance.availableBalanceCents <= 0}
                 onClick={() => setPayoutOpen(true)}
               >
@@ -280,214 +302,226 @@ export default function DashboardOverviewPage() {
           </Card>
 
           {/* Card 2: Arrecadação Bruta & Líquida */}
-          <Card className="border-border/60 bg-card/60 backdrop-blur-md">
-            <CardHeader className="pb-2">
-              <CardDescription className="text-xs uppercase tracking-wider font-mono">
+          <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-6 flex flex-col justify-between">
+            <CardHeader className="p-0 pb-2">
+              <CardDescription className="text-xs uppercase tracking-wider font-mono font-semibold text-muted-foreground">
                 Arrecadação Bruta
               </CardDescription>
-              <CardTitle className="font-mono text-3xl font-bold tabular-nums">
+              <CardTitle className="font-mono text-3xl font-bold apple-numeral mt-1 text-foreground">
                 {balance ? formatBRL(balance.grossRevenueCents) : 'R$ 0,00'}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 pt-2">
+            <CardContent className="p-0 space-y-3 pt-3">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>Taxa da Plataforma ({balance?.platformFeePercent ?? 4.9}%)</span>
-                <span className="font-mono text-destructive">
+                <span className="font-mono text-destructive apple-numeral">
                   - {balance ? formatBRL(balance.platformFeeCents) : 'R$ 0,00'}
                 </span>
               </div>
-              <Separator />
+              <Separator className="bg-white/10" />
               <div className="flex items-center justify-between text-sm font-semibold">
-                <span>Total Líquido Arrecadado</span>
-                <span className="font-mono text-foreground">
+                <span className="text-muted-foreground">Total Líquido Arrecadado</span>
+                <span className="font-mono text-foreground apple-numeral text-base">
                   {balance ? formatBRL(balance.netRevenueCents) : 'R$ 0,00'}
                 </span>
               </div>
             </CardContent>
+            <div className="pt-3 text-[11px] text-muted-foreground">
+              Calculado automaticamente a cada pagamento confirmado.
+            </div>
           </Card>
 
           {/* Card 3: Histórico de Saques */}
-          <Card className="border-border/60 bg-card/60 backdrop-blur-md">
-            <CardHeader className="pb-2">
-              <CardDescription className="text-xs uppercase tracking-wider font-mono">
+          <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-6 flex flex-col justify-between">
+            <CardHeader className="p-0 pb-2">
+              <CardDescription className="text-xs uppercase tracking-wider font-mono font-semibold text-muted-foreground">
                 Total Já Transferido
               </CardDescription>
-              <CardTitle className="font-mono text-3xl font-bold tabular-nums text-muted-foreground">
+              <CardTitle className="font-mono text-3xl font-bold apple-numeral mt-1 text-muted-foreground">
                 {balance ? formatBRL(balance.totalWithdrawnCents) : 'R$ 0,00'}
               </CardTitle>
             </CardHeader>
-            <CardContent className="pt-2">
+            <CardContent className="p-0 pt-3 space-y-2">
               <p className="text-xs text-muted-foreground">
                 {payouts.length === 0
                   ? 'Nenhum saque realizado até o momento.'
                   : `${payouts.length} saque(s) realizado(s) com sucesso.`}
               </p>
               {balance?.lastPayoutAt ? (
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-muted-foreground font-mono">
                   Último saque em {new Date(balance.lastPayoutAt).toLocaleDateString('pt-BR')}.
                 </p>
               ) : null}
             </CardContent>
+            <div className="pt-3 text-[11px] text-muted-foreground font-mono">
+              Chave cadastrada: {balance?.pixKey || 'Nenhuma'}
+            </div>
           </Card>
         </div>
 
         {/* Quick Access Links */}
-        <section className="space-y-4">
-          <h2 className="font-heading text-xl font-bold">Links de Acesso Rápido</h2>
+        <section className="space-y-4 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_0.2s_both]">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="font-heading text-xl font-bold">Links de Acesso Rápido</h2>
+              <p className="text-xs text-muted-foreground">Acesse e compartilhe os terminais dedicados para cada papel na festa.</p>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {/* Guest Cartela Link */}
-            <Card className="border-border/50 bg-card/50">
-              <CardHeader className="pb-3">
+            <Card className="apple-glass-interactive rounded-3xl border-white/12 shadow-lg p-5 flex flex-col justify-between">
+              <div>
                 <div className="flex items-center justify-between">
-                  <Badge variant="secondary" className="font-mono text-xs">
+                  <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-muted-foreground">
                     📱 Para os Convidados
-                  </Badge>
+                  </span>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="size-8"
+                    className="apple-pressable size-8 rounded-full border border-white/10 hover:bg-white/10"
                     disabled={!guestUrl}
                     onClick={() => copyToClipboard(guestUrl, 'Link dos Convidados')}
                   >
                     {copiedLink === 'Link dos Convidados' ? (
-                      <CheckIcon className="size-4 text-primary" />
+                      <CheckIcon className="size-3.5 text-primary" />
                     ) : (
-                      <CopyIcon className="size-4" />
+                      <CopyIcon className="size-3.5" />
                     )}
                   </Button>
                 </div>
-                <CardTitle className="font-heading text-lg mt-2">Página da Rifa</CardTitle>
-                <CardDescription className="text-xs line-clamp-1">
+                <h3 className="font-heading text-lg font-bold mt-3">Página da Rifa</h3>
+                <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5 font-mono">
                   {guestUrl || 'Gerando link da rifa...'}
-                </CardDescription>
-              </CardHeader>
-              <CardFooter className="pt-0">
+                </p>
+              </div>
+              <div className="pt-4">
                 {guestUrl ? (
-                  <Button asChild variant="outline" size="sm" className="w-full">
+                  <Button asChild variant="outline" size="sm" className="apple-pressable w-full rounded-2xl border-white/15 bg-white/5 hover:bg-white/10 h-10 font-semibold text-xs">
                     <a href={guestUrl} target="_blank" rel="noopener noreferrer">
                       Abrir Rifa <ExternalLinkIcon className="size-3.5 ml-1.5" />
                     </a>
                   </Button>
                 ) : (
-                  <Button variant="outline" size="sm" className="w-full" disabled>
+                  <Button variant="outline" size="sm" className="w-full rounded-2xl h-10" disabled>
                     <Spinner className="size-3.5 mr-1.5" /> Carregando...
                   </Button>
                 )}
-              </CardFooter>
+              </div>
             </Card>
 
             {/* Telão Interativo */}
-            <Card className="border-border/50 bg-card/50">
-              <CardHeader className="pb-3">
+            <Card className="apple-glass-interactive rounded-3xl border-white/12 shadow-lg p-5 flex flex-col justify-between">
+              <div>
                 <div className="flex items-center justify-between">
-                  <Badge variant="secondary" className="font-mono text-xs">
+                  <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-muted-foreground">
                     🖥️ Para o Projetor / TV
-                  </Badge>
+                  </span>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="size-8"
+                    className="apple-pressable size-8 rounded-full border border-white/10 hover:bg-white/10"
                     disabled={!telaoUrl}
                     onClick={() => copyToClipboard(telaoUrl, 'Link do Telão')}
                   >
                     {copiedLink === 'Link do Telão' ? (
-                      <CheckIcon className="size-4 text-primary" />
+                      <CheckIcon className="size-3.5 text-primary" />
                     ) : (
-                      <CopyIcon className="size-4" />
+                      <CopyIcon className="size-3.5" />
                     )}
                   </Button>
                 </div>
-                <CardTitle className="font-heading text-lg mt-2">Telão ao Vivo</CardTitle>
-                <CardDescription className="text-xs line-clamp-1">
+                <h3 className="font-heading text-lg font-bold mt-3">Telão ao Vivo</h3>
+                <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5 font-mono">
                   {telaoUrl || 'Gerando link do telão...'}
-                </CardDescription>
-              </CardHeader>
-              <CardFooter className="pt-0">
+                </p>
+              </div>
+              <div className="pt-4">
                 {telaoUrl ? (
-                  <Button asChild variant="outline" size="sm" className="w-full">
+                  <Button asChild variant="outline" size="sm" className="apple-pressable w-full rounded-2xl border-white/15 bg-white/5 hover:bg-white/10 h-10 font-semibold text-xs">
                     <a href={telaoUrl} target="_blank" rel="noopener noreferrer">
                       Abrir Telão <TvIcon className="size-3.5 ml-1.5" />
                     </a>
                   </Button>
                 ) : (
-                  <Button variant="outline" size="sm" className="w-full" disabled>
+                  <Button variant="outline" size="sm" className="w-full rounded-2xl h-10" disabled>
                     <Spinner className="size-3.5 mr-1.5" /> Carregando...
                   </Button>
                 )}
-              </CardFooter>
+              </div>
             </Card>
 
             {/* Console dos Padrinhos */}
-            <Card className="border-border/50 bg-card/50">
-              <CardHeader className="pb-3">
+            <Card className="apple-glass-interactive rounded-3xl border-white/12 shadow-lg p-5 flex flex-col justify-between">
+              <div>
                 <div className="flex items-center justify-between">
-                  <Badge variant="secondary" className="font-mono text-xs">
+                  <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-muted-foreground">
                     👔 Para os Padrinhos
-                  </Badge>
+                  </span>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="size-8"
+                    className="apple-pressable size-8 rounded-full border border-white/10 hover:bg-white/10"
                     disabled={!padrinhoUrl}
                     onClick={() => copyToClipboard(padrinhoUrl, 'Link dos Padrinhos')}
                   >
                     {copiedLink === 'Link dos Padrinhos' ? (
-                      <CheckIcon className="size-4 text-primary" />
+                      <CheckIcon className="size-3.5 text-primary" />
                     ) : (
-                      <CopyIcon className="size-4" />
+                      <CopyIcon className="size-3.5" />
                     )}
                   </Button>
                 </div>
-                <CardTitle className="font-heading text-lg mt-2">Venda Assistida</CardTitle>
-                <CardDescription className="text-xs line-clamp-1">
+                <h3 className="font-heading text-lg font-bold mt-3">Venda Assistida</h3>
+                <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5 font-mono">
                   {padrinhoUrl || 'Gerando link dos padrinhos...'}
-                </CardDescription>
-              </CardHeader>
-              <CardFooter className="pt-0">
+                </p>
+              </div>
+              <div className="pt-4">
                 {padrinhoUrl ? (
-                  <Button asChild variant="outline" size="sm" className="w-full">
+                  <Button asChild variant="outline" size="sm" className="apple-pressable w-full rounded-2xl border-white/15 bg-white/5 hover:bg-white/10 h-10 font-semibold text-xs">
                     <a href={padrinhoUrl} target="_blank" rel="noopener noreferrer">
                       Abrir Console <ShieldCheckIcon className="size-3.5 ml-1.5" />
                     </a>
                   </Button>
                 ) : (
-                  <Button variant="outline" size="sm" className="w-full" disabled>
+                  <Button variant="outline" size="sm" className="w-full rounded-2xl h-10" disabled>
                     <Spinner className="size-3.5 mr-1.5" /> Carregando...
                   </Button>
                 )}
-              </CardFooter>
+              </div>
             </Card>
           </div>
         </section>
 
         {/* Payouts History Table */}
-        <section className="space-y-4">
+        <section className="space-y-4 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_0.25s_both]">
           <h2 className="font-heading text-xl font-bold">Histórico de Saques</h2>
-          <Card className="border-border/50 bg-card/50">
+          <Card className="apple-glass rounded-3xl border-white/12 shadow-xl overflow-hidden">
             <CardContent className="p-0">
               {payouts.length === 0 ? (
-                <div className="p-8 text-center text-sm text-muted-foreground">
+                <div className="p-10 text-center text-sm text-muted-foreground">
                   Você ainda não solicitou nenhum saque. Assim que receber vendas, o saldo ficará disponível imediatamente.
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm">
                     <thead>
-                      <tr className="border-b border-border/50 bg-muted/20 text-xs uppercase tracking-wider text-muted-foreground">
-                        <th className="p-4">Data</th>
+                      <tr className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wider text-muted-foreground">
+                        <th className="p-4 pl-6">Data</th>
                         <th className="p-4">Valor</th>
                         <th className="p-4">Chave PIX</th>
                         <th className="p-4">Status</th>
-                        <th className="p-4">ID da Transferência</th>
+                        <th className="p-4 pr-6">ID da Transferência</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-border/30 font-mono text-xs">
+                    <tbody className="divide-y divide-white/5 font-mono text-xs">
                       {payouts.map((p) => (
-                        <tr key={p.id} className="hover:bg-muted/10">
-                          <td className="p-4 font-sans text-sm">
+                        <tr key={p.id} className="hover:bg-white/5 transition-colors">
+                          <td className="p-4 pl-6 font-sans text-sm">
                             {new Date(p.createdAt).toLocaleString('pt-BR')}
                           </td>
-                          <td className="p-4 font-bold text-primary text-sm">
+                          <td className="p-4 font-bold text-primary text-sm apple-numeral">
                             {formatBRL(p.amountCents)}
                           </td>
                           <td className="p-4">
@@ -495,11 +529,11 @@ export default function DashboardOverviewPage() {
                             {p.pixKey}
                           </td>
                           <td className="p-4">
-                            <Badge variant="outline" className="border-primary/40 text-primary">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 font-mono text-[11px] font-medium text-emerald-400">
                               {p.status === 'completed' ? 'Transferido' : p.status}
-                            </Badge>
+                            </span>
                           </td>
-                          <td className="p-4 text-muted-foreground">
+                          <td className="p-4 pr-6 text-muted-foreground">
                             {p.transferId || '—'}
                           </td>
                         </tr>
@@ -512,18 +546,23 @@ export default function DashboardOverviewPage() {
           </Card>
         </section>
 
-        {/* PIX Cashout Modal */}
+        {/* PIX Cashout Modal (Apple Sheet Style) */}
         {payoutOpen && balance ? (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 animate-[fade-up_0.2s_ease_both]">
-            <div className="relative w-full max-w-md rounded-2xl border border-primary/30 bg-card p-6 shadow-2xl space-y-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-[fade-up_0.2s_ease_both]">
+            <div className="relative w-full max-w-md rounded-3xl border border-white/15 apple-glass p-6 sm:p-7 shadow-2xl space-y-5">
               <div>
-                <h3 className="font-heading text-xl font-bold">Solicitar Saque PIX</h3>
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary">
+                    <WalletIcon className="size-4" />
+                  </div>
+                  <h3 className="font-heading text-xl font-bold">Solicitar Saque PIX</h3>
+                </div>
                 <p className="text-sm text-muted-foreground mt-1">
                   O valor de{' '}
-                  <span className="font-bold text-primary">
+                  <span className="font-bold text-primary apple-numeral">
                     {formatBRL(balance.availableBalanceCents)}
                   </span>{' '}
-                  será transferido automaticamente para sua conta.
+                  será transferido automaticamente para sua conta bancária.
                 </p>
               </div>
 
@@ -531,35 +570,36 @@ export default function DashboardOverviewPage() {
                 <FieldGroup>
                   <div className="grid grid-cols-3 gap-3">
                     <Field className="col-span-1">
-                      <FieldLabel>Tipo de Chave</FieldLabel>
+                      <FieldLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tipo</FieldLabel>
                       <select
                         aria-label="Tipo de Chave PIX"
                         value={pixKeyType}
                         onChange={(e) => setPixKeyType(e.target.value)}
-                        className="h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none"
+                        className="h-11 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-1 text-sm shadow-xs transition-all focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 outline-none"
                       >
                         <option value="cpf">CPF</option>
                         <option value="cnpj">CNPJ</option>
                         <option value="email">E-mail</option>
                         <option value="phone">Telefone</option>
-                        <option value="random">Chave Aleatória</option>
+                        <option value="random">Aleatória</option>
                       </select>
                     </Field>
 
                     <Field className="col-span-2">
-                      <FieldLabel htmlFor="pixKey">Chave PIX</FieldLabel>
+                      <FieldLabel htmlFor="pixKey" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Chave PIX</FieldLabel>
                       <Input
                         id="pixKey"
                         required
                         value={pixKey}
                         onChange={(e) => setPixKey(e.target.value)}
                         placeholder="Insira sua chave PIX"
+                        className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                       />
                     </Field>
                   </div>
 
                   <Field>
-                    <FieldLabel htmlFor="payoutAmount">
+                    <FieldLabel htmlFor="payoutAmount" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       Valor a Sacar (R$) — Em branco para o total
                     </FieldLabel>
                     <Input
@@ -570,18 +610,24 @@ export default function DashboardOverviewPage() {
                       value={payoutAmount}
                       onChange={(e) => setPayoutAmount(e.target.value)}
                       placeholder={(balance.availableBalanceCents / 100).toFixed(2)}
+                      className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 apple-numeral"
                     />
                   </Field>
                 </FieldGroup>
 
-                <div className="flex justify-end gap-2 pt-2">
-                  <Button variant="ghost" type="button" onClick={() => setPayoutOpen(false)}>
+                <div className="flex justify-end gap-2.5 pt-3 border-t border-white/10">
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    onClick={() => setPayoutOpen(false)}
+                    className="apple-pressable rounded-full text-xs"
+                  >
                     Cancelar
                   </Button>
                   <Button
                     type="submit"
                     disabled={payoutPending}
-                    className="font-heading uppercase"
+                    className="apple-pressable h-11 px-6 rounded-2xl font-heading text-xs font-semibold tracking-wider uppercase bg-primary text-primary-foreground shadow-lg shadow-primary/20"
                   >
                     {payoutPending ? <Spinner data-icon="inline-start" /> : null}
                     {payoutPending ? 'Transferindo…' : 'Confirmar Saque Agora'}

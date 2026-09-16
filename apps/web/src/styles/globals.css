@@ -98,37 +98,96 @@
 
   body {
     @apply text-foreground antialiased;
-    background-color: var(--ink);
+    background-color: var(--background);
     background-image:
-      radial-gradient(ellipse 90% 60% at 15% -10%, rgba(46, 230, 166, 0.14), transparent 55%),
-      radial-gradient(ellipse 70% 50% at 95% 10%, rgba(56, 120, 255, 0.1), transparent 50%),
-      radial-gradient(ellipse 50% 40% at 70% 100%, rgba(46, 230, 166, 0.06), transparent 55%),
-      linear-gradient(rgba(46, 230, 166, 0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(46, 230, 166, 0.035) 1px, transparent 1px);
-    background-size:
-      auto,
-      auto,
-      auto,
-      48px 48px,
-      48px 48px;
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(198, 167, 94, 0.15), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 85% 15%, rgba(120, 150, 255, 0.08), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 10% 80%, rgba(198, 167, 94, 0.06), transparent 60%);
     background-attachment: fixed;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+}
 
-  body::before {
-    content: "";
-    pointer-events: none;
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    opacity: 0.04;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 0, 0, 0.35) 2px,
-      rgba(0, 0, 0, 0.35) 3px
-    );
-  }
+/* ==============================================================================
+   Apple Human Interface Guidelines (HIG) & Liquid Glass Utilities
+   ============================================================================== */
+
+:root {
+  --apple-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --apple-spring-snappy: cubic-bezier(0.25, 1, 0.5, 1);
+  --apple-spring-bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Liquid Glass Card Material */
+.apple-glass {
+  background: rgba(22, 27, 46, 0.68);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 20px 50px -15px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
+}
+
+.apple-glass-subtle {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+.apple-glass-interactive {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.18), 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: all 0.24s var(--apple-spring);
+}
+
+.apple-glass-interactive:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.28), 0 8px 24px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+
+.apple-glass-interactive:active {
+  transform: scale(0.97) translateY(0);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Tactile Spring Press Affordance */
+.apple-pressable {
+  transition: transform 0.2s var(--apple-spring), opacity 0.2s ease, filter 0.2s ease;
+  user-select: none;
+}
+
+.apple-pressable:active {
+  transform: scale(0.965);
+  opacity: 0.9;
+}
+
+/* Apple Segmented Control Container */
+.apple-segmented-control {
+  display: inline-flex;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Tabular Numerals */
+.apple-numeral {
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.015em;
 }
 
 @keyframes fade-up {

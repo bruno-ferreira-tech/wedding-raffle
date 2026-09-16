@@ -185,7 +185,7 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
     <div {...themeAttr} className="min-h-dvh w-full text-foreground bg-background transition-colors duration-300">
       <div className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
         {salesClosed ? (
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
             <AlertTitle>Vendas encerradas</AlertTitle>
             <AlertDescription>
               Não é mais possível comprar números neste momento.
@@ -194,67 +194,69 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
         ) : null}
 
         <header className="flex flex-col gap-3 animate-[fade-up_0.55s_ease_both]">
-          <Badge
-            variant="secondary"
-            className="w-fit font-mono tracking-[0.18em] uppercase"
-          >
-            <span
-              className="size-1.5 animate-pulse rounded-full bg-primary"
-              aria-hidden
-            />
-            {event?.salesStatus === 'closed' ? 'Sorteio em andamento' : 'Rifa ao vivo'}
-          </Badge>
-          <h1 className="font-heading text-4xl font-bold tracking-tight text-balance sm:text-6xl">
-            <span className="bg-gradient-to-br from-foreground to-primary bg-clip-text text-transparent">
-              {event?.coupleNames ? `Corta-Gravata · ${event.coupleNames}` : 'Corta-Gravata'}
-            </span>
-          </h1>
-          <p className="max-w-[48ch] text-base text-muted-foreground">
-            {event?.welcomeMessage ||
-              `Toque nos números da cartela como num bingo. Cada um custa ${formatBRL(unitPrice)}.`}
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3">
-            {livres !== null && !salesClosed ? (
-              <Badge variant="outline" className="w-fit font-mono">
-                {livres.toLocaleString('pt-BR')} slots livres · {formatBRL(unitPrice)} cada
-              </Badge>
-            ) : null}
+          <div className="flex items-center gap-2">
+            <Badge
+              variant="secondary"
+              className="rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-xs tracking-wider uppercase backdrop-blur-md"
+            >
+              <span
+                className="size-1.5 mr-1.5 animate-pulse rounded-full bg-primary"
+                aria-hidden
+              />
+              {event?.salesStatus === 'closed' ? 'Sorteio em andamento' : 'Rifa ao vivo'}
+            </Badge>
 
             {event?.eventDate ? (
-              <Badge variant="secondary" className="w-fit font-mono">
+              <Badge variant="outline" className="rounded-full border-white/10 bg-white/5 font-mono text-xs">
                 📅 {new Date(event.eventDate).toLocaleDateString('pt-BR')}
               </Badge>
             ) : null}
           </div>
 
-          {event?.prizes && event.prizes.length > 0 ? (
-            <div className="mt-2 flex flex-wrap gap-2">
-              <span className="text-xs font-mono tracking-wider uppercase text-muted-foreground self-center mr-1">
-                Prêmios:
+          <h1 className="font-heading text-4xl font-extrabold tracking-tight text-balance sm:text-6xl">
+            <span className="bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
+              {event?.coupleNames ? `Corta-Gravata · ${event.coupleNames}` : 'Corta-Gravata'}
+            </span>
+          </h1>
+          <p className="max-w-[54ch] text-base text-muted-foreground leading-relaxed">
+            {event?.welcomeMessage ||
+              `Escolha seus bilhetes da sorte na cartela interativa. Cada número custa ${formatBRL(unitPrice)}.`}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            {livres !== null && !salesClosed ? (
+              <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 font-mono text-xs font-semibold text-primary">
+                {livres.toLocaleString('pt-BR')} disponíveis · {formatBRL(unitPrice)} cada
               </span>
-              {event.prizes.map((p) => (
-                <Badge
-                  key={p.prizeIndex}
-                  variant="default"
-                  className="bg-primary/20 text-primary border border-primary/30 font-sans"
-                >
-                  #{p.prizeIndex + 1} {p.label}
-                </Badge>
-              ))}
-            </div>
-          ) : null}
+            ) : null}
+
+            {event?.prizes && event.prizes.length > 0 ? (
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="text-xs font-mono tracking-wider uppercase text-muted-foreground ml-2 mr-1">
+                  Prêmios:
+                </span>
+                {event.prizes.map((p) => (
+                  <Badge
+                    key={p.prizeIndex}
+                    variant="outline"
+                    className="rounded-full border-primary/20 bg-primary/5 text-primary text-xs font-medium"
+                  >
+                    🏆 #{p.prizeIndex + 1} {p.label}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
+          </div>
         </header>
 
-      <Card className="border-primary/20 bg-card/70 shadow-[0_0_40px_-16px_var(--glow)] backdrop-blur-md animate-[fade-up_0.55s_ease_0.12s_both]">
-        <CardHeader>
-          <CardTitle className="font-heading">Cartela</CardTitle>
-          <CardDescription>
-            Números riscados já foram reservados ou vendidos. Os verdes são
-            seus.
+      <Card className="apple-glass rounded-3xl border-white/10 shadow-2xl animate-[fade-up_0.55s_ease_0.12s_both]">
+        <CardHeader className="pb-4">
+          <CardTitle className="font-heading text-2xl font-bold">Cartela Digital</CardTitle>
+          <CardDescription className="text-muted-foreground">
+            Toque nos números desejados para selecioná-los. Os números dourados são os seus.
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-5">
+        <CardContent className="flex flex-col gap-6">
           <BingoBoard
             cells={board}
             selected={selected}
@@ -263,7 +265,7 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
             onToggle={toggleNumber}
           />
 
-          <Separator />
+          <Separator className="bg-white/10" />
 
           <form
             id="purchase-form"
@@ -276,7 +278,7 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
                   Boolean(error && !buyerName.trim()) || undefined
                 }
               >
-                <FieldLabel htmlFor={nameId}>Nome</FieldLabel>
+                <FieldLabel htmlFor={nameId} className="text-sm font-medium">Seu Nome Completo</FieldLabel>
                 <Input
                   id={nameId}
                   value={buyerName}
@@ -284,7 +286,8 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
                   disabled={salesClosed || pending}
                   required
                   autoComplete="name"
-                  placeholder="Seu nome completo"
+                  placeholder="Ex: Pedro Henrique Silva"
+                  className="h-11 rounded-xl border-white/10 bg-white/5 backdrop-blur-md px-4 focus-visible:ring-primary/40"
                   aria-invalid={
                     Boolean(error && !buyerName.trim()) || undefined
                   }
@@ -292,48 +295,48 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
               </Field>
             </FieldGroup>
 
-            <div className="flex items-end justify-between gap-3">
+            <div className="flex items-end justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md">
               <div className="flex flex-col gap-1">
-                <span className="font-mono text-xs tracking-[0.16em] text-muted-foreground uppercase">
-                  Selecionados
+                <span className="font-mono text-xs tracking-wider text-muted-foreground uppercase">
+                  Bilhetes Selecionados
                 </span>
-                <span className="font-mono text-sm text-foreground">
+                <span className="font-mono text-sm font-medium text-foreground">
                   {selected.length === 0
-                    ? 'Nenhum'
-                    : `${selected.length} · ${selected
+                    ? 'Nenhum bilhete'
+                    : `${selected.length} selecionado(s) · ${selected
                         .slice(0, 8)
                         .map(formatRaffleNumber)
                         .join(' ')}${selected.length > 8 ? '…' : ''}`}
                 </span>
               </div>
               <div className="text-right">
-                <span className="font-mono text-xs tracking-[0.16em] text-muted-foreground uppercase">
-                  Total
+                <span className="font-mono text-xs tracking-wider text-muted-foreground uppercase">
+                  Valor Total
                 </span>
-                <p className="font-mono text-2xl font-semibold text-primary tabular-nums">
+                <p className="apple-numeral font-mono text-3xl font-bold text-primary">
                   {selected.length === 0 ? formatBRL(0) : formatBRL(total)}
                 </p>
               </div>
             </div>
 
             {error ? (
-              <Alert variant="destructive">
+              <Alert variant="destructive" className="rounded-xl border-destructive/30 bg-destructive/10">
                 <AlertTitle>Atenção</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             ) : null}
           </form>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="pt-2 pb-6">
           <Button
             type="submit"
             form="purchase-form"
             size="lg"
-            className="h-11 w-full font-heading tracking-wide uppercase"
+            className="apple-pressable h-12 w-full rounded-full font-heading text-base tracking-wide uppercase shadow-xl shadow-primary/25"
             disabled={salesClosed || pending || selected.length === 0}
           >
-            {pending ? <Spinner data-icon="inline-start" /> : null}
-            {pending ? 'Criando pedido…' : 'Pagar com PIX'}
+            {pending ? <Spinner data-icon="inline-start" className="mr-2" /> : null}
+            {pending ? 'Processando pedido…' : `Garantir Bilhetes · ${formatBRL(total)}`}
           </Button>
         </CardFooter>
       </Card>

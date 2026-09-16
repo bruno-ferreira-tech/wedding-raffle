@@ -178,71 +178,82 @@ export function AdminConsole() {
 
   if (!authed) {
     return (
-      <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
-        <header className="flex flex-col gap-3 animate-[fade-up_0.55s_ease_both]">
-          <Badge
-            variant="secondary"
-            className="w-fit font-mono tracking-[0.18em] uppercase"
-          >
-            Console master
-          </Badge>
-          <h1 className="font-heading text-5xl font-bold tracking-tight text-balance sm:text-6xl">
-            <span className="bg-gradient-to-br from-foreground to-primary bg-clip-text text-transparent">
-              Admin
-            </span>
-          </h1>
-          <p className="max-w-[36ch] text-base text-muted-foreground">
-            Vendas, arrecadação e sorteio do Corta-Gravata.
-          </p>
-        </header>
+      <div className="relative min-h-dvh w-full overflow-x-hidden bg-background text-foreground">
+        {/* Ambient background glow */}
+        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+          <div className="absolute -top-32 left-1/2 h-96 w-[36rem] -translate-x-1/2 rounded-full bg-primary/10 blur-[140px]" />
+        </div>
 
-        <Card className="border-primary/20 bg-card/70 shadow-[0_0_40px_-16px_var(--glow)] backdrop-blur-md animate-[fade-up_0.55s_ease_0.12s_both]">
-          <CardHeader>
-            <CardTitle className="font-heading">Entrar</CardTitle>
-            <CardDescription>Acesso restrito ao console master.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form id="admin-login" className="flex flex-col gap-5" onSubmit={onLogin}>
-              <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor={passwordId}>Senha</FieldLabel>
-                  <Input
-                    id={passwordId}
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    disabled={pending}
-                    autoComplete="current-password"
-                    required
-                    autoFocus
-                  />
-                </Field>
-              </FieldGroup>
-              {error ? (
-                <Alert variant="destructive">
-                  <AlertTitle>Atenção</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              ) : null}
-            </form>
-          </CardContent>
-          <CardFooter>
-            <Button
-              type="submit"
-              form="admin-login"
-              size="lg"
-              className="h-11 w-full font-heading tracking-wide uppercase"
-              disabled={pending}
-            >
-              {pending ? (
-                <Spinner data-icon="inline-start" />
-              ) : (
-                <LogInIcon data-icon="inline-start" />
-              )}
-              {pending ? 'Entrando…' : 'Entrar'}
-            </Button>
-          </CardFooter>
-        </Card>
+        <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-4 py-12">
+          <header className="flex flex-col items-center text-center gap-3 mb-6 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_both]">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[11px] font-semibold tracking-wider text-muted-foreground uppercase backdrop-blur-md">
+              <span className="size-2 rounded-full bg-primary animate-pulse" />
+              Console Master
+            </span>
+            <h1 className="font-heading text-4xl font-bold tracking-tight sm:text-5xl">
+              <span className="bg-gradient-to-br from-foreground via-foreground to-primary bg-clip-text text-transparent">
+                Admin
+              </span>
+            </h1>
+            <p className="text-sm text-muted-foreground max-w-[32ch]">
+              Vendas, arrecadação e sorteio geral do Corta-Gravata.
+            </p>
+          </header>
+
+          <Card className="apple-glass rounded-3xl border border-white/12 shadow-2xl p-4 sm:p-6 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_0.1s_both]">
+            <CardHeader className="text-center pb-3">
+              <CardTitle className="font-heading text-xl">Acesso Master</CardTitle>
+              <CardDescription className="text-xs text-muted-foreground">
+                Informe a chave mestre do sistema
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form id="admin-login" className="flex flex-col gap-4" onSubmit={onLogin}>
+                <FieldGroup>
+                  <Field>
+                    <FieldLabel htmlFor={passwordId} className="text-xs font-semibold uppercase tracking-wider text-muted-foreground text-center block">
+                      Senha
+                    </FieldLabel>
+                    <Input
+                      id={passwordId}
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      disabled={pending}
+                      autoComplete="current-password"
+                      required
+                      placeholder="••••••••"
+                      autoFocus
+                      className="h-12 text-center font-mono text-xl tracking-[0.25em] rounded-2xl bg-black/25 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                    />
+                  </Field>
+                </FieldGroup>
+                {error ? (
+                  <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
+                    <AlertTitle>Atenção</AlertTitle>
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                ) : null}
+              </form>
+            </CardContent>
+            <CardFooter className="pt-2">
+              <Button
+                type="submit"
+                form="admin-login"
+                size="lg"
+                className="apple-pressable h-12 w-full rounded-2xl font-heading text-sm font-semibold tracking-wider uppercase bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                disabled={pending}
+              >
+                {pending ? (
+                  <Spinner data-icon="inline-start" />
+                ) : (
+                  <LogInIcon data-icon="inline-start" className="size-4 mr-2" />
+                )}
+                {pending ? 'Entrando…' : 'Entrar'}
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
       </div>
     );
   }
@@ -250,206 +261,208 @@ export function AdminConsole() {
   const salesOpen = state?.salesStatus === 'open';
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
-      <header className="flex flex-col gap-3 animate-[fade-up_0.55s_ease_both]">
-        <Badge
-          variant="secondary"
-          className="w-fit font-mono tracking-[0.18em] uppercase"
-        >
-          Console master
-        </Badge>
-        <h1 className="font-heading text-5xl font-bold tracking-tight text-balance sm:text-6xl">
-          <span className="bg-gradient-to-br from-foreground to-primary bg-clip-text text-transparent">
-            Painel
-          </span>
-        </h1>
-      </header>
+    <div className="relative min-h-dvh w-full overflow-x-hidden bg-background text-foreground transition-colors duration-500">
+      {/* Ambient background glow */}
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-32 left-1/2 h-96 w-[36rem] -translate-x-1/2 rounded-full bg-primary/10 blur-[140px]" />
+        <div className="absolute top-1/2 -right-48 h-80 w-80 rounded-full bg-primary/5 blur-[100px]" />
+      </div>
 
-      {state ? (
-        <section
-          className="grid grid-cols-2 gap-3 animate-[fade-up_0.55s_ease_0.08s_both] sm:grid-cols-4"
-          aria-live="polite"
-        >
-          <Card size="sm" className="bg-card/70 backdrop-blur-md">
-            <CardHeader>
-              <CardDescription className="font-mono text-xs tracking-[0.14em] uppercase">
+      <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
+        <header className="flex flex-col gap-3 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_both]">
+          <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[11px] font-semibold tracking-wider text-muted-foreground uppercase backdrop-blur-md">
+            <span className="size-2 rounded-full bg-primary animate-pulse" />
+            Console Master
+          </span>
+          <h1 className="font-heading text-4xl font-bold tracking-tight sm:text-5xl">
+            <span className="bg-gradient-to-br from-foreground via-foreground to-primary bg-clip-text text-transparent">
+              Painel Admin
+            </span>
+          </h1>
+        </header>
+
+        {state ? (
+          <section
+            className="grid grid-cols-2 gap-3 sm:grid-cols-4 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_0.08s_both]"
+            aria-live="polite"
+          >
+            <Card className="apple-glass rounded-2xl border-white/12 p-3 text-center">
+              <CardDescription className="font-mono text-[10px] tracking-wider uppercase text-muted-foreground">
                 Disponíveis
               </CardDescription>
-              <CardTitle className="font-mono text-2xl tabular-nums">
+              <CardTitle className="font-mono text-2xl font-bold apple-numeral mt-1 text-foreground">
                 {state.counts.disponivel}
               </CardTitle>
-            </CardHeader>
-          </Card>
-          <Card size="sm" className="bg-card/70 backdrop-blur-md">
-            <CardHeader>
-              <CardDescription className="font-mono text-xs tracking-[0.14em] uppercase">
+            </Card>
+            <Card className="apple-glass rounded-2xl border-white/12 p-3 text-center">
+              <CardDescription className="font-mono text-[10px] tracking-wider uppercase text-muted-foreground">
                 Reservados
               </CardDescription>
-              <CardTitle className="font-mono text-2xl tabular-nums">
+              <CardTitle className="font-mono text-2xl font-bold apple-numeral mt-1 text-amber-400">
                 {state.counts.reservado}
               </CardTitle>
-            </CardHeader>
-          </Card>
-          <Card size="sm" className="bg-card/70 backdrop-blur-md">
-            <CardHeader>
-              <CardDescription className="font-mono text-xs tracking-[0.14em] uppercase">
+            </Card>
+            <Card className="apple-glass rounded-2xl border-white/12 p-3 text-center">
+              <CardDescription className="font-mono text-[10px] tracking-wider uppercase text-muted-foreground">
                 Pagos
               </CardDescription>
-              <CardTitle className="font-mono text-2xl tabular-nums">
+              <CardTitle className="font-mono text-2xl font-bold apple-numeral mt-1 text-emerald-400">
                 {state.counts.pago}
               </CardTitle>
-            </CardHeader>
-          </Card>
-          <Card
-            size="sm"
-            className="col-span-2 border-primary/20 bg-card/70 backdrop-blur-md sm:col-span-1"
-          >
-            <CardHeader>
-              <CardDescription className="font-mono text-xs tracking-[0.14em] uppercase">
+            </Card>
+            <Card className="apple-glass rounded-2xl border-primary/30 p-3 text-center">
+              <CardDescription className="font-mono text-[10px] tracking-wider uppercase text-muted-foreground">
                 Arrecadado
               </CardDescription>
-              <CardTitle className="font-mono text-xl text-primary tabular-nums">
+              <CardTitle className="font-mono text-lg font-bold text-primary apple-numeral mt-1">
                 {formatBRL(state.arrecadadoCents)}
               </CardTitle>
-            </CardHeader>
-          </Card>
-        </section>
-      ) : (
-        <div className="flex flex-col gap-3">
+            </Card>
+          </section>
+        ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <Skeleton className="h-20 w-full rounded-xl" />
-            <Skeleton className="h-20 w-full rounded-xl" />
-            <Skeleton className="h-20 w-full rounded-xl" />
-            <Skeleton className="h-20 w-full rounded-xl" />
+            <Skeleton className="h-20 w-full rounded-2xl" />
+            <Skeleton className="h-20 w-full rounded-2xl" />
+            <Skeleton className="h-20 w-full rounded-2xl" />
+            <Skeleton className="h-20 w-full rounded-2xl" />
           </div>
-        </div>
-      )}
+        )}
 
-      <Card className="border-primary/20 bg-card/70 shadow-[0_0_40px_-16px_var(--glow)] backdrop-blur-md animate-[fade-up_0.55s_ease_0.12s_both]">
-        <CardHeader>
-          <CardTitle className="font-heading">Vendas</CardTitle>
-          <CardDescription className="flex items-center gap-2">
-            Status:{' '}
-            <Badge variant={salesOpen ? 'default' : 'destructive'}>
-              {salesOpen ? 'Abertas' : 'Encerradas'}
-            </Badge>
-          </CardDescription>
-        </CardHeader>
-        <CardFooter>
-          <Button
-            type="button"
-            variant={salesOpen ? 'destructive' : 'default'}
-            size="lg"
-            className="h-11 w-full font-heading tracking-wide uppercase"
-            onClick={toggleSales}
-            disabled={pending || !state}
-          >
-            {pending ? (
-              <Spinner data-icon="inline-start" />
-            ) : salesOpen ? (
-              <LockIcon data-icon="inline-start" />
+        <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-5 sm:p-6 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_0.12s_both]">
+          <CardHeader className="p-0 pb-4">
+            <CardTitle className="font-heading text-xl font-bold">Vendas</CardTitle>
+            <CardDescription className="flex items-center gap-2 mt-1">
+              Status:{' '}
+              <span
+                className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-mono text-[10px] font-semibold uppercase ${
+                  salesOpen
+                    ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
+                    : 'border-destructive/30 bg-destructive/10 text-destructive'
+                }`}
+              >
+                {salesOpen ? 'Abertas' : 'Encerradas'}
+              </span>
+            </CardDescription>
+          </CardHeader>
+          <CardFooter className="p-0 pt-2">
+            <Button
+              type="button"
+              variant={salesOpen ? 'destructive' : 'default'}
+              size="lg"
+              className="apple-pressable h-12 w-full rounded-2xl font-heading text-xs font-semibold tracking-wider uppercase shadow-md"
+              onClick={toggleSales}
+              disabled={pending || !state}
+            >
+              {pending ? (
+                <Spinner data-icon="inline-start" />
+              ) : salesOpen ? (
+                <LockIcon data-icon="inline-start" className="size-4 mr-2" />
+              ) : (
+                <StoreIcon data-icon="inline-start" className="size-4 mr-2" />
+              )}
+              {salesOpen ? 'Encerrar vendas' : 'Reabrir vendas'}
+            </Button>
+          </CardFooter>
+        </Card>
+
+        <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-5 sm:p-6 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_0.16s_both]">
+          <CardHeader className="p-0 pb-4">
+            <CardTitle className="font-heading text-xl font-bold">Sorteio</CardTitle>
+            <CardDescription className="text-xs text-muted-foreground mt-0.5">
+              Feche as vendas antes de sortear o próximo prêmio.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <form id="admin-draw" className="flex flex-col gap-4" onSubmit={onDraw}>
+              <FieldGroup>
+                <Field data-disabled={salesOpen || undefined}>
+                  <FieldLabel htmlFor={prizeId} className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Rótulo do prêmio (opcional)
+                  </FieldLabel>
+                  <Input
+                    id={prizeId}
+                    value={prizeLabel}
+                    onChange={(e) => setPrizeLabel(e.target.value)}
+                    disabled={pending || salesOpen}
+                    placeholder="Ex.: Lua de mel"
+                    className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                  />
+                </Field>
+              </FieldGroup>
+              {salesOpen ? (
+                <Alert className="rounded-2xl border-white/15 bg-white/5">
+                  <AlertTitle>Vendas abertas</AlertTitle>
+                  <AlertDescription>
+                    Feche as vendas antes de sortear.
+                  </AlertDescription>
+                </Alert>
+              ) : null}
+            </form>
+          </CardContent>
+          <CardFooter className="p-0 pt-4">
+            <Button
+              type="submit"
+              form="admin-draw"
+              size="lg"
+              className="apple-pressable h-12 w-full rounded-2xl font-heading text-xs font-semibold tracking-wider uppercase bg-primary text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50"
+              disabled={pending || !state || salesOpen}
+            >
+              {pending ? (
+                <Spinner data-icon="inline-start" />
+              ) : (
+                <DicesIcon data-icon="inline-start" className="size-4 mr-2" />
+              )}
+              {pending ? 'Sorteando…' : 'Sortear próximo'}
+            </Button>
+          </CardFooter>
+        </Card>
+
+        <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-5 sm:p-6 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_0.2s_both]">
+          <CardHeader className="p-0 pb-4">
+            <CardTitle className="font-heading text-xl font-bold">Vencedores</CardTitle>
+            <CardDescription className="text-xs text-muted-foreground mt-0.5">Histórico de sorteios realizados.</CardDescription>
+          </CardHeader>
+          <CardContent className="p-0 pt-2">
+            {!state || state.drawResults.length === 0 ? (
+              <Empty className="border border-dashed border-white/15 rounded-2xl py-6">
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <TrophyIcon className="text-primary" />
+                  </EmptyMedia>
+                  <EmptyTitle>Nenhum sorteio ainda</EmptyTitle>
+                  <EmptyDescription>
+                    Os vencedores aparecem aqui após cada rodada.
+                  </EmptyDescription>
+                </EmptyHeader>
+              </Empty>
             ) : (
-              <StoreIcon data-icon="inline-start" />
+              <ul className="flex flex-col gap-3">
+                {state.drawResults.map((w: DrawResult, index) => (
+                  <li key={w.prizeIndex} className="flex flex-col gap-2">
+                    {index > 0 ? <Separator className="bg-white/10" /> : null}
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="font-mono text-xs tracking-wider text-muted-foreground uppercase">
+                        #{w.prizeIndex} · {w.prizeLabel}
+                      </span>
+                      <Badge variant="outline" className="font-mono text-primary border-primary/30 apple-numeral">
+                        {formatRaffleNumber(w.numberId)}
+                      </Badge>
+                    </div>
+                    <p className="text-sm font-semibold text-foreground">{w.buyerName}</p>
+                  </li>
+                ))}
+              </ul>
             )}
-            {salesOpen ? 'Encerrar vendas' : 'Reabrir vendas'}
-          </Button>
-        </CardFooter>
-      </Card>
+          </CardContent>
+        </Card>
 
-      <Card className="border-primary/20 bg-card/70 backdrop-blur-md animate-[fade-up_0.55s_ease_0.16s_both]">
-        <CardHeader>
-          <CardTitle className="font-heading">Sorteio</CardTitle>
-          <CardDescription>
-            Feche as vendas antes de sortear o próximo prêmio.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form id="admin-draw" className="flex flex-col gap-5" onSubmit={onDraw}>
-            <FieldGroup>
-              <Field data-disabled={salesOpen || undefined}>
-                <FieldLabel htmlFor={prizeId}>Rótulo do prêmio (opcional)</FieldLabel>
-                <Input
-                  id={prizeId}
-                  value={prizeLabel}
-                  onChange={(e) => setPrizeLabel(e.target.value)}
-                  disabled={pending || salesOpen}
-                  placeholder="Ex.: Lua de mel"
-                />
-              </Field>
-            </FieldGroup>
-            {salesOpen ? (
-              <Alert>
-                <AlertTitle>Vendas abertas</AlertTitle>
-                <AlertDescription>
-                  Feche as vendas antes de sortear.
-                </AlertDescription>
-              </Alert>
-            ) : null}
-          </form>
-        </CardContent>
-        <CardFooter>
-          <Button
-            type="submit"
-            form="admin-draw"
-            size="lg"
-            className="h-11 w-full font-heading tracking-wide uppercase"
-            disabled={pending || !state || salesOpen}
-          >
-            {pending ? (
-              <Spinner data-icon="inline-start" />
-            ) : (
-              <DicesIcon data-icon="inline-start" />
-            )}
-            {pending ? 'Sorteando…' : 'Sortear próximo'}
-          </Button>
-        </CardFooter>
-      </Card>
-
-      <Card className="bg-card/70 backdrop-blur-md animate-[fade-up_0.55s_ease_0.2s_both]">
-        <CardHeader>
-          <CardTitle className="font-heading">Vencedores</CardTitle>
-          <CardDescription>Histórico de sorteios realizados.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {!state || state.drawResults.length === 0 ? (
-            <Empty className="border border-dashed border-border/80 py-6">
-              <EmptyHeader>
-                <EmptyMedia variant="icon">
-                  <TrophyIcon />
-                </EmptyMedia>
-                <EmptyTitle>Nenhum sorteio ainda</EmptyTitle>
-                <EmptyDescription>
-                  Os vencedores aparecem aqui após cada rodada.
-                </EmptyDescription>
-              </EmptyHeader>
-            </Empty>
-          ) : (
-            <ul className="flex flex-col gap-3">
-              {state.drawResults.map((w: DrawResult, index) => (
-                <li key={w.prizeIndex} className="flex flex-col gap-2">
-                  {index > 0 ? <Separator /> : null}
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="font-mono text-xs tracking-[0.12em] text-muted-foreground uppercase">
-                      #{w.prizeIndex} · {w.prizeLabel}
-                    </span>
-                    <Badge variant="outline" className="font-mono">
-                      {formatRaffleNumber(w.numberId)}
-                    </Badge>
-                  </div>
-                  <p className="text-sm font-medium">{w.buyerName}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </CardContent>
-      </Card>
-
-      {error ? (
-        <Alert variant="destructive">
-          <AlertTitle>Atenção</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      ) : null}
+        {error ? (
+          <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
+            <AlertTitle>Atenção</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        ) : null}
+      </div>
     </div>
   );
 }
