@@ -25,6 +25,8 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { NumberTicker } from '@/components/ui/number-ticker';
+import { Marquee } from '@/components/ui/marquee';
 import { formatBRL } from '@/lib/money';
 
 export default function LandingPage() {
@@ -87,7 +89,7 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Button asChild size="lg" className="wedding-button h-13 px-8 rounded-full text-base font-semibold w-full sm:w-auto shadow-md">
+            <Button asChild size="lg" className="wedding-button wedding-shimmer h-13 px-8 rounded-full text-base font-semibold w-full sm:w-auto shadow-md">
               <Link href="/cadastro">
                 Criar Rifa da Nossa Festa
                 <ArrowRightIcon className="size-4 ml-2" />
@@ -111,6 +113,27 @@ export default function LandingPage() {
               <CheckCircle2Icon className="size-4 text-primary" /> Pronto em 3 minutos
             </span>
           </div>
+        </div>
+
+        {/* Marquee Ribbon */}
+        <div className="mt-14 border-y border-border bg-card/60 py-3">
+          <Marquee speedSecs={28} pauseOnHover>
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground px-4">
+              🥂 A brincadeira mais tradicional da festa
+            </span>
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary px-4">
+              ⚡ Pagamento PIX com baixa instantânea
+            </span>
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground px-4">
+              📺 Telão ao vivo para a pista de dança
+            </span>
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary px-4">
+              🤵 Modo Padrinho para registrar na mesa
+            </span>
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground px-4">
+              ✈️ Dinheiro direto para a Lua de Mel
+            </span>
+          </Marquee>
         </div>
       </section>
 
@@ -193,23 +216,41 @@ export default function LandingPage() {
                     Estimativa Líquida para o Casal
                   </CardDescription>
                   <CardTitle className="wedding-numeral text-4xl sm:text-5xl font-bold text-primary">
-                    {formatBRL(estimatedNet)}
+                    <NumberTicker
+                      value={estimatedNet}
+                      formatFn={(n) => formatBRL(Math.round(n))}
+                    />
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2.5 text-sm">
                     <div className="flex justify-between text-muted-foreground">
                       <span>Total arrecadado ({totalTickets} bilhetes)</span>
-                      <span className="wedding-numeral font-medium text-foreground">{formatBRL(estimatedGross)}</span>
+                      <span className="wedding-numeral font-medium text-foreground">
+                        <NumberTicker
+                          value={estimatedGross}
+                          formatFn={(n) => formatBRL(Math.round(n))}
+                        />
+                      </span>
                     </div>
                     <div className="flex justify-between text-muted-foreground">
                       <span>Taxa de serviço e PIX (4.9%)</span>
-                      <span className="wedding-numeral font-medium text-muted-foreground">- {formatBRL(estimatedFee)}</span>
+                      <span className="wedding-numeral font-medium text-muted-foreground">
+                        - <NumberTicker
+                          value={estimatedFee}
+                          formatFn={(n) => formatBRL(Math.round(n))}
+                        />
+                      </span>
                     </div>
                     <Separator className="bg-border" />
                     <div className="flex justify-between font-semibold text-foreground text-base">
                       <span>Disponível para saque</span>
-                      <span className="wedding-numeral font-bold text-primary text-xl">{formatBRL(estimatedNet)}</span>
+                      <span className="wedding-numeral font-bold text-primary text-xl">
+                        <NumberTicker
+                          value={estimatedNet}
+                          formatFn={(n) => formatBRL(Math.round(n))}
+                        />
+                      </span>
                     </div>
                   </div>
 
@@ -218,7 +259,7 @@ export default function LandingPage() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button asChild className="wedding-button w-full h-12 rounded-full text-base font-semibold shadow-md">
+                  <Button asChild className="wedding-button wedding-shimmer w-full h-12 rounded-full text-base font-semibold shadow-md">
                     <Link href="/cadastro">
                       Criar Nossa Rifa Grátis
                     </Link>

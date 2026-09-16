@@ -32,6 +32,8 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
+import { NumberTicker } from '@/components/ui/number-ticker';
+import { launchCelebrationConfetti } from '@/lib/confetti';
 import {
   ApiError,
   drawNext,
@@ -160,6 +162,7 @@ export function AdminConsole() {
         const winner = await drawNext(label ? { prizeLabel: label } : undefined);
         await refresh();
         setPrizeLabel('');
+        launchCelebrationConfetti({ count: 90 });
         toast.success(
           `Vencedor: ${formatRaffleNumber(winner.numberId)} — ${winner.buyerName}`,
         );
@@ -267,16 +270,13 @@ export function AdminConsole() {
         </header>
 
         {state ? (
-          <section
-            className="grid grid-cols-2 gap-3 sm:grid-cols-4"
-            aria-live="polite"
-          >
+          <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Card className="wedding-card p-3 text-center shadow-xs">
               <CardDescription className="text-[10px] tracking-wider uppercase font-semibold text-muted-foreground">
-                Disponíveis
+                Livres
               </CardDescription>
               <CardTitle className="wedding-numeral text-2xl font-bold mt-1 text-foreground">
-                {state.counts.disponivel}
+                <NumberTicker value={state.counts.disponivel} />
               </CardTitle>
             </Card>
             <Card className="wedding-card p-3 text-center shadow-xs">
@@ -284,7 +284,7 @@ export function AdminConsole() {
                 Reservados
               </CardDescription>
               <CardTitle className="wedding-numeral text-2xl font-bold mt-1 text-amber-600">
-                {state.counts.reservado}
+                <NumberTicker value={state.counts.reservado} />
               </CardTitle>
             </Card>
             <Card className="wedding-card p-3 text-center shadow-xs">
@@ -292,7 +292,7 @@ export function AdminConsole() {
                 Pagos
               </CardDescription>
               <CardTitle className="wedding-numeral text-2xl font-bold mt-1 text-emerald-600">
-                {state.counts.pago}
+                <NumberTicker value={state.counts.pago} />
               </CardTitle>
             </Card>
             <Card className="wedding-card border-primary/30 p-3 text-center shadow-xs">
@@ -300,7 +300,10 @@ export function AdminConsole() {
                 Arrecadado
               </CardDescription>
               <CardTitle className="wedding-numeral text-lg font-bold text-primary mt-1">
-                {formatBRL(state.arrecadadoCents)}
+                <NumberTicker
+                  value={state.arrecadadoCents}
+                  formatFn={(n) => formatBRL(Math.round(n))}
+                />
               </CardTitle>
             </Card>
           </section>
@@ -389,7 +392,7 @@ export function AdminConsole() {
               type="submit"
               form="admin-draw"
               size="lg"
-              className="wedding-button h-12 w-full rounded-2xl text-xs font-semibold tracking-wider uppercase shadow-md disabled:opacity-50"
+              className="wedding-button wedding-shimmer h-12 w-full rounded-2xl text-xs font-semibold tracking-wider uppercase shadow-md disabled:opacity-50"
               disabled={pending || !state || salesOpen}
             >
               {pending ? (

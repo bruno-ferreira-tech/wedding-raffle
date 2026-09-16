@@ -178,7 +178,7 @@ export default function RegisterPage() {
               type="submit"
               form="register-form"
               size="lg"
-              className="wedding-button h-12 w-full rounded-2xl text-sm font-semibold shadow-md disabled:opacity-50"
+              className="wedding-button wedding-shimmer h-12 w-full rounded-2xl text-sm font-semibold shadow-md disabled:opacity-50"
               disabled={pending}
             >
               {pending ? <Spinner data-icon="inline-start" /> : null}

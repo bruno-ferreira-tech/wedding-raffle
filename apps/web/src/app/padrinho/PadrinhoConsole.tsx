@@ -24,6 +24,7 @@ import {
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
+import { launchCelebrationConfetti } from '@/lib/confetti';
 import {
   ApiError,
   fetchNumberBoard,
@@ -145,6 +146,7 @@ export function PadrinhoConsole() {
     startTransition(async () => {
       try {
         await markPaid({ buyerName: name, numberIds: numbers });
+        launchCelebrationConfetti({ count: 50 });
         toast.success(
           `Pago: ${numbers.map(formatRaffleNumber).join(', ')} — ${name}`,
         );
@@ -229,10 +231,10 @@ export function PadrinhoConsole() {
             <CardFooter className="pt-2">
               <Button
                 type="submit"
-                form="padrinho-login"
+                form="padrinho-auth-form"
                 size="lg"
-                className="wedding-button h-12 w-full rounded-2xl text-base font-semibold shadow-md"
-                disabled={pending}
+                className="wedding-button wedding-shimmer h-12 w-full rounded-2xl text-base font-semibold shadow-md"
+                disabled={pending || !password.trim()}
               >
                 {pending ? (
                   <Spinner data-icon="inline-start" />
@@ -338,7 +340,7 @@ export function PadrinhoConsole() {
               type="submit"
               form="padrinho-mark-paid"
               size="lg"
-              className="wedding-button h-14 w-full rounded-2xl text-base font-semibold shadow-md disabled:opacity-50"
+              className="wedding-button wedding-shimmer h-14 w-full rounded-2xl text-base font-semibold shadow-md disabled:opacity-50"
               disabled={pending || selected.length === 0}
             >
               {pending ? (

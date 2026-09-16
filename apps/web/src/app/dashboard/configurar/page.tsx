@@ -508,7 +508,7 @@ export default function ConfigureEventPage() {
               <Button
                 type="submit"
                 disabled={pending}
-                className="wedding-button h-12 px-8 rounded-2xl text-xs font-semibold shadow-md"
+                className="wedding-button wedding-shimmer h-12 px-8 rounded-2xl text-xs font-semibold shadow-md"
               >
                 {pending ? <Spinner data-icon="inline-start" /> : <SaveIcon className="size-4 mr-1.5" />}
                 {pending ? 'Salvando…' : 'Salvar Todas as Configurações'}

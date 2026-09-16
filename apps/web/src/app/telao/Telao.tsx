@@ -10,6 +10,8 @@ import {
 } from '@/lib/api';
 import { formatBRL, formatRaffleNumber } from '@/lib/money';
 import { parseRealtimeEvent } from '@/lib/sse';
+import { NumberTicker } from '@/components/ui/number-ticker';
+import { launchCelebrationConfetti } from '@/lib/confetti';
 import styles from './telao.module.css';
 
 type RevealPhase = 'idle' | 'countdown' | 'number' | 'name';
@@ -78,8 +80,10 @@ export function Telao({ event }: TelaoProps = {}) {
               phase: 'number',
               countdown: null,
             }));
+            launchCelebrationConfetti({ count: 120 });
             const nameId = window.setTimeout(() => {
               setReveal((prev) => ({ ...prev, phase: 'name' }));
+              launchCelebrationConfetti({ count: 80 });
             }, 1600);
             revealTimers.current.push(nameId);
             const dismissId = window.setTimeout(() => {
@@ -199,7 +203,14 @@ export function Telao({ event }: TelaoProps = {}) {
         <div className={`${styles.counter} ${styles.counterWide}`}>
           <span className={styles.counterLabel}>Total Arrecadado</span>
           <span className={styles.counterMoney}>
-            {state ? formatBRL(state.arrecadadoCents) : '—'}
+            {state ? (
+              <NumberTicker
+                value={state.arrecadadoCents}
+                formatFn={(n) => formatBRL(Math.round(n))}
+              />
+            ) : (
+              '—'
+            )}
           </span>
         </div>
       </section>
@@ -284,7 +295,7 @@ function Counter({
     >
       <span className={styles.counterLabel}>{label}</span>
       <span className={styles.counterValue}>
-        {value === undefined ? '—' : value}
+        {value === undefined ? '—' : <NumberTicker value={value} />}
       </span>
     </div>
   );

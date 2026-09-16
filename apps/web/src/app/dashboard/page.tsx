@@ -30,6 +30,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
+import { NumberTicker } from '@/components/ui/number-ticker';
 import {
   ApiError,
   createDashboardEvent,
@@ -271,7 +272,14 @@ export default function DashboardOverviewPage() {
                 </span>
               </div>
               <CardTitle className="wedding-numeral text-4xl sm:text-5xl font-bold text-primary mt-2">
-                {balance ? formatBRL(balance.availableBalanceCents) : 'R$ 0,00'}
+                {balance ? (
+                  <NumberTicker
+                    value={balance.availableBalanceCents}
+                    formatFn={(n) => formatBRL(Math.round(n))}
+                  />
+                ) : (
+                  'R$ 0,00'
+                )}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0 py-2">
@@ -281,7 +289,7 @@ export default function DashboardOverviewPage() {
             </CardContent>
             <CardFooter className="p-0 pt-4">
               <Button
-                className="wedding-button w-full h-12 rounded-2xl text-sm font-semibold shadow-md disabled:opacity-50"
+                className="wedding-button wedding-shimmer w-full h-12 rounded-2xl text-sm font-semibold shadow-md disabled:opacity-50"
                 disabled={!balance || balance.availableBalanceCents <= 0}
                 onClick={() => setPayoutOpen(true)}
               >
@@ -298,7 +306,14 @@ export default function DashboardOverviewPage() {
                 Arrecadação Bruta
               </CardDescription>
               <CardTitle className="wedding-numeral text-3xl font-bold mt-1 text-foreground">
-                {balance ? formatBRL(balance.grossRevenueCents) : 'R$ 0,00'}
+                {balance ? (
+                  <NumberTicker
+                    value={balance.grossRevenueCents}
+                    formatFn={(n) => formatBRL(Math.round(n))}
+                  />
+                ) : (
+                  'R$ 0,00'
+                )}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0 space-y-3 pt-3">
@@ -312,7 +327,14 @@ export default function DashboardOverviewPage() {
               <div className="flex items-center justify-between text-sm font-semibold">
                 <span className="text-muted-foreground">Total Líquido Arrecadado</span>
                 <span className="wedding-numeral text-foreground text-base">
-                  {balance ? formatBRL(balance.netRevenueCents) : 'R$ 0,00'}
+                  {balance ? (
+                    <NumberTicker
+                      value={balance.netRevenueCents}
+                      formatFn={(n) => formatBRL(Math.round(n))}
+                    />
+                  ) : (
+                    'R$ 0,00'
+                  )}
                 </span>
               </div>
             </CardContent>

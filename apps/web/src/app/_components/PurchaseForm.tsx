@@ -29,6 +29,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
+import { NumberTicker } from '@/components/ui/number-ticker';
 import { BingoBoard } from '@/app/_components/BingoBoard';
 import {
   ApiError,
@@ -312,7 +313,10 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
                   Valor Total
                 </span>
                 <p className="wedding-numeral text-3xl font-bold text-primary">
-                  {selected.length === 0 ? formatBRL(0) : formatBRL(total)}
+                  <NumberTicker
+                    value={selected.length === 0 ? 0 : total}
+                    formatFn={(n) => formatBRL(Math.round(n))}
+                  />
                 </p>
               </div>
             </div>
@@ -330,7 +334,7 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
             type="submit"
             form="purchase-form"
             size="lg"
-            className="wedding-button h-12 w-full rounded-full text-base font-semibold shadow-md"
+            className="wedding-button wedding-shimmer h-12 w-full rounded-full text-base font-semibold shadow-md"
             disabled={salesClosed || pending || selected.length === 0}
           >
             {pending ? <Spinner data-icon="inline-start" className="mr-2" /> : null}

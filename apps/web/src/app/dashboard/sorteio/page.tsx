@@ -24,6 +24,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
+import { BorderBeam } from '@/components/ui/border-beam';
+import { launchCelebrationConfetti } from '@/lib/confetti';
 import {
   ApiError,
   drawDashboardEvent,
@@ -110,6 +112,7 @@ export default function DashboardSorteioPage() {
       try {
         const winner = await drawDashboardEvent(event.id, prizeLabel.trim() || undefined);
         setLastWinner(winner);
+        launchCelebrationConfetti({ count: 110 });
         toast.success(`🎉 Vencedor sorteado: Número ${formatRaffleNumber(winner.numberId)} (${winner.buyerName})!`);
         await loadData();
       } catch (err) {
@@ -215,7 +218,8 @@ export default function DashboardSorteioPage() {
         </Card>
 
         {/* Step 2: Sorteio do Próximo Prêmio */}
-        <Card className="wedding-card border-primary/30 shadow-md p-6 sm:p-7">
+        <Card className="wedding-card relative overflow-hidden border-primary/30 shadow-md p-6 sm:p-7">
+          <BorderBeam size={240} duration={8} />
           <CardHeader className="p-0 pb-4">
             <div className="flex items-center gap-2">
               <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -249,7 +253,7 @@ export default function DashboardSorteioPage() {
                   size="lg"
                   onClick={onDrawNext}
                   disabled={!isSalesClosed || eligibleCount === 0 || drawPending}
-                  className="wedding-button h-12 w-full sm:w-auto font-semibold px-8 rounded-2xl shadow-md disabled:opacity-50"
+                  className="wedding-button wedding-shimmer h-12 w-full sm:w-auto font-semibold px-8 rounded-2xl shadow-md disabled:opacity-50"
                 >
                   {drawPending ? <Spinner data-icon="inline-start" /> : <SparklesIcon className="size-4 mr-2" />}
                   {drawPending ? 'Sorteando…' : 'Sortear Agora!'}

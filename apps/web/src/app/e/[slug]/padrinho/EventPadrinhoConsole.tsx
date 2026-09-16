@@ -24,6 +24,8 @@ import {
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
+import { NumberTicker } from '@/components/ui/number-ticker';
+import { launchCelebrationConfetti } from '@/lib/confetti';
 import {
   ApiError,
   fetchNumberBoard,
@@ -157,6 +159,7 @@ export function EventPadrinhoConsole({ event }: Props) {
           buyerName: name,
           numberIds: numbers,
         });
+        launchCelebrationConfetti({ count: 50 });
         toast.success(
           `Venda confirmada: ${numbers.map(formatRaffleNumber).join(', ')} — ${name}`,
         );
@@ -334,7 +337,10 @@ export function EventPadrinhoConsole({ event }: Props) {
                         Valor Total em Mãos
                       </span>
                       <p className="wedding-numeral text-3xl font-bold text-primary">
-                        {formatBRL(total)}
+                        <NumberTicker
+                          value={total}
+                          formatFn={(n) => formatBRL(Math.round(n))}
+                        />
                       </p>
                     </div>
                   </div>
@@ -353,7 +359,7 @@ export function EventPadrinhoConsole({ event }: Props) {
                 type="submit"
                 form="mark-paid-form"
                 size="lg"
-                className="wedding-button h-14 w-full rounded-2xl text-base font-semibold shadow-md disabled:opacity-50"
+                className="wedding-button wedding-shimmer h-14 w-full rounded-2xl text-base font-semibold shadow-md disabled:opacity-50"
                 disabled={pending || selected.length === 0}
               >
                 {pending ? <Spinner data-icon="inline-start" /> : <CheckIcon data-icon="inline-start" className="size-5 mr-2" />}

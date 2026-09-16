@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { CheckIcon, CopyIcon } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -18,6 +18,8 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
+import { BorderBeam } from '@/components/ui/border-beam';
+import { launchCelebrationConfetti } from '@/lib/confetti';
 import {
   ApiError,
   confirmFakePayment,
@@ -83,12 +85,17 @@ export function OrderStatus({ orderId, backHref = '/', themeId }: Props) {
   const [copied, setCopied] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [now, setNow] = useState(() => Date.now());
+  const confettiFired = useRef(false);
 
   const refresh = useCallback(async () => {
     try {
       const next = await fetchOrder(orderId);
       setOrder(next);
       setError(null);
+      if (next.status === 'paid' && !confettiFired.current) {
+        confettiFired.current = true;
+        launchCelebrationConfetti({ count: 90 });
+      }
     } catch (err) {
       const message =
         err instanceof ApiError
@@ -264,7 +271,8 @@ export function OrderStatus({ orderId, backHref = '/', themeId }: Props) {
       </Card>
 
       {order.status === 'pending' ? (
-        <Card className="wedding-card border-primary/30 shadow-md">
+        <Card className="wedding-card relative overflow-hidden border-primary/30 shadow-md">
+          <BorderBeam size={220} duration={8} />
           <CardHeader className="pb-3 text-center">
             <CardTitle className="font-heading text-2xl font-bold text-foreground">Pague com PIX</CardTitle>
             <CardDescription className="text-xs">
@@ -301,7 +309,7 @@ export function OrderStatus({ orderId, backHref = '/', themeId }: Props) {
           <CardFooter className="flex flex-col sm:flex-row gap-3 pt-2 pb-6">
             <Button
               type="button"
-              className="wedding-button h-11 w-full rounded-full font-semibold shadow-sm"
+              className="wedding-button wedding-shimmer h-11 w-full rounded-full font-semibold shadow-sm"
               onClick={() => void onCopyPix()}
               disabled={!order.pixCopyPaste}
             >
