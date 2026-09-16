@@ -172,32 +172,25 @@ export function PadrinhoConsole() {
   if (!authed) {
     return (
       <div className="relative min-h-dvh w-full overflow-x-hidden bg-background text-foreground">
-        {/* Ambient background glow */}
-        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-          <div className="absolute -top-32 left-1/2 h-96 w-[36rem] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]" />
-        </div>
-
         <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-4 py-12">
-          <header className="flex flex-col items-center text-center gap-3 mb-6 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_both]">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[11px] font-semibold tracking-wider text-muted-foreground uppercase backdrop-blur-md">
+          <header className="flex flex-col items-center text-center gap-3 mb-6">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               <span className="size-2 rounded-full bg-primary animate-pulse" />
-              Operação de Campo
+              Modo Padrinho
             </span>
-            <h1 className="font-heading text-4xl font-bold tracking-tight sm:text-5xl">
-              <span className="bg-gradient-to-br from-foreground via-foreground to-primary bg-clip-text text-transparent">
-                Padrinho
-              </span>
+            <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
+              Acesso do Padrinho
             </h1>
-            <p className="text-sm text-muted-foreground max-w-[32ch]">
-              Marque números pagos em dinheiro ou PIX presencialmente no evento.
+            <p className="text-sm text-muted-foreground max-w-[34ch]">
+              Marque bilhetes pagos em dinheiro ou PIX em mãos durante a festa.
             </p>
           </header>
 
-          <Card className="apple-glass rounded-3xl border border-white/12 shadow-2xl p-2 sm:p-4 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_0.1s_both]">
+          <Card className="wedding-card shadow-lg p-2 sm:p-4">
             <CardHeader className="text-center pb-3">
-              <CardTitle className="font-heading text-xl">Acesso do Padrinho</CardTitle>
+              <CardTitle className="font-heading text-xl font-bold text-foreground">Entrar na Cartela</CardTitle>
               <CardDescription className="text-xs text-muted-foreground">
-                Informe a senha de acesso para liberar a cartela
+                Informe a senha de acesso informada pelos noivos
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -209,7 +202,7 @@ export function PadrinhoConsole() {
                 <FieldGroup>
                   <Field>
                     <FieldLabel htmlFor={passwordId} className="text-xs font-semibold uppercase tracking-wider text-muted-foreground text-center block">
-                      Senha
+                      Senha de Acesso
                     </FieldLabel>
                     <Input
                       id={passwordId}
@@ -221,7 +214,7 @@ export function PadrinhoConsole() {
                       required
                       placeholder="••••••••"
                       autoFocus
-                      className="h-12 text-center font-mono text-xl tracking-[0.25em] rounded-2xl bg-black/25 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                      className="h-12 text-center font-mono text-xl tracking-[0.25em] rounded-2xl bg-background border-border focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-2xs"
                     />
                   </Field>
                 </FieldGroup>
@@ -238,7 +231,7 @@ export function PadrinhoConsole() {
                 type="submit"
                 form="padrinho-login"
                 size="lg"
-                className="apple-pressable h-12 w-full rounded-2xl font-heading text-sm font-semibold tracking-wider uppercase bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                className="wedding-button h-12 w-full rounded-2xl text-base font-semibold shadow-md"
                 disabled={pending}
               >
                 {pending ? (
@@ -246,7 +239,7 @@ export function PadrinhoConsole() {
                 ) : (
                   <LogInIcon data-icon="inline-start" className="size-4 mr-2" />
                 )}
-                {pending ? 'Entrando…' : 'Entrar na Cartela'}
+                {pending ? 'Entrando…' : 'Acessar Cartela'}
               </Button>
             </CardFooter>
           </Card>
@@ -256,34 +249,26 @@ export function PadrinhoConsole() {
   }
 
   return (
-    <div className="relative min-h-dvh w-full overflow-x-hidden bg-background text-foreground">
-      {/* Ambient background glow */}
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-32 left-1/2 h-96 w-[36rem] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]" />
-        <div className="absolute top-1/2 -right-48 h-80 w-80 rounded-full bg-primary/5 blur-[100px]" />
-      </div>
-
+    <div className="relative min-h-dvh w-full bg-background text-foreground">
       <div className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
-        <header className="flex flex-col gap-3 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_both]">
-          <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[11px] font-semibold tracking-wider text-muted-foreground uppercase backdrop-blur-md">
+        <header className="flex flex-col gap-3">
+          <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
             <span className="size-2 rounded-full bg-primary animate-pulse" />
-            Operação Assistida
+            Modo Padrinho
           </span>
-          <h1 className="font-heading text-4xl font-bold tracking-tight sm:text-5xl">
-            <span className="bg-gradient-to-br from-foreground via-foreground to-primary bg-clip-text text-transparent">
-              Marcar Pago
-            </span>
+          <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-5xl text-foreground">
+            Registrar Venda em Mãos
           </h1>
           <p className="max-w-[44ch] text-base text-muted-foreground leading-relaxed">
-            Toque na cartela, confirme o nome do comprador e registre o pagamento.
+            Selecione os números na cartela, digite o nome do convidado e confirme o recebimento.
           </p>
         </header>
 
-        <Card className="apple-glass rounded-3xl border border-white/12 shadow-2xl animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_0.1s_both] overflow-hidden">
-          <CardHeader className="border-b border-white/10 pb-5">
-            <CardTitle className="font-heading text-2xl font-bold">Cartela Presencial</CardTitle>
+        <Card className="wedding-card shadow-lg overflow-hidden">
+          <CardHeader className="border-b border-border pb-5">
+            <CardTitle className="font-heading text-2xl font-bold text-foreground">Cartela da Festa</CardTitle>
             <CardDescription className="text-sm text-muted-foreground">
-              Mesma grade ao vivo do telão e convidados — ideal para quem paga em mãos.
+              Grade oficial ao vivo sincronizada com o telão e o site dos noivos.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-6 pt-6">
@@ -295,7 +280,7 @@ export function PadrinhoConsole() {
               onToggle={toggleNumber}
             />
 
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-4 sm:p-5 backdrop-blur-md">
+            <div className="rounded-2xl border border-border bg-secondary/30 p-4 sm:p-5">
               <form
                 id="padrinho-mark-paid"
                 className="flex flex-col gap-5"
@@ -318,7 +303,7 @@ export function PadrinhoConsole() {
                       required
                       autoComplete="name"
                       placeholder="Ex: Tio Roberto ou Carlos Oliveira"
-                      className="h-12 rounded-xl bg-black/30 border-white/15 px-4 text-base focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                      className="h-12 rounded-xl bg-background border-border px-4 text-base focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-2xs"
                       aria-invalid={
                         Boolean(error && !buyerName.trim()) || undefined
                       }
@@ -326,15 +311,15 @@ export function PadrinhoConsole() {
                   </Field>
                 </FieldGroup>
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-white/10 pt-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-border pt-4">
                   <div className="flex flex-col gap-1">
-                    <span className="font-mono text-xs tracking-[0.16em] text-muted-foreground uppercase">
+                    <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                       Selecionados ({selected.length})
                     </span>
-                    <span className="font-mono text-sm text-foreground apple-numeral">
+                    <span className="text-sm font-semibold text-foreground">
                       {selected.length === 0
                         ? 'Nenhum número selecionado'
-                        : `${selected.slice(0, 8).map(formatRaffleNumber).join(' ')}${selected.length > 8 ? '…' : ''}`}
+                        : `${selected.slice(0, 8).map(formatRaffleNumber).join(', ')}${selected.length > 8 ? '…' : ''}`}
                     </span>
                   </div>
                 </div>
@@ -348,12 +333,12 @@ export function PadrinhoConsole() {
               </form>
             </div>
           </CardContent>
-          <CardFooter className="border-t border-white/10 bg-black/10 p-4 sm:p-6">
+          <CardFooter className="border-t border-border bg-secondary/10 p-4 sm:p-6">
             <Button
               type="submit"
               form="padrinho-mark-paid"
               size="lg"
-              className="apple-pressable h-14 w-full rounded-2xl font-heading text-base font-semibold tracking-wide uppercase bg-primary text-primary-foreground shadow-xl shadow-primary/25 disabled:opacity-50"
+              className="wedding-button h-14 w-full rounded-2xl text-base font-semibold shadow-md disabled:opacity-50"
               disabled={pending || selected.length === 0}
             >
               {pending ? (

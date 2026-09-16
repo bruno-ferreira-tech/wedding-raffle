@@ -1,33 +1,26 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, Syne } from "next/font/google";
+import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 
-const syne = Syne({
+const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
-  weight: ["500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const ibmPlexSans = IBM_Plex_Sans({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
-  weight: ["400", "500", "600"],
-});
-
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  display: "swap",
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Corta-Gravata",
-  description: "Corta-Gravata Digital — rifa do casamento",
+  title: "Corta-Gravata — A Tradição da Gravata dos Noivos, Elegante e Digital",
+  description: "Arrecadação festiva para a lua de mel com cartela ao vivo e sorteio no telão do casamento.",
 };
 
 export default function RootLayout({
@@ -38,11 +31,11 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={cn("dark", syne.variable, ibmPlexSans.variable, ibmPlexMono.variable)}
+      className={cn(playfair.variable, jakarta.variable)}
     >
-      <body className="min-h-dvh font-sans">
+      <body className="min-h-dvh font-sans antialiased bg-background text-foreground selection:bg-primary/20 selection:text-primary">
         {children}
-        <Toaster position="top-center" theme="dark" />
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );

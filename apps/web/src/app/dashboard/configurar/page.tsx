@@ -37,37 +37,38 @@ import {
 const THEMES = [
   {
     id: 'champagne-navy',
-    name: 'Champagne & Navy',
-    subtitle: 'Cerimonial Luxuoso',
-    bg: '#141829',
-    primary: '#c6a75e',
-    text: '#f8fafc',
+    name: 'Champagne & Marfim',
+    subtitle: 'Clássico & Nobre',
+    bg: '#faf8f5',
+    primary: '#b89047',
+    text: '#262320',
   },
   {
     id: 'rose-gold',
-    name: 'Rose Gold & Velvet',
+    name: 'Rosé & Linho',
     subtitle: 'Romântico & Suave',
-    bg: '#25151c',
-    primary: '#d4a373',
-    text: '#fff1f2',
+    bg: '#fdfaf9',
+    primary: '#b66d72',
+    text: '#2a2426',
   },
   {
     id: 'emerald-brass',
-    name: 'Emerald & Brass',
-    subtitle: 'Floresta & Bronze',
-    bg: '#12221a',
-    primary: '#d4b26f',
-    text: '#f0fdf4',
+    name: 'Sálvia & Ouro Velho',
+    subtitle: 'Botânico & Campo',
+    bg: '#f7faf7',
+    primary: '#4d6e53',
+    text: '#1f2821',
   },
   {
     id: 'monochrome-slate',
-    name: 'Monochrome & Ivory',
-    subtitle: 'Minimalista & Prata',
-    bg: '#171923',
-    primary: '#e2e8f0',
-    text: '#ffffff',
+    name: 'Noite de Gala',
+    subtitle: 'Black-Tie Aveludado',
+    bg: '#141312',
+    primary: '#d4af37',
+    text: '#f5f2eb',
   },
 ];
+
 
 export default function ConfigureEventPage() {
   const router = useRouter();
@@ -195,22 +196,16 @@ export default function ConfigureEventPage() {
   }
 
   return (
-    <div className="relative min-h-dvh w-full overflow-x-hidden bg-background text-foreground transition-colors duration-500">
-      {/* Ambient background glow */}
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-40 left-1/3 h-[32rem] w-[32rem] rounded-full bg-primary/10 blur-[140px]" />
-        <div className="absolute top-1/2 -right-40 h-96 w-96 rounded-full bg-primary/5 blur-[120px]" />
-      </div>
-
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-background/70 backdrop-blur-2xl">
+    <div className="min-h-dvh w-full bg-background text-foreground">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <Button asChild variant="ghost" size="icon" className="apple-pressable size-8 rounded-full border border-white/10 hover:bg-white/10">
+            <Button asChild variant="ghost" size="icon" className="size-8 rounded-full hover:bg-muted">
               <Link href="/dashboard">
                 <ArrowLeftIcon className="size-4" />
               </Link>
             </Button>
-            <h1 className="font-heading text-lg font-bold">Configurar Casamento</h1>
+            <h1 className="font-heading text-lg font-bold text-foreground">Configurar Casamento</h1>
           </div>
 
           <Button
@@ -218,7 +213,7 @@ export default function ConfigureEventPage() {
             form="config-form"
             size="sm"
             disabled={pending}
-            className="apple-pressable h-9 px-4 rounded-full font-heading text-xs font-semibold uppercase tracking-wider bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+            className="wedding-button h-9 px-4 rounded-full text-xs font-semibold shadow-xs"
           >
             {pending ? <Spinner data-icon="inline-start" /> : <SaveIcon className="size-3.5 mr-1.5" />}
             {pending ? 'Salvando…' : 'Salvar Alterações'}
@@ -234,11 +229,11 @@ export default function ConfigureEventPage() {
           </Alert>
         ) : null}
 
-        <form id="config-form" onSubmit={onSubmit} className="space-y-8 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_both]">
+        <form id="config-form" onSubmit={onSubmit} className="space-y-8">
           {/* Section 1: Informações Gerais */}
-          <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-6 sm:p-7">
+          <Card className="wedding-card shadow-sm p-6 sm:p-7">
             <CardHeader className="p-0 pb-5">
-              <CardTitle className="font-heading text-xl font-bold">Informações Gerais</CardTitle>
+              <CardTitle className="font-heading text-xl font-bold text-foreground">Informações Gerais</CardTitle>
               <CardDescription className="text-xs text-muted-foreground mt-0.5">
                 Personalize os dados de apresentação que aparecem na rifa e no telão.
               </CardDescription>
@@ -257,7 +252,7 @@ export default function ConfigureEventPage() {
                       onChange={(e) => setCoupleNames(e.target.value)}
                       placeholder="Ex: Marina & Bruno"
                       disabled={pending}
-                      className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                      className="h-11 rounded-xl bg-background border-border focus:ring-2 focus:ring-primary shadow-2xs"
                     />
                   </Field>
 
@@ -271,7 +266,7 @@ export default function ConfigureEventPage() {
                       value={eventDate}
                       onChange={(e) => setEventDate(e.target.value)}
                       disabled={pending}
-                      className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                      className="h-11 rounded-xl bg-background border-border focus:ring-2 focus:ring-primary shadow-2xs"
                     />
                   </Field>
                 </div>
@@ -286,7 +281,7 @@ export default function ConfigureEventPage() {
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Ex: Corta-Gravata dos Noivos Marina & Bruno"
                     disabled={pending}
-                    className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                    className="h-11 rounded-xl bg-background border-border focus:ring-2 focus:ring-primary shadow-2xs"
                   />
                 </Field>
 
@@ -300,7 +295,7 @@ export default function ConfigureEventPage() {
                     onChange={(e) => setWelcomeMessage(e.target.value)}
                     placeholder="Ex: Ajude os noivos na lua de mel e concorra a prêmios incríveis!"
                     disabled={pending}
-                    className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                    className="h-11 rounded-xl bg-background border-border focus:ring-2 focus:ring-primary shadow-2xs"
                   />
                 </Field>
               </FieldGroup>
@@ -308,16 +303,16 @@ export default function ConfigureEventPage() {
           </Card>
 
           {/* Section 2: Temas Visuais */}
-          <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-6 sm:p-7">
+          <Card className="wedding-card shadow-sm p-6 sm:p-7">
             <CardHeader className="p-0 pb-5">
               <div className="flex items-center gap-2">
-                <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary">
+                <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <PaletteIcon className="size-4" />
                 </div>
                 <div>
-                  <CardTitle className="font-heading text-xl font-bold">Tema Visual da Festa</CardTitle>
+                  <CardTitle className="font-heading text-xl font-bold text-foreground">Tema Visual da Festa</CardTitle>
                   <CardDescription className="text-xs text-muted-foreground mt-0.5">
-                    Selecione a paleta cromática que combina com a decoração do seu casamento.
+                    Selecione a paleta de cores que combina com a decoração do seu casamento.
                   </CardDescription>
                 </div>
               </div>
@@ -330,15 +325,15 @@ export default function ConfigureEventPage() {
                     <div
                       key={theme.id}
                       onClick={() => setThemeId(theme.id)}
-                      className={`apple-pressable cursor-pointer rounded-2xl border p-4 transition-all duration-300 ${
+                      className={`cursor-pointer rounded-2xl border p-4 transition-all ${
                         isSelected
-                          ? 'border-primary ring-2 ring-primary/40 bg-primary/10 shadow-lg shadow-primary/10'
-                          : 'border-white/10 hover:border-white/20 bg-black/20 hover:bg-white/5'
+                          ? 'border-primary ring-2 ring-primary/40 bg-primary/10 shadow-xs'
+                          : 'border-border hover:border-primary/50 bg-secondary/20 hover:bg-secondary/40'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-3">
                         <div>
-                          <p className="font-semibold text-sm">{theme.name}</p>
+                          <p className="font-semibold text-sm text-foreground">{theme.name}</p>
                           <p className="text-xs text-muted-foreground">{theme.subtitle}</p>
                         </div>
                         {isSelected ? (
@@ -348,7 +343,7 @@ export default function ConfigureEventPage() {
                         ) : null}
                       </div>
 
-                      <div className="flex h-7 w-full overflow-hidden rounded-xl border border-white/10">
+                      <div className="flex h-7 w-full overflow-hidden rounded-xl border border-border shadow-2xs">
                         <div style={{ backgroundColor: theme.bg }} className="flex-1" />
                         <div style={{ backgroundColor: theme.primary }} className="w-1/3" />
                       </div>
@@ -360,11 +355,11 @@ export default function ConfigureEventPage() {
           </Card>
 
           {/* Section 3: Regras da Rifa e Valores */}
-          <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-6 sm:p-7">
+          <Card className="wedding-card shadow-sm p-6 sm:p-7">
             <CardHeader className="p-0 pb-5">
-              <CardTitle className="font-heading text-xl font-bold">Regras e Valores</CardTitle>
+              <CardTitle className="font-heading text-xl font-bold text-foreground">Regras e Valores</CardTitle>
               <CardDescription className="text-xs text-muted-foreground mt-0.5">
-                Defina o preço de cada número e a chave de segurança dos padrinhos.
+                Defina o preço de cada número e a senha de segurança dos padrinhos.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0 space-y-4">
@@ -380,7 +375,7 @@ export default function ConfigureEventPage() {
                       onChange={(e) => setTicketPriceReais(e.target.value)}
                       placeholder="20.00"
                       disabled={pending}
-                      className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 apple-numeral font-semibold"
+                      className="h-11 rounded-xl bg-background border-border focus:ring-2 focus:ring-primary wedding-numeral font-semibold shadow-2xs"
                     />
                   </Field>
 
@@ -393,14 +388,14 @@ export default function ConfigureEventPage() {
                       type="number"
                       value={totalNumbers}
                       disabled
-                      className="h-11 rounded-xl bg-white/5 border-white/10 opacity-75 cursor-not-allowed apple-numeral"
+                      className="h-11 rounded-xl bg-muted border-border opacity-75 cursor-not-allowed wedding-numeral"
                     />
                   </Field>
                 </div>
 
                 <Field>
                   <FieldLabel htmlFor="padrinhoPin" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    PIN dos Padrinhos (4 dígitos)
+                    Senha dos Padrinhos (4 dígitos)
                   </FieldLabel>
                   <Input
                     id="padrinhoPin"
@@ -409,10 +404,10 @@ export default function ConfigureEventPage() {
                     onChange={(e) => setPadrinhoPin(e.target.value)}
                     placeholder="1234"
                     disabled={pending}
-                    className="h-11 font-mono tracking-widest sm:max-w-xs rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                    className="h-11 font-mono tracking-widest sm:max-w-xs rounded-xl bg-background border-border focus:ring-2 focus:ring-primary shadow-2xs"
                   />
                   <p className="text-xs text-muted-foreground mt-1.5">
-                    Código que os padrinhos usarão para registrar vendas em dinheiro vivo pelo smartphone.
+                    Código que os padrinhos usarão para registrar vendas em dinheiro vivo ou Pix na festa.
                   </p>
                 </Field>
               </FieldGroup>
@@ -420,10 +415,10 @@ export default function ConfigureEventPage() {
           </Card>
 
           {/* Section 4: Cadastro de Prêmios */}
-          <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-6 sm:p-7">
+          <Card className="wedding-card shadow-sm p-6 sm:p-7">
             <CardHeader className="p-0 pb-5 flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="font-heading text-xl font-bold">Prêmios do Sorteio</CardTitle>
+                <CardTitle className="font-heading text-xl font-bold text-foreground">Prêmios do Sorteio</CardTitle>
                 <CardDescription className="text-xs text-muted-foreground mt-0.5">
                   Adicione os prêmios que serão sorteados ao vivo na festa.
                 </CardDescription>
@@ -433,7 +428,7 @@ export default function ConfigureEventPage() {
                 variant="outline"
                 size="sm"
                 onClick={addPrize}
-                className="apple-pressable rounded-full border-white/15 bg-white/5 text-xs font-semibold"
+                className="rounded-full border-border bg-card text-xs font-semibold hover:bg-muted"
               >
                 <PlusIcon className="size-3.5 mr-1" />
                 Adicionar Prêmio
@@ -441,23 +436,23 @@ export default function ConfigureEventPage() {
             </CardHeader>
             <CardContent className="p-0 space-y-3">
               {prizes.map((prize, idx) => (
-                <div key={idx} className="flex items-center gap-2.5 bg-black/20 p-2 rounded-2xl border border-white/10">
-                  <span className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 font-mono text-xs font-semibold text-primary px-3 py-2 min-w-[5rem]">
-                    #{idx + 1} Lugar
+                <div key={idx} className="flex items-center gap-2.5 bg-secondary/30 p-2 rounded-2xl border border-border">
+                  <span className="inline-flex items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-xs font-semibold text-primary px-3 py-2 min-w-[5rem]">
+                    #{idx + 1} Prêmio
                   </span>
                   <Input
                     value={prize.label}
                     onChange={(e) => updatePrizeLabel(idx, e.target.value)}
                     placeholder={`Ex: Whisky 12 anos, Caixa de Som JBL, Airfryer…`}
                     disabled={pending}
-                    className="h-10 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                    className="h-10 rounded-xl bg-background border-border focus:ring-2 focus:ring-primary shadow-2xs"
                   />
                   {prizes.length > 1 ? (
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="apple-pressable size-9 rounded-xl text-destructive hover:bg-destructive/10"
+                      className="size-9 rounded-xl text-destructive hover:bg-destructive/10"
                       onClick={() => removePrize(idx)}
                     >
                       <TrashIcon className="size-4" />
@@ -469,9 +464,9 @@ export default function ConfigureEventPage() {
           </Card>
 
           {/* Section 5: Chave PIX para Recebimento */}
-          <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-6 sm:p-7">
+          <Card className="wedding-card shadow-sm p-6 sm:p-7">
             <CardHeader className="p-0 pb-5">
-              <CardTitle className="font-heading text-xl font-bold">Chave PIX dos Noivos</CardTitle>
+              <CardTitle className="font-heading text-xl font-bold text-foreground">Chave PIX dos Noivos</CardTitle>
               <CardDescription className="text-xs text-muted-foreground mt-0.5">
                 Chave cadastrada para transferências automáticas dos seus saques.
               </CardDescription>
@@ -485,7 +480,7 @@ export default function ConfigureEventPage() {
                       aria-label="Tipo de Chave PIX"
                       value={pixKeyType}
                       onChange={(e) => setPixKeyType(e.target.value)}
-                      className="h-11 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-1 text-sm shadow-xs transition-all focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 outline-none"
+                      className="h-11 w-full rounded-xl border border-border bg-background px-3 py-1 text-sm shadow-2xs focus-visible:ring-2 focus-visible:ring-primary outline-none"
                     >
                       <option value="cpf">CPF</option>
                       <option value="cnpj">CNPJ</option>
@@ -503,7 +498,7 @@ export default function ConfigureEventPage() {
                       onChange={(e) => setPixKey(e.target.value)}
                       placeholder="Insira sua chave PIX principal"
                       disabled={pending}
-                      className="h-11 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                      className="h-11 rounded-xl bg-background border-border focus:ring-2 focus:ring-primary shadow-2xs"
                     />
                   </Field>
                 </div>
@@ -513,7 +508,7 @@ export default function ConfigureEventPage() {
               <Button
                 type="submit"
                 disabled={pending}
-                className="apple-pressable h-12 px-8 rounded-2xl font-heading text-xs font-semibold uppercase tracking-wider bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                className="wedding-button h-12 px-8 rounded-2xl text-xs font-semibold shadow-md"
               >
                 {pending ? <Spinner data-icon="inline-start" /> : <SaveIcon className="size-4 mr-1.5" />}
                 {pending ? 'Salvando…' : 'Salvar Todas as Configurações'}

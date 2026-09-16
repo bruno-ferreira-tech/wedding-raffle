@@ -2,62 +2,75 @@
    Curated Luxury Wedding Themes for Corta-Gravata
    ============================================================================== */
 
-/* 1. Champagne & Navy (Ceremonial Luxury) */
+/* 1. Champagne & Marfim (Clássico Nobre) - Default */
 [data-theme="champagne-navy"] {
-  --background: oklch(0.12 0.03 260);
-  --foreground: oklch(0.96 0.01 260);
-  --card: oklch(0.16 0.03 260);
-  --card-foreground: oklch(0.96 0.01 260);
-  --primary: oklch(0.78 0.14 85); /* Champagne Gold */
-  --primary-foreground: oklch(0.14 0.03 260);
-  --border: oklch(0.78 0.14 85 / 22%);
-  --ring: oklch(0.78 0.14 85);
-  --glow: rgba(198, 167, 94, 0.45);
-  --champagne: #c6a75e;
-  --champagne-soft: #f4e8c1;
+  --background: #faf8f5;
+  --foreground: #262320;
+  --card: #ffffff;
+  --card-foreground: #262320;
+  --primary: #b89047;
+  --primary-foreground: #ffffff;
+  --secondary: #f2ece1;
+  --secondary-foreground: #4a443b;
+  --muted: #f4ede3;
+  --muted-foreground: #78716c;
+  --border: #e8e1d7;
+  --ring: #b89047;
+  --champagne: #b89047;
+  --champagne-soft: #fdf9f0;
 }
 
-/* 2. Rose Gold & Velvet */
+/* 2. Rosé & Linho (Romântico Suave) */
 [data-theme="rose-gold"] {
-  --background: oklch(0.12 0.03 340);
-  --foreground: oklch(0.97 0.01 340);
-  --card: oklch(0.16 0.035 340);
-  --card-foreground: oklch(0.97 0.01 340);
-  --primary: oklch(0.75 0.12 40); /* Rose Gold */
-  --primary-foreground: oklch(0.14 0.03 340);
-  --border: oklch(0.75 0.12 40 / 24%);
-  --ring: oklch(0.75 0.12 40);
-  --glow: rgba(212, 163, 115, 0.45);
-  --champagne: #d4a373;
-  --champagne-soft: #f5dcc4;
+  --background: #fdfaf9;
+  --foreground: #2a2426;
+  --card: #ffffff;
+  --card-foreground: #2a2426;
+  --primary: #b66d72;
+  --primary-foreground: #ffffff;
+  --secondary: #faedf0;
+  --secondary-foreground: #523e42;
+  --muted: #f7eaed;
+  --muted-foreground: #7a6b6e;
+  --border: #eedcdb;
+  --ring: #b66d72;
+  --champagne: #b66d72;
+  --champagne-soft: #fcf4f5;
 }
 
-/* 3. Emerald & Brass (Forest Elegance) */
+/* 3. Sálvia & Ouro Velho (Botânico Chic) */
 [data-theme="emerald-brass"] {
-  --background: oklch(0.12 0.03 160);
-  --foreground: oklch(0.96 0.01 160);
-  --card: oklch(0.16 0.035 160);
-  --card-foreground: oklch(0.96 0.01 160);
-  --primary: oklch(0.76 0.15 88); /* Brass Gold */
-  --primary-foreground: oklch(0.14 0.03 160);
-  --border: oklch(0.76 0.15 88 / 24%);
-  --ring: oklch(0.76 0.15 88);
-  --glow: rgba(212, 178, 111, 0.45);
-  --champagne: #d4b26f;
-  --champagne-soft: #faebc7;
+  --background: #f7faf7;
+  --foreground: #1f2821;
+  --card: #ffffff;
+  --card-foreground: #1f2821;
+  --primary: #4d6e53;
+  --primary-foreground: #ffffff;
+  --secondary: #eaf1eb;
+  --secondary-foreground: #344838;
+  --muted: #e7efe8;
+  --muted-foreground: #637567;
+  --border: #dbe7dc;
+  --ring: #4d6e53;
+  --champagne: #c29b4e;
+  --champagne-soft: #f4f8f4;
 }
 
-/* 4. Monochrome & Ivory (Minimalist Chic) */
+/* 4. Noite de Gala (Black-Tie Aveludado) */
 [data-theme="monochrome-slate"] {
-  --background: oklch(0.12 0.01 240);
-  --foreground: oklch(0.97 0.01 240);
-  --card: oklch(0.17 0.01 240);
-  --card-foreground: oklch(0.97 0.01 240);
-  --primary: oklch(0.88 0.02 240); /* Silver Ivory */
-  --primary-foreground: oklch(0.12 0.01 240);
-  --border: oklch(0.88 0.02 240 / 25%);
-  --ring: oklch(0.88 0.02 240);
-  --glow: rgba(226, 232, 240, 0.35);
-  --champagne: #e2e8f0;
-  --champagne-soft: #ffffff;
+  --background: #141312;
+  --foreground: #f5f2eb;
+  --card: #1c1b19;
+  --card-foreground: #f5f2eb;
+  --primary: #d4af37;
+  --primary-foreground: #141312;
+  --secondary: #282622;
+  --secondary-foreground: #dfd8c8;
+  --muted: #24221f;
+  --muted-foreground: #9a9488;
+  --border: #36332d;
+  --ring: #d4af37;
+  --champagne: #d4af37;
+  --champagne-soft: #2d2922;
 }
+

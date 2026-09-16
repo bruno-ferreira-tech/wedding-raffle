@@ -182,11 +182,11 @@ export function Telao({ event }: TelaoProps = {}) {
             className={live ? styles.liveDotOn : styles.liveDotOff}
             aria-hidden
           />
-          {live ? 'Ao vivo · sync' : 'Reconectando…'}
+          {live ? 'Ao vivo' : 'Reconectando…'}
           {state ? (
             <>
               {' · '}
-              {state.salesStatus === 'open' ? 'Vendas abertas' : 'Vendas travadas'}
+              {state.salesStatus === 'open' ? 'Cotas abertas' : 'Pausado para o sorteio'}
             </>
           ) : null}
         </p>
@@ -195,9 +195,9 @@ export function Telao({ event }: TelaoProps = {}) {
       <section className={styles.counters} aria-live="polite">
         <Counter label="Disponíveis" value={counts?.disponivel} delay={0} />
         <Counter label="Reservados" value={counts?.reservado} delay={1} />
-        <Counter label="Pagos" value={counts?.pago} delay={2} />
+        <Counter label="Confirmados" value={counts?.pago} delay={2} />
         <div className={`${styles.counter} ${styles.counterWide}`}>
-          <span className={styles.counterLabel}>Arrecadado</span>
+          <span className={styles.counterLabel}>Total Arrecadado</span>
           <span className={styles.counterMoney}>
             {state ? formatBRL(state.arrecadadoCents) : '—'}
           </span>
@@ -205,10 +205,10 @@ export function Telao({ event }: TelaoProps = {}) {
       </section>
 
       <section className={styles.feedSection}>
-        <h2 className={styles.feedTitle}>Últimas vendas</h2>
+        <h2 className={styles.feedTitle}>Últimas participações</h2>
         <ul className={styles.feed}>
           {recent.length === 0 ? (
-            <li className={styles.feedEmpty}>Aguardando as primeiras vendas…</li>
+            <li className={styles.feedEmpty}>Aguardando as primeiras participações…</li>
           ) : (
             recent.slice(0, 12).map((sale: RecentSale, index) => (
               <li

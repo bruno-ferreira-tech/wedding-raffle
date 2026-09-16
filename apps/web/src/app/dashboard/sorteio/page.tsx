@@ -134,34 +134,28 @@ export default function DashboardSorteioPage() {
   const drawResults = state?.drawResults ?? [];
 
   return (
-    <div className="relative min-h-dvh w-full overflow-x-hidden bg-background text-foreground transition-colors duration-500">
-      {/* Ambient background glow */}
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-40 left-1/3 h-[32rem] w-[32rem] rounded-full bg-primary/10 blur-[140px]" />
-        <div className="absolute top-1/2 -right-40 h-96 w-96 rounded-full bg-primary/5 blur-[120px]" />
-      </div>
-
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-background/70 backdrop-blur-2xl">
+    <div className="min-h-dvh w-full bg-background text-foreground">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <Button asChild variant="ghost" size="icon" className="apple-pressable size-8 rounded-full border border-white/10 hover:bg-white/10">
+            <Button asChild variant="ghost" size="icon" className="size-8 rounded-full hover:bg-muted">
               <Link href="/dashboard">
                 <ArrowLeftIcon className="size-4" />
               </Link>
             </Button>
-            <h1 className="font-heading text-lg font-bold">Painel do Sorteio</h1>
+            <h1 className="font-heading text-lg font-bold text-foreground">Sorteio da Festa</h1>
           </div>
 
           <div className="flex items-center gap-2">
             <span
-              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[11px] font-semibold tracking-wider uppercase backdrop-blur-md ${
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${
                 isSalesClosed
                   ? 'border-destructive/30 bg-destructive/10 text-destructive'
-                  : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
+                  : 'border-emerald-600/30 bg-emerald-50 text-emerald-700'
               }`}
             >
-              <span className={`size-2 rounded-full ${isSalesClosed ? 'bg-destructive' : 'bg-emerald-400 animate-pulse'}`} />
-              {isSalesClosed ? 'Vendas Travadas' : 'Vendas Abertas'}
+              <span className={`size-2 rounded-full ${isSalesClosed ? 'bg-destructive' : 'bg-emerald-600 animate-pulse'}`} />
+              {isSalesClosed ? 'Vendas Congeladas' : 'Vendas Abertas'}
             </span>
           </div>
         </div>
@@ -176,23 +170,23 @@ export default function DashboardSorteioPage() {
         ) : null}
 
         {/* Step 1: Trava de Vendas */}
-        <Card className="apple-glass rounded-3xl border-white/12 shadow-xl p-6 sm:p-7 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_both]">
+        <Card className="wedding-card shadow-sm p-6 sm:p-7">
           <CardHeader className="p-0 pb-4">
-            <CardTitle className="font-heading text-xl font-bold">1. Controle de Vendas</CardTitle>
+            <CardTitle className="font-heading text-xl font-bold text-foreground">1. Congelar Vendas</CardTitle>
             <CardDescription className="text-xs text-muted-foreground mt-0.5">
-              Para sortear com integridade, encerre as vendas antes do sorteio para que a cartela seja congelada.
+              Para sortear com integridade, encerre as vendas para que os números participantes sejam congelados.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-0 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-2">
             <div>
               <p className="text-sm font-semibold">
                 Status atual:{' '}
-                <span className={isSalesClosed ? 'text-destructive font-mono' : 'text-emerald-400 font-mono'}>
-                  {isSalesClosed ? 'VENDAS TRAVADAS' : 'VENDAS ABERTAS'}
+                <span className={isSalesClosed ? 'text-destructive font-semibold' : 'text-emerald-700 font-semibold'}>
+                  {isSalesClosed ? 'VENDAS TRAVADAS PARA O SORTEIO' : 'RECEBENDO VENDAS'}
                 </span>
               </p>
-              <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-                <span className="apple-numeral font-bold text-foreground">{eligibleCount}</span> número(s) pago(s) concorrendo neste momento.
+              <p className="text-xs text-muted-foreground mt-0.5">
+                <span className="wedding-numeral font-bold text-foreground">{eligibleCount}</span> bilhete(s) concorrendo neste momento.
               </p>
             </div>
 
@@ -201,7 +195,7 @@ export default function DashboardSorteioPage() {
                 variant="outline"
                 onClick={() => onToggleSales('open')}
                 disabled={salesPending}
-                className="apple-pressable rounded-full border-white/15 bg-white/5 hover:bg-white/10 font-mono text-xs uppercase h-10 px-5"
+                className="rounded-full border-border bg-card hover:bg-muted text-xs uppercase h-10 px-5 font-semibold"
               >
                 <UnlockIcon className="size-3.5 mr-1.5" />
                 Reabrir Vendas
@@ -211,7 +205,7 @@ export default function DashboardSorteioPage() {
                 variant="destructive"
                 onClick={() => onToggleSales('closed')}
                 disabled={salesPending}
-                className="apple-pressable rounded-full font-mono text-xs uppercase tracking-wider h-10 px-5 shadow-lg shadow-destructive/20"
+                className="rounded-full text-xs uppercase tracking-wider h-10 px-5 shadow-sm font-semibold"
               >
                 <LockIcon className="size-3.5 mr-1.5" />
                 Travar Vendas para Sortear
@@ -221,17 +215,16 @@ export default function DashboardSorteioPage() {
         </Card>
 
         {/* Step 2: Sorteio do Próximo Prêmio */}
-        <Card className="apple-glass rounded-3xl border-primary/30 shadow-2xl p-6 sm:p-7 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_0.1s_both] relative overflow-hidden">
-          <div className="absolute top-0 right-0 h-32 w-32 bg-primary/10 rounded-full blur-2xl pointer-events-none" />
+        <Card className="wedding-card border-primary/30 shadow-md p-6 sm:p-7">
           <CardHeader className="p-0 pb-4">
             <div className="flex items-center gap-2">
-              <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary">
+              <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <PartyPopperIcon className="size-4" />
               </div>
               <div>
-                <CardTitle className="font-heading text-xl font-bold">2. Sortear Prêmio</CardTitle>
+                <CardTitle className="font-heading text-xl font-bold text-foreground">2. Sortear Prêmio</CardTitle>
                 <CardDescription className="text-xs text-muted-foreground mt-0.5">
-                  O vencedor é sorteado criptograficamente entre os números pagos e projetado instantaneamente no Telão.
+                  O vencedor é sorteado aleatoriamente entre os números confirmados e transmitido na mesma hora no Telão.
                 </CardDescription>
               </div>
             </div>
@@ -239,7 +232,7 @@ export default function DashboardSorteioPage() {
           <CardContent className="p-0 space-y-4 pt-2">
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
-                <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground block mb-1.5 font-semibold">
+                <label className="text-xs uppercase tracking-wider text-muted-foreground block mb-1.5 font-semibold">
                   Nome do Prêmio Sorteado
                 </label>
                 <Input
@@ -247,7 +240,7 @@ export default function DashboardSorteioPage() {
                   onChange={(e) => setPrizeLabel(e.target.value)}
                   placeholder="Ex: Whisky 12 Anos"
                   disabled={drawPending}
-                  className="h-12 rounded-xl bg-black/30 border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                  className="h-12 rounded-xl bg-background border-border focus:ring-2 focus:ring-primary shadow-2xs"
                 />
               </div>
 
@@ -256,7 +249,7 @@ export default function DashboardSorteioPage() {
                   size="lg"
                   onClick={onDrawNext}
                   disabled={!isSalesClosed || eligibleCount === 0 || drawPending}
-                  className="apple-pressable h-12 w-full sm:w-auto font-heading uppercase tracking-wider px-8 rounded-2xl bg-primary text-primary-foreground shadow-xl shadow-primary/25 disabled:opacity-50"
+                  className="wedding-button h-12 w-full sm:w-auto font-semibold px-8 rounded-2xl shadow-md disabled:opacity-50"
                 >
                   {drawPending ? <Spinner data-icon="inline-start" /> : <SparklesIcon className="size-4 mr-2" />}
                   {drawPending ? 'Sorteando…' : 'Sortear Agora!'}
@@ -265,27 +258,27 @@ export default function DashboardSorteioPage() {
             </div>
 
             {!isSalesClosed ? (
-              <p className="text-xs text-amber-400/90 font-mono">
+              <p className="text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
                 ⚠️ Você precisa travar as vendas no passo 1 antes de realizar o sorteio.
               </p>
             ) : eligibleCount === 0 ? (
-              <p className="text-xs text-amber-400/90 font-mono">
+              <p className="text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
                 ⚠️ Nenhum número pago foi registrado ainda.
               </p>
             ) : null}
 
             {lastWinner ? (
-              <div className="mt-4 rounded-2xl border border-primary/40 bg-primary/10 p-5 text-center backdrop-blur-md animate-[chip-in_0.45s_cubic-bezier(0.16,1,0.3,1)_both]">
-                <span className="inline-flex items-center rounded-full border border-primary/40 bg-primary/15 px-3 py-0.5 font-mono text-xs font-semibold text-primary mb-2">
+              <div className="mt-4 rounded-2xl border border-primary/40 bg-primary/10 p-5 text-center shadow-xs">
+                <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/20 px-3 py-0.5 text-xs font-semibold text-primary mb-2">
                   🎉 Último Sorteado
                 </span>
-                <h3 className="font-heading text-4xl font-bold text-primary apple-numeral">
+                <h3 className="wedding-numeral text-4xl font-bold text-primary">
                   Número {formatRaffleNumber(lastWinner.numberId)}
                 </h3>
                 <p className="text-xl font-bold text-foreground mt-1">
                   {lastWinner.buyerName}
                 </p>
-                <p className="text-xs text-muted-foreground mt-0.5 font-mono uppercase tracking-wider">
+                <p className="text-xs text-muted-foreground mt-0.5 uppercase tracking-wider font-semibold">
                   Prêmio: {lastWinner.prizeLabel}
                 </p>
               </div>
@@ -294,14 +287,14 @@ export default function DashboardSorteioPage() {
         </Card>
 
         {/* Step 3: Histórico de Vencedores */}
-        <Card className="apple-glass rounded-3xl border-white/12 shadow-xl overflow-hidden animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_0.2s_both]">
-          <CardHeader className="p-6 pb-4 border-b border-white/10">
+        <Card className="wedding-card shadow-sm overflow-hidden">
+          <CardHeader className="p-6 pb-4 border-b border-border">
             <div className="flex items-center gap-2">
-              <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary">
+              <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <TrophyIcon className="size-4" />
               </div>
               <div>
-                <CardTitle className="font-heading text-xl font-bold">Vencedores Sorteados</CardTitle>
+                <CardTitle className="font-heading text-xl font-bold text-foreground">Vencedores Sorteados</CardTitle>
                 <CardDescription className="text-xs text-muted-foreground mt-0.5">
                   Lista de todos os ganhadores do casamento.
                 </CardDescription>
@@ -317,7 +310,7 @@ export default function DashboardSorteioPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wider text-muted-foreground">
+                    <tr className="border-b border-border bg-secondary/40 text-xs uppercase tracking-wider text-muted-foreground font-semibold">
                       <th className="p-4 pl-6">#</th>
                       <th className="p-4">Prêmio</th>
                       <th className="p-4">Número</th>
@@ -325,17 +318,17 @@ export default function DashboardSorteioPage() {
                       <th className="p-4 pr-6">Hora</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5 font-mono text-xs">
+                  <tbody className="divide-y divide-border text-xs">
                     {drawResults.map((result, idx) => (
-                      <tr key={`${result.numberId}-${result.prizeIndex}`} className="hover:bg-white/5 transition-colors">
-                        <td className="p-4 pl-6 text-muted-foreground">#{idx + 1}</td>
-                        <td className="p-4 font-sans font-semibold text-foreground text-sm">
+                      <tr key={`${result.numberId}-${result.prizeIndex}`} className="hover:bg-muted/40 transition-colors">
+                        <td className="p-4 pl-6 text-muted-foreground font-semibold">#{idx + 1}</td>
+                        <td className="p-4 font-semibold text-foreground text-sm">
                           {result.prizeLabel}
                         </td>
-                        <td className="p-4 font-bold text-primary text-sm apple-numeral">
+                        <td className="p-4 font-bold text-primary text-sm wedding-numeral">
                           {formatRaffleNumber(result.numberId)}
                         </td>
-                        <td className="p-4 font-sans text-sm">{result.buyerName}</td>
+                        <td className="p-4 text-sm text-foreground">{result.buyerName}</td>
                         <td className="p-4 pr-6 text-muted-foreground">
                           {new Date(result.drawnAt).toLocaleTimeString('pt-BR')}
                         </td>

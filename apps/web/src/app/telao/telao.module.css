@@ -3,12 +3,11 @@
   min-height: 100dvh;
   overflow: hidden;
   padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1.5rem, 5vw, 4rem);
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(198, 167, 94, 0.2), transparent 65%),
-    radial-gradient(ellipse 60% 40% at 90% 20%, rgba(120, 150, 255, 0.1), transparent 60%),
-    radial-gradient(ellipse 50% 40% at 10% 80%, rgba(198, 167, 94, 0.1), transparent 60%),
-    var(--background);
-  color: var(--foreground);
+  background-color: #0d0c0b;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(180, 130, 60, 0.06) 0%, transparent 50%);
+  color: #fbf9f5;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -17,9 +16,9 @@
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    ellipse 75% 70% at 50% 45%,
-    transparent 45%,
-    rgba(0, 0, 0, 0.6) 100%
+    ellipse 85% 80% at 50% 40%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.75) 100%
   );
   z-index: 1;
 }
@@ -52,14 +51,13 @@
 
 .brand {
   margin: 0;
-  font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: clamp(2.5rem, 8vw, 4.75rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: clamp(2.5rem, 7vw, 4.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: #fdfbf7;
 }
 
 .live {
@@ -67,18 +65,17 @@
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.5rem 1rem;
+  padding: 0.45rem 1.1rem;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  font-family: var(--font-mono);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(26, 24, 22, 0.8);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.8rem;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--primary);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  color: #e5c158;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .liveDotOn,
@@ -90,13 +87,13 @@
 }
 
 .liveDotOn {
-  background: var(--primary);
-  box-shadow: 0 0 14px var(--glow, rgba(198, 167, 94, 0.8));
-  animation: pulse-soft 1.6s ease-in-out infinite;
+  background: #e5c158;
+  box-shadow: 0 0 10px rgba(229, 193, 88, 0.7);
+  animation: pulse-soft 2s ease-in-out infinite;
 }
 
 .liveDotOff {
-  background: var(--muted-foreground);
+  background: #6b665f;
 }
 
 .counters {
@@ -108,51 +105,50 @@
 
 .counter {
   padding: 1.5rem 1.75rem;
-  border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(22, 27, 46, 0.65);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-radius: 1.25rem;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  background: #171513;
+  box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.7);
   animation: fade-up 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .counterWide {
   grid-column: 1 / -1;
   margin-top: 0.25rem;
-  border-color: rgba(198, 167, 94, 0.4);
-  box-shadow: 0 25px 60px -15px rgba(198, 167, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  border-color: rgba(212, 175, 55, 0.45);
+  background: linear-gradient(180deg, #1c1916 0%, #151311 100%);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(212, 175, 55, 0.25);
 }
 
 .counterLabel {
   display: block;
   margin-bottom: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: clamp(0.72rem, 1.3vw, 0.85rem);
-  letter-spacing: 0.1em;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: clamp(0.72rem, 1.3vw, 0.82rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--muted-foreground);
+  color: #a8a095;
 }
 
 .counterValue {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 700;
-  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  font-size: clamp(2.5rem, 6vw, 4.25rem);
   line-height: 1;
   font-variant-numeric: tabular-nums lining-nums;
   letter-spacing: -0.02em;
-  color: var(--foreground);
+  color: #fdfbf7;
 }
 
 .counterMoney {
-  font-family: var(--font-mono);
-  font-weight: 800;
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  font-weight: 700;
   font-size: clamp(3rem, 8vw, 5.25rem);
   line-height: 1;
   font-variant-numeric: tabular-nums lining-nums;
-  letter-spacing: -0.025em;
-  color: var(--primary);
-  text-shadow: 0 0 50px var(--glow, rgba(198, 167, 94, 0.4));
+  letter-spacing: -0.02em;
+  color: #e5c158;
 }
 
 .feedSection {
@@ -162,12 +158,12 @@
 
 .feedTitle {
   margin: 0 0 1.25rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.8rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--primary);
-  font-weight: 600;
+  color: #d4af37;
+  font-weight: 700;
 }
 
 .feed {
@@ -179,53 +175,52 @@
   gap: 0.35rem;
   max-height: min(44vh, 30rem);
   overflow: hidden;
-  border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(10, 14, 25, 0.45);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  border-radius: 1.25rem;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  background: #141311;
 }
 
 .feedEmpty {
-  color: var(--muted-foreground);
-  font-size: 1.1rem;
-  padding: 1.75rem;
+  color: #8c857b;
+  font-size: 1.05rem;
+  padding: 2rem;
   text-align: center;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-style: italic;
 }
 
 .feedItem {
   display: grid;
-  grid-template-columns: 7rem 1fr;
+  grid-template-columns: 6.5rem 1fr;
   gap: 1.25rem;
   align-items: center;
   padding: 0.85rem 1.25rem;
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
   animation: fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
   transition: all 0.3s ease;
 }
 
 .feedItemPulse {
-  background: rgba(198, 167, 94, 0.2);
-  border-color: var(--primary);
-  box-shadow: 0 0 20px -4px var(--glow, rgba(198, 167, 94, 0.5));
+  background: rgba(212, 175, 55, 0.16);
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 20px -4px rgba(212, 175, 55, 0.3);
 }
 
 .feedNumber {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 700;
-  font-size: clamp(1.3rem, 3vw, 1.85rem);
-  color: var(--primary);
+  font-size: clamp(1.25rem, 2.8vw, 1.75rem);
+  color: #e5c158;
   font-variant-numeric: tabular-nums lining-nums;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.02em;
 }
 
 .feedName {
-  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
   font-weight: 500;
-  color: var(--foreground);
+  color: #fdfbf7;
 }
 
 .winnersStrip {
@@ -234,7 +229,7 @@
   gap: 0.75rem 1.25rem;
   margin-top: clamp(1.5rem, 3vw, 2.25rem);
   padding-top: 1.25rem;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
   animation: fade-up 0.6s ease 0.28s both;
 }
 
@@ -244,36 +239,33 @@
   gap: 0.25rem;
   min-width: 9rem;
   padding: 0.85rem 1.25rem;
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 0.85rem;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: #171513;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
 .winnerChipLabel {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.7rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--primary);
-  font-weight: 600;
+  color: #e5c158;
+  font-weight: 700;
 }
 
 .winnerChipNumber {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 700;
   font-size: 1.6rem;
-  color: var(--foreground);
+  color: #fdfbf7;
   font-variant-numeric: tabular-nums lining-nums;
-  letter-spacing: -0.01em;
 }
 
 .winnerChipName {
   font-size: 0.95rem;
   font-weight: 500;
-  color: var(--muted-foreground);
+  color: #b3aba0;
 }
 
 .reveal {
@@ -282,80 +274,90 @@
   z-index: 50;
   display: grid;
   place-items: center;
-  background: rgba(8, 12, 22, 0.85);
-  backdrop-filter: blur(32px) saturate(200%);
-  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  background: rgba(10, 9, 8, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   animation: reveal-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .revealInner {
   text-align: center;
-  padding: 3.5rem;
-  border-radius: 2.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(25, 30, 50, 0.65);
+  padding: clamp(2.5rem, 6vw, 4.5rem);
+  border-radius: 2rem;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: #171513;
   box-shadow: 
-    0 30px 80px -20px rgba(0, 0, 0, 0.8),
-    0 0 100px -20px var(--glow, rgba(198, 167, 94, 0.5)),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    0 30px 80px -20px rgba(0, 0, 0, 0.9),
+    0 0 60px -10px rgba(212, 175, 55, 0.2),
+    inset 0 1px 0 rgba(212, 175, 55, 0.3);
   max-width: 48rem;
   width: 90vw;
 }
 
 .revealPrize {
   margin: 0 0 1.5rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: clamp(1rem, 2vw, 1.35rem);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: #e5c158;
   font-weight: 700;
   animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .revealCountdown {
   margin: 0;
-  font-family: var(--font-mono);
-  font-weight: 800;
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  font-weight: 700;
   font-size: clamp(6.5rem, 24vw, 13rem);
   line-height: 1;
   font-variant-numeric: tabular-nums lining-nums;
-  color: var(--primary);
-  text-shadow: 0 0 70px var(--glow, rgba(198, 167, 94, 0.7));
+  color: #e5c158;
   animation: countdown-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 .revealNumber {
   margin: 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 800;
   font-size: clamp(5rem, 20vw, 10.5rem);
   line-height: 0.95;
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums lining-nums;
   color: #ffffff;
-  text-shadow: 0 0 80px var(--glow, rgba(198, 167, 94, 0.8));
   animation: number-reveal 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .revealName {
   margin: 1.5rem 0 0;
-  font-family: var(--font-heading);
-  font-weight: 800;
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-style: italic;
   font-size: clamp(2.25rem, 6vw, 4rem);
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.01em;
+  color: #fdfbf7;
   animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
 }
 
-@keyframes feed-flash {
-  0% {
-    background: rgba(46, 230, 166, 0.22);
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
   }
-  100% {
-    background: transparent;
+  50% {
+    opacity: 0.6;
+    transform: scale(0.92);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -375,20 +377,17 @@
   }
   to {
     opacity: 1;
-    transform: scale(1);
   }
 }
 
 @keyframes number-reveal {
   from {
     opacity: 0;
-    transform: scale(1.35) translateY(1rem);
-    filter: blur(8px);
+    transform: scale(1.15) translateY(0.75rem);
   }
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
-    filter: blur(0);
   }
 }
 
@@ -401,3 +400,4 @@
     max-height: 36vh;
   }
 }
+

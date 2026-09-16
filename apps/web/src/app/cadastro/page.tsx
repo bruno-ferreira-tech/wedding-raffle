@@ -79,28 +79,22 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-x-hidden bg-background px-4 py-12 text-foreground transition-colors duration-500">
-      {/* Ambient background glow */}
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-32 left-1/2 h-96 w-[36rem] -translate-x-1/2 rounded-full bg-primary/10 blur-[140px]" />
-        <div className="absolute bottom-10 -left-20 h-80 w-80 rounded-full bg-primary/5 blur-[120px]" />
-      </div>
-
-      <div className="w-full max-w-md space-y-6 animate-[fade-up_0.55s_cubic-bezier(0.16,1,0.3,1)_both]">
+    <div className="flex min-h-dvh flex-col items-center justify-center bg-background px-4 py-12 text-foreground">
+      <div className="w-full max-w-md space-y-6">
         <div className="text-center space-y-2">
-          <Link href="/" className="inline-block font-heading text-3xl font-bold tracking-tight text-primary">
+          <Link href="/" className="inline-block font-heading text-3xl font-bold tracking-tight text-foreground hover:opacity-85">
             Corta-Gravata
           </Link>
           <p className="text-sm text-muted-foreground">
-            Crie sua rifa digital em menos de 2 minutos. Arrecadação 100% automatizada e saques instantâneos via PIX.
+            Crie sua rifa dos noivos em minutos. Pagamentos automáticos no PIX e arrecadação direta na sua conta.
           </p>
         </div>
 
-        <Card className="apple-glass rounded-3xl border-white/15 shadow-2xl p-4 sm:p-6">
+        <Card className="wedding-card shadow-lg p-4 sm:p-6">
           <CardHeader className="text-center pb-4">
-            <CardTitle className="font-heading text-2xl font-bold">Criar Rifa dos Noivos</CardTitle>
+            <CardTitle className="font-heading text-2xl font-bold text-foreground">Criar Rifa dos Noivos</CardTitle>
             <CardDescription className="text-xs text-muted-foreground mt-0.5">
-              Sem mensalidade, sem taxa fixa de adesão
+              Sem mensalidades ou taxas de adesão
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-2">
@@ -117,7 +111,7 @@ export default function RegisterPage() {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Ex: Marina & Bruno"
                     disabled={pending}
-                    className="h-12 rounded-xl bg-black/30 border-white/15 px-4 text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                    className="h-12 rounded-xl bg-background border-border px-4 text-sm focus:ring-2 focus:ring-primary shadow-2xs"
                   />
                 </Field>
 
@@ -134,7 +128,7 @@ export default function RegisterPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="noivos@exemplo.com"
                     disabled={pending}
-                    className="h-12 rounded-xl bg-black/30 border-white/15 px-4 text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                    className="h-12 rounded-xl bg-background border-border px-4 text-sm focus:ring-2 focus:ring-primary shadow-2xs"
                   />
                 </Field>
 
@@ -151,7 +145,7 @@ export default function RegisterPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Mínimo 6 caracteres"
                     disabled={pending}
-                    className="h-12 rounded-xl bg-black/30 border-white/15 px-4 text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                    className="h-12 rounded-xl bg-background border-border px-4 text-sm focus:ring-2 focus:ring-primary shadow-2xs"
                   />
                 </Field>
 
@@ -166,7 +160,7 @@ export default function RegisterPage() {
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="(11) 99999-9999"
                     disabled={pending}
-                    className="h-12 rounded-xl bg-black/30 border-white/15 px-4 text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                    className="h-12 rounded-xl bg-background border-border px-4 text-sm focus:ring-2 focus:ring-primary shadow-2xs"
                   />
                 </Field>
               </FieldGroup>
@@ -184,15 +178,15 @@ export default function RegisterPage() {
               type="submit"
               form="register-form"
               size="lg"
-              className="apple-pressable h-12 w-full rounded-2xl font-heading text-xs font-semibold uppercase tracking-wider bg-primary text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50"
+              className="wedding-button h-12 w-full rounded-2xl text-sm font-semibold shadow-md disabled:opacity-50"
               disabled={pending}
             >
               {pending ? <Spinner data-icon="inline-start" /> : null}
-              {pending ? 'Criando sua rifa…' : 'Criar Minha Rifa Agora'}
+              {pending ? 'Criando sua rifa…' : 'Criar Rifa da Nossa Festa'}
             </Button>
             <p className="text-center text-xs text-muted-foreground">
               Já tem uma conta?{' '}
-              <Link href="/login" className="font-semibold text-primary underline underline-offset-4 hover:text-primary/80 transition-colors">
+              <Link href="/login" className="font-semibold text-primary underline underline-offset-4 hover:opacity-85 transition-opacity">
                 Entrar no painel
               </Link>
             </p>
