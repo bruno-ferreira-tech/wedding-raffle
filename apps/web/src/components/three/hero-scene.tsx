@@ -10,13 +10,14 @@
  * Designed with Open Props & Apple elegance: subtle, premium, and performant.
  */
 
-import { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
+import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import * as THREE from "three";
 
 export interface HeroSceneHandle {
   group: THREE.Group | null;
   camera: THREE.PerspectiveCamera | null;
   scene: THREE.Scene | null;
+  scrollProgress: number;
 }
 
 export interface HeroSceneProps {
@@ -29,6 +30,20 @@ export const HeroScene = forwardRef<HeroSceneHandle, HeroSceneProps>(
     const groupRef = useRef<THREE.Group | null>(null);
     const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
     const sceneRef = useRef<THREE.Scene | null>(null);
+    const [scrollProgress, setScrollProgress] = useState(0);
+    const scrollProgressRef = useRef(0);
+
+    useEffect(() => {
+      const handleScroll = (e: Event) => {
+        const customEvent = e as CustomEvent<number>;
+        const progress = typeof customEvent.detail === "number" ? customEvent.detail : 0;
+        setScrollProgress(progress);
+        scrollProgressRef.current = progress;
+      };
+
+      window.addEventListener("scroll-progress", handleScroll);
+      return () => window.removeEventListener("scroll-progress", handleScroll);
+    }, []);
 
     useImperativeHandle(ref, () => ({
       get group() {
@@ -39,6 +54,9 @@ export const HeroScene = forwardRef<HeroSceneHandle, HeroSceneProps>(
       },
       get scene() {
         return sceneRef.current;
+      },
+      get scrollProgress() {
+        return scrollProgressRef.current;
       },
     }));
 
@@ -132,8 +150,8 @@ export const HeroScene = forwardRef<HeroSceneHandle, HeroSceneProps>(
     const ambientLight = new THREE.AmbientLight(0xfff7ed, 1.4);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xfff1cf, 2.5);
-    keyLight.position.set(4, 5, 5);
+    const keyLight = new THREE.DirectionalLight(0xffd700, 1.5);
+    keyLight.position.set(-5, 5, 5);
     scene.add(keyLight);
 
     const fillLight = new THREE.PointLight(0xb89047, 2, 10);
@@ -184,10 +202,10 @@ export const HeroScene = forwardRef<HeroSceneHandle, HeroSceneProps>(
       currentRotX += (targetRotX - currentRotX) * 0.05;
       currentRotY += (targetRotY - currentRotY) * 0.05;
 
-      // Base idle oscillation + mouse tilt
-      group.rotation.y = elapsed * 0.35 + currentRotY;
+      // Base idle oscillation + mouse tilt + scroll sync
+      group.rotation.y = elapsed * 0.35 + currentRotY + scrollProgressRef.current * Math.PI * 2;
       group.rotation.x = Math.sin(elapsed * 0.5) * 0.15 + currentRotX;
-      group.position.y = Math.sin(elapsed * 1.2) * 0.08;
+      group.position.y = Math.sin(elapsed * 1.2) * 0.08 + scrollProgressRef.current * -2;
 
       // Slowly rotate particle field
       particles.rotation.y = elapsed * 0.05;
@@ -221,6 +239,7 @@ export const HeroScene = forwardRef<HeroSceneHandle, HeroSceneProps>(
   return (
     <div
       ref={containerRef}
+      data-scroll-progress={scrollProgress}
       className={
         className ??
         "relative mx-auto h-[260px] w-[260px] sm:h-[320px] sm:w-[320px] cursor-grab active:cursor-grabbing select-none"
