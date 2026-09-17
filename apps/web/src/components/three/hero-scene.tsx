@@ -10,36 +10,73 @@
  * Designed with Open Props & Apple elegance: subtle, premium, and performant.
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import * as THREE from "three";
 
-export function HeroScene() {
-  const containerRef = useRef<HTMLDivElement>(null);
+export interface HeroSceneHandle {
+  group: THREE.Group | null;
+  camera: THREE.PerspectiveCamera | null;
+  scene: THREE.Scene | null;
+}
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+export interface HeroSceneProps {
+  className?: string;
+}
 
-    // Dimensions
-    const width = container.clientWidth || 320;
-    const height = container.clientHeight || 320;
+export const HeroScene = forwardRef<HeroSceneHandle, HeroSceneProps>(
+  function HeroScene({ className }, ref) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const groupRef = useRef<THREE.Group | null>(null);
+    const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+    const sceneRef = useRef<THREE.Scene | null>(null);
 
-    // Scene & Camera
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.z = 7;
+    useImperativeHandle(ref, () => ({
+      get group() {
+        return groupRef.current;
+      },
+      get camera() {
+        return cameraRef.current;
+      },
+      get scene() {
+        return sceneRef.current;
+      },
+    }));
 
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
-    container.appendChild(renderer.domElement);
+    useEffect(() => {
+      const container = containerRef.current;
+      if (!container) return;
 
-    // Group for the 3D wedding rings
-    const group = new THREE.Group();
-    scene.add(group);
+      // Dimensions
+      const width = container.clientWidth || window.innerWidth || 320;
+      const height = container.clientHeight || window.innerHeight || 320;
+
+      // Scene & Camera
+      const scene = new THREE.Scene();
+      sceneRef.current = scene;
+
+      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+      camera.position.z = 7;
+      cameraRef.current = camera;
+
+      // Renderer
+      let renderer: THREE.WebGLRenderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      } catch {
+        // Graceful fallback for non-WebGL / test environments
+        return;
+      }
+
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.2;
+      container.appendChild(renderer.domElement);
+
+      // Group for the 3D wedding rings
+      const group = new THREE.Group();
+      groupRef.current = group;
+      scene.add(group);
 
     // Gold material with metallic luster
     const goldMaterial = new THREE.MeshStandardMaterial({
@@ -175,14 +212,20 @@ export function HeroScene() {
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
+      groupRef.current = null;
+      cameraRef.current = null;
+      sceneRef.current = null;
     };
   }, []);
 
   return (
     <div
       ref={containerRef}
-      className="relative mx-auto h-[260px] w-[260px] sm:h-[320px] sm:w-[320px] cursor-grab active:cursor-grabbing select-none"
+      className={
+        className ??
+        "relative mx-auto h-[260px] w-[260px] sm:h-[320px] sm:w-[320px] cursor-grab active:cursor-grabbing select-none"
+      }
       aria-label="Animação 3D interativa das alianças dos noivos"
     />
   );
-}
+});

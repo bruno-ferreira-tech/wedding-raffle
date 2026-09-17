@@ -4,33 +4,22 @@ import Link from 'next/link';
 import {
   ArrowRightIcon,
   CheckCircle2Icon,
-  CoinsIcon,
-  ExternalLinkIcon,
   PaletteIcon,
-  PartyPopperIcon,
   ShieldCheckIcon,
   SparklesIcon,
   TvIcon,
   WalletIcon,
+  CalculatorIcon,
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { NumberTicker } from '@/components/ui/number-ticker';
 import { Marquee } from '@/components/ui/marquee';
 import { HeroScene } from '@/components/three/hero-scene';
 import { formatBRL } from '@/lib/money';
-import { cardReveal, staggerContainer, animatePulse } from '@/lib/animations';
+import { animatePulse } from '@/lib/animations';
 
 export default function LandingPage() {
   // Calculator state
@@ -39,6 +28,7 @@ export default function LandingPage() {
   const [ticketsPerGuest, setTicketsPerGuest] = useState(2);
   const netDisplayRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLAnchorElement>(null);
+  const bentoContainerRef = useRef<HTMLDivElement>(null);
 
   const totalTickets = guests * ticketsPerGuest;
   const estimatedGross = totalTickets * ticketPrice * 100;
@@ -46,24 +36,67 @@ export default function LandingPage() {
   const estimatedFee = Math.round(estimatedGross * feePercent);
   const estimatedNet = estimatedGross - estimatedFee;
 
-  // GSAP kinetic reaction on calculator change
   useEffect(() => {
+    // GSAP kinetic reaction on calculator change
     if (netDisplayRef.current) {
       import('gsap').then(({ default: gsap }) => {
         gsap.fromTo(
           netDisplayRef.current,
-          { scale: 1.06, filter: 'brightness(1.2)' },
-          { scale: 1, filter: 'brightness(1)', duration: 0.35, ease: 'back.out(2)' }
+          { scale: 1.05, filter: 'brightness(1.1)', color: 'var(--primary)' },
+          { scale: 1, filter: 'brightness(1)', color: 'var(--primary)', duration: 0.4, ease: 'back.out(1.5)' }
         );
       });
     }
   }, [estimatedNet]);
 
+  useEffect(() => {
+    // GSAP entrance animation for Bento Grid
+    let ctx: { revert: () => void };
+    Promise.all([
+      import('gsap'),
+      import('gsap/ScrollTrigger')
+    ]).then(([{ default: gsap }, { default: ScrollTrigger }]) => {
+      gsap.registerPlugin(ScrollTrigger);
+      
+      if (!bentoContainerRef.current) return;
+      
+      ctx = gsap.context(() => {
+        const cards = gsap.utils.toArray('.gsap-bento');
+        
+        // Initial reveal
+        gsap.fromTo(
+          cards,
+          { y: 80, opacity: 0, scale: 0.97 },
+          { 
+            y: 0, 
+            opacity: 1, 
+            scale: 1, 
+            duration: 0.9, 
+            stagger: 0.1, 
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: bentoContainerRef.current,
+              start: 'top 90%',
+            }
+          }
+        );
+      }, bentoContainerRef);
+    });
+
+    return () => {
+      if (ctx) ctx.revert();
+    };
+  }, []);
+
   return (
-    <div className="min-h-dvh w-full bg-background text-foreground">
+    <div className="relative min-h-dvh w-full bg-background text-foreground overflow-x-hidden">
+      <div className="canvas-container fixed inset-0 z-0 pointer-events-none">
+        <HeroScene className="w-full h-full" />
+      </div>
+
       {/* Warm Ivory Navigation Bar */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
-        <div className="mx-auto flex h-18 max-w-6xl items-center justify-between px-4 sm:px-8 py-3">
+        <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center gap-3">
             <Link href="/" className="font-heading text-2xl font-bold tracking-tight text-foreground transition-opacity hover:opacity-85">
               Corta-Gravata
@@ -79,435 +112,248 @@ export default function LandingPage() {
             </Button>
             <Button asChild size="sm" className="wedding-button rounded-full text-sm">
               <Link href="/cadastro">
-                Criar Rifa dos Noivos <ArrowRightIcon className="size-3.5 ml-1.5" />
+                Criar Nossa Rifa <ArrowRightIcon className="size-3.5 ml-1.5" />
               </Link>
             </Button>
           </nav>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden px-4 pt-16 pb-16 sm:px-8 sm:pt-24 sm:pb-24">
-        <motion.div
-          className="mx-auto max-w-4xl text-center space-y-6"
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.div variants={cardReveal} className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-primary shadow-xs">
-            <SparklesIcon className="size-3.5 text-primary" />
-            A tradição do casamento, sem constrangimento e com muita diversão
-          </motion.div>
-
-          {/* Three.js 3D Interactive Wedding Emblem */}
-          <motion.div variants={cardReveal} className="flex justify-center -my-3 sm:-my-4">
-            <HeroScene />
-          </motion.div>
-
-          <motion.h1
-            variants={cardReveal}
-            className="font-heading text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.15]"
+      <div className="scroll-content relative z-10 w-full pt-[100vh]">
+        {/* Main Bento Grid Kinetic Showcase */}
+        <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 pb-20 sm:pt-16 sm:pb-32" ref={bentoContainerRef}>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 auto-rows-auto">
+          
+          {/* Card 1: Main Hero with 3D Rings (Spans 8 columns) */}
+          <motion.div 
+            className="gsap-bento md:col-span-8 wedding-card flex flex-col md:flex-row overflow-hidden relative min-h-[480px] sm:min-h-[520px] isolate"
+            whileHover={{ y: -4, scale: 0.995 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
           >
-            O Corta-Gravata que{' '}
-            <span className="text-primary italic">
-              arrecada mais
-            </span>{' '}
-            e alegra a festa.
-          </motion.h1>
-
-          <motion.p
-            variants={cardReveal}
-            className="mx-auto max-w-2xl text-base sm:text-lg text-muted-foreground font-normal leading-relaxed"
-          >
-            Substitua a gravata picotada por uma experiência leve e elegante: os convidados participam pelo celular via PIX, acompanham os números no telão e concorrem a um prêmio especial da noite.
-          </motion.p>
-
-          <motion.div
-            variants={cardReveal}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
-          >
-            <Button
-              asChild
-              size="lg"
-              className="wedding-button wedding-shimmer h-13 px-8 rounded-full text-base font-semibold w-full sm:w-auto shadow-md"
-              onMouseEnter={() => {
-                if (ctaRef.current) animatePulse(ctaRef.current);
-              }}
-            >
-              <Link ref={ctaRef} href="/cadastro">
-                Criar Rifa da Nossa Festa
-                <ArrowRightIcon className="size-4 ml-2" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="h-13 px-8 rounded-full border-border bg-card text-foreground text-base hover:bg-muted font-medium w-full sm:w-auto shadow-xs">
-              <Link href="/e/bruno-moreira" target="_blank">
-                Ver Exemplo ao Vivo <ExternalLinkIcon className="size-4 ml-2" />
-              </Link>
-            </Button>
-          </motion.div>
-
-          <motion.div
-            variants={cardReveal}
-            className="pt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground font-medium"
-          >
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2Icon className="size-4 text-primary" /> Sem mensalidade fixa
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2Icon className="size-4 text-primary" /> Saque PIX direto na conta
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2Icon className="size-4 text-primary" /> Pronto em 3 minutos
-            </span>
-          </motion.div>
-        </motion.div>
-
-        {/* Marquee Ribbon */}
-        <div className="mt-14 border-y border-border bg-card/60 py-3">
-          <Marquee speedSecs={28} pauseOnHover>
-            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground px-4">
-              🥂 A brincadeira mais tradicional da festa
-            </span>
-            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary px-4">
-              ⚡ Pagamento PIX com baixa instantânea
-            </span>
-            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground px-4">
-              📺 Telão ao vivo para a pista de dança
-            </span>
-            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary px-4">
-              🤵 Modo Padrinho para registrar na mesa
-            </span>
-            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground px-4">
-              ✈️ Dinheiro direto para a Lua de Mel
-            </span>
-          </Marquee>
-        </div>
-      </section>
-
-      {/* Interactive Revenue Calculator */}
-      <section className="relative border-y border-border bg-secondary/40 py-20 px-4 sm:px-8">
-        <div className="mx-auto max-w-5xl space-y-12">
-          <div className="text-center space-y-3">
-            <Badge variant="outline" className="rounded-full border-border bg-card text-xs uppercase tracking-wider text-muted-foreground">
-              Simulador da Festa
-            </Badge>
-            <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
-              Quanto vocês podem arrecadar para a Lua de Mel?
-            </h2>
-            <p className="text-sm text-muted-foreground max-w-xl mx-auto">
-              Sem precisar de dinheiro trocado, convidados participam com facilidade pelo PIX direto na mesa.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center">
-            {/* Sliders Card */}
-            <div className="lg:col-span-6 space-y-6 wedding-card p-6 sm:p-8">
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="font-medium text-foreground">Convidados esperados</span>
-                  <span className="wedding-numeral font-bold text-primary">{guests} pessoas</span>
-                </div>
-                <input
-                  type="range"
-                  min="50"
-                  max="500"
-                  step="10"
-                  value={guests}
-                  onChange={(e) => setGuests(Number(e.target.value))}
-                  className="w-full accent-primary cursor-pointer h-2 bg-muted rounded-lg appearance-none"
-                />
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="font-medium text-foreground">Valor por bilhete</span>
-                  <span className="wedding-numeral font-bold text-primary">R$ {ticketPrice},00</span>
-                </div>
-                <input
-                  type="range"
-                  min="10"
-                  max="100"
-                  step="5"
-                  value={ticketPrice}
-                  onChange={(e) => setTicketPrice(Number(e.target.value))}
-                  className="w-full accent-primary cursor-pointer h-2 bg-muted rounded-lg appearance-none"
-                />
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="font-medium text-foreground">Média de números por convidado</span>
-                  <span className="wedding-numeral font-bold text-primary">{ticketsPerGuest} bilhetes</span>
-                </div>
-                <input
-                  type="range"
-                  min="1"
-                  max="5"
-                  step="1"
-                  value={ticketsPerGuest}
-                  onChange={(e) => setTicketsPerGuest(Number(e.target.value))}
-                  className="w-full accent-primary cursor-pointer h-2 bg-muted rounded-lg appearance-none"
-                />
-              </div>
-
-              <div className="rounded-xl bg-primary/5 p-4 border border-primary/20 text-xs text-muted-foreground space-y-1">
-                <p>💡 <strong>Experiência real:</strong> A maioria dos convidados adquire 2 a 4 números para ajudar o casal e ter mais chances no sorteio.</p>
-              </div>
-            </div>
-
-            {/* Calculated Result Card */}
-            <div className="lg:col-span-6">
-              <Card className="wedding-card border-primary/40 shadow-lg">
-                <CardHeader className="pb-3">
-                  <CardDescription className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
-                    Estimativa Líquida para o Casal
-                  </CardDescription>
-                  <CardTitle ref={netDisplayRef} className="wedding-numeral text-4xl sm:text-5xl font-bold text-primary transition-transform origin-left">
-                    <NumberTicker
-                      value={estimatedNet}
-                      formatFn={(n) => formatBRL(Math.round(n))}
-                    />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2.5 text-sm">
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>Total arrecadado ({totalTickets} bilhetes)</span>
-                      <span className="wedding-numeral font-medium text-foreground">
-                        <NumberTicker
-                          value={estimatedGross}
-                          formatFn={(n) => formatBRL(Math.round(n))}
-                        />
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>Taxa de serviço e PIX (4.9%)</span>
-                      <span className="wedding-numeral font-medium text-muted-foreground">
-                        - <NumberTicker
-                          value={estimatedFee}
-                          formatFn={(n) => formatBRL(Math.round(n))}
-                        />
-                      </span>
-                    </div>
-                    <Separator className="bg-border" />
-                    <div className="flex justify-between font-semibold text-foreground text-base">
-                      <span>Disponível para saque</span>
-                      <span className="wedding-numeral font-bold text-primary text-xl">
-                        <NumberTicker
-                          value={estimatedNet}
-                          formatFn={(n) => formatBRL(Math.round(n))}
-                        />
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl bg-muted/70 p-3.5 text-xs text-muted-foreground border border-border leading-relaxed">
-                    ✨ <strong>Comparativo:</strong> Na tradicional gravata cortada com cédulas, o casal costuma arrecadar menos da metade porque quase ninguém anda com dinheiro em espécie.
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button asChild className="wedding-button wedding-shimmer w-full h-12 rounded-full text-base font-semibold shadow-md">
-                    <Link href="/cadastro">
-                      Criar Nossa Rifa Grátis
-                    </Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section className="py-24 px-4 sm:px-8">
-        <div className="mx-auto max-w-6xl space-y-14">
-          <motion.div
-            className="text-center space-y-3"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ type: 'spring', stiffness: 260, damping: 24 }}
-          >
-            <Badge variant="outline" className="rounded-full border-border bg-card text-xs uppercase tracking-wider text-muted-foreground">
-              Funcionalidades
-            </Badge>
-            <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
-              Tudo pensado com carinho para o seu casamento
-            </h2>
-            <p className="text-sm text-muted-foreground max-w-xl mx-auto">
-              Simples para quem compra, divertido para os convidados e transparente para os noivos.
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-          >
-            {/* Feature 1 */}
-            <motion.div variants={cardReveal}>
-              <Card className="wedding-card-interactive p-2 h-full">
-                <CardHeader>
-                  <div className="size-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
-                    <WalletIcon className="size-5" />
-                  </div>
-                  <CardTitle className="font-heading text-xl text-foreground">PIX Direto &amp; Seguro</CardTitle>
-                  <CardDescription className="text-muted-foreground leading-relaxed">
-                    O convidado aponta a câmera, faz o PIX no banco e o número é confirmado imediatamente. Sem precisar conferir comprovantes.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </motion.div>
-
-            {/* Feature 2 */}
-            <motion.div variants={cardReveal}>
-              <Card className="wedding-card-interactive p-2 h-full">
-                <CardHeader>
-                  <div className="size-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
-                    <TvIcon className="size-5" />
-                  </div>
-                  <CardTitle className="font-heading text-xl text-foreground">Telão Festivo ao Vivo</CardTitle>
-                  <CardDescription className="text-muted-foreground leading-relaxed">
-                    Conecte o projetor do salão: a contagem de números sobe em tempo real e o sorteio gera um momento emocionante na pista.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </motion.div>
-
-            {/* Feature 3 */}
-            <motion.div variants={cardReveal}>
-              <Card className="wedding-card-interactive p-2 h-full">
-                <CardHeader>
-                  <div className="size-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
-                    <ShieldCheckIcon className="size-5" />
-                  </div>
-                  <CardTitle className="font-heading text-xl text-foreground">Modo Padrinhos</CardTitle>
-                  <CardDescription className="text-muted-foreground leading-relaxed">
-                    Seus padrinhos podem ajudar circulando com o celular e marcando quem pagou em dinheiro ou no Pix direto na mesa.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </motion.div>
-
-            {/* Feature 4 */}
-            <motion.div variants={cardReveal}>
-              <Card className="wedding-card-interactive p-2 h-full">
-                <CardHeader>
-                  <div className="size-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
-                    <PaletteIcon className="size-5" />
-                  </div>
-                  <CardTitle className="font-heading text-xl text-foreground">Combina com a Decoração</CardTitle>
-                  <CardDescription className="text-muted-foreground leading-relaxed">
-                    Escolha entre paletas elegantes (Champagne, Rosé Floral, Sálvia e Noite de Gala) para manter a harmonia visual da sua festa.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </motion.div>
-
-            {/* Feature 5 */}
-            <motion.div variants={cardReveal}>
-              <Card className="wedding-card-interactive p-2 h-full">
-                <CardHeader>
-                  <div className="size-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
-                    <PartyPopperIcon className="size-5" />
-                  </div>
-                  <CardTitle className="font-heading text-xl text-foreground">Sorteio Transparente</CardTitle>
-                  <CardDescription className="text-muted-foreground leading-relaxed">
-                    Realize o sorteio com apenas um clique. A animação revela o vencedor de forma clara, justa e com muita vibração.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </motion.div>
-
-            {/* Feature 6 */}
-            <motion.div variants={cardReveal}>
-              <Card className="wedding-card-interactive p-2 h-full">
-                <CardHeader>
-                  <div className="size-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
-                    <CoinsIcon className="size-5" />
-                  </div>
-                  <CardTitle className="font-heading text-xl text-foreground">Sem Mensalidades</CardTitle>
-                  <CardDescription className="text-muted-foreground leading-relaxed">
-                    Crie sua rifa gratuitamente. Só há a pequena taxa de 4.9% sobre o que for arrecadado na festa.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* How it Works */}
-      <section className="relative border-t border-border bg-secondary/30 py-24 px-4 sm:px-8">
-        <div className="mx-auto max-w-5xl space-y-14">
-          <div className="text-center space-y-3">
-            <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
-              Como funciona em 3 passos simples
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Tudo pronto em poucos minutos, sem burocracia.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="wedding-card p-6 sm:p-8 space-y-4 text-center sm:text-left">
-              <div className="size-10 rounded-full bg-primary text-white font-heading text-base font-bold flex items-center justify-center mx-auto sm:mx-0 shadow-sm">
-                1
-              </div>
-              <h3 className="font-heading text-xl font-bold text-foreground">Crie a Rifa dos Noivos</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Personalize o nome do casal, o valor dos bilhetes e os mimos ou prêmios que serão sorteados.
+            {/* Text Content */}
+            <div className="p-8 sm:p-12 md:w-3/5 flex flex-col justify-center space-y-6 z-10 relative">
+              <Badge variant="outline" className="w-fit text-primary border-primary/20 bg-primary/5 text-xs font-semibold px-3 py-1 rounded-full">
+                <SparklesIcon className="size-3.5 mr-1.5 inline-block" />
+                A tradição, sem constrangimento
+              </Badge>
+              <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.1]">
+                O Corta-Gravata que <span className="text-primary italic">arrecada mais</span> e alegra a festa.
+              </h1>
+              <p className="text-muted-foreground text-base sm:text-lg leading-relaxed max-w-md">
+                Substitua o dinheiro picotado por uma experiência tátil e elegante. Os convidados participam pelo PIX e concorrem a um prêmio especial da noite.
               </p>
+              <div className="flex flex-col sm:flex-row gap-4 pt-2">
+                <Button
+                  asChild
+                  className="wedding-button h-13 px-8 rounded-full text-base font-semibold shadow-md w-full sm:w-auto"
+                  onMouseEnter={() => {
+                    if (ctaRef.current) animatePulse(ctaRef.current);
+                  }}
+                >
+                  <Link ref={ctaRef} href="/cadastro">
+                    Garanta sua participação <ArrowRightIcon className="size-4 ml-2" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            
+            {/* Subtle Gradient Backdrop */}
+            <div className="absolute right-0 top-0 bottom-0 w-full md:w-2/5 z-0 opacity-15 md:opacity-100 pointer-events-none flex items-center justify-center">
+               <div className="absolute inset-0 bg-gradient-to-l from-transparent to-card md:hidden" />
+            </div>
+          </motion.div>
+
+          {/* Card 2: The Ticket Simulator (Spans 4 columns) - Inspired by paper receipts */}
+          <motion.div 
+            className="gsap-bento md:col-span-4 wedding-card p-6 sm:p-8 flex flex-col justify-between min-h-[480px] sm:min-h-[520px] bg-card border-border"
+            whileHover={{ y: -4, scale: 0.995 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+          >
+            <div className="space-y-6">
+              <div className="flex items-center justify-between pb-4 border-b border-border border-dashed">
+                <h3 className="font-heading font-bold text-xl text-foreground flex items-center gap-2">
+                  <CalculatorIcon className="size-5 text-primary" />
+                  Simulador de Lua de Mel
+                </h3>
+              </div>
+              
+              <div className="space-y-5 pt-2">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="font-medium text-foreground">Convidados</span>
+                    <span className="wedding-numeral font-bold text-primary">{guests}</span>
+                  </div>
+                  <input
+                    type="range" min="50" max="500" step="10" value={guests}
+                    onChange={(e) => setGuests(Number(e.target.value))}
+                    className="w-full accent-primary h-1.5 bg-muted rounded-full appearance-none cursor-pointer"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="font-medium text-foreground">Valor por cota</span>
+                    <span className="wedding-numeral font-bold text-primary">R$ {ticketPrice},00</span>
+                  </div>
+                  <input
+                    type="range" min="10" max="100" step="5" value={ticketPrice}
+                    onChange={(e) => setTicketPrice(Number(e.target.value))}
+                    className="w-full accent-primary h-1.5 bg-muted rounded-full appearance-none cursor-pointer"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="font-medium text-foreground">Cotas por convidado</span>
+                    <span className="wedding-numeral font-bold text-primary">{ticketsPerGuest}</span>
+                  </div>
+                  <input
+                    type="range" min="1" max="5" step="1" value={ticketsPerGuest}
+                    onChange={(e) => setTicketsPerGuest(Number(e.target.value))}
+                    className="w-full accent-primary h-1.5 bg-muted rounded-full appearance-none cursor-pointer"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="wedding-card p-6 sm:p-8 space-y-4 text-center sm:text-left">
-              <div className="size-10 rounded-full bg-primary text-white font-heading text-base font-bold flex items-center justify-center mx-auto sm:mx-0 shadow-sm">
-                2
-              </div>
-              <h3 className="font-heading text-xl font-bold text-foreground">Compartilhe na Festa</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Coloque plaquinhas com o QR Code nas mesas, no telão do salão e conte com os padrinhos na pista.
-              </p>
+            <div className="border-t border-border border-dashed pt-5 space-y-1 mt-8">
+               <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">
+                 Estimativa Livre (Pós-taxa 4.9%)
+               </div>
+               <div ref={netDisplayRef} className="font-heading font-bold text-4xl text-primary wedding-numeral tracking-tight">
+                   <NumberTicker value={estimatedNet} formatFn={(n) => formatBRL(Math.round(n))} />
+               </div>
             </div>
+          </motion.div>
 
-            <div className="wedding-card p-6 sm:p-8 space-y-4 text-center sm:text-left">
-              <div className="size-10 rounded-full bg-primary text-white font-heading text-base font-bold flex items-center justify-center mx-auto sm:mx-0 shadow-sm">
-                3
-              </div>
-              <h3 className="font-heading text-xl font-bold text-foreground">Receba via PIX</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Ao finalizar a festa, transfira o valor acumulado direto para a conta bancária do casal em instantes.
-              </p>
-            </div>
-          </div>
+          {/* Card 3: Telão Festivo */}
+          <motion.div 
+            className="gsap-bento md:col-span-12 lg:col-span-8 wedding-card p-6 sm:p-8 bg-card flex flex-col sm:flex-row gap-6 items-center"
+            whileHover={{ y: -4, scale: 0.995 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+          >
+             <div className="size-16 shrink-0 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                <TvIcon className="size-8" />
+             </div>
+             <div>
+               <h3 className="font-heading text-2xl font-bold text-foreground mb-2">Telão Festivo ao Vivo</h3>
+               <p className="text-muted-foreground leading-relaxed">
+                 O coração da festa. Conecte ao projetor do salão: a arrecadação sobe em tempo real e o sorteio final gera um momento vibrante na pista de dança, revelando o vencedor com grande estilo.
+               </p>
+             </div>
+          </motion.div>
+
+          {/* Card 4: Pagamento Tátil */}
+          <motion.div 
+            className="gsap-bento md:col-span-6 lg:col-span-4 wedding-card p-6 sm:p-8"
+            whileHover={{ y: -4, scale: 0.995 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+          >
+             <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                <WalletIcon className="size-6" />
+             </div>
+             <h3 className="font-heading text-xl font-bold text-foreground mb-2">PIX sem atrito</h3>
+             <p className="text-sm text-muted-foreground leading-relaxed">
+               Um toque, uma leitura de QR Code, e o número é garantido instantaneamente. Zero necessidade de conferir comprovantes em papel.
+             </p>
+          </motion.div>
+
+          {/* Card 5: Modo Padrinho */}
+          <motion.div 
+            className="gsap-bento md:col-span-6 lg:col-span-4 wedding-card p-6 sm:p-8"
+            whileHover={{ y: -4, scale: 0.995 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+          >
+             <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                <ShieldCheckIcon className="size-6" />
+             </div>
+             <h3 className="font-heading text-xl font-bold text-foreground mb-2">Modo Padrinhos</h3>
+             <p className="text-sm text-muted-foreground leading-relaxed">
+               Uma tela otimizada para os padrinhos operarem pelo celular enquanto circulam pelas mesas. Receba em dinheiro ou PIX com um clique.
+             </p>
+          </motion.div>
+
+           {/* Card 6: Design Autêntico */}
+           <motion.div 
+            className="gsap-bento md:col-span-6 lg:col-span-4 wedding-card p-6 sm:p-8"
+            whileHover={{ y: -4, scale: 0.995 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+          >
+             <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                <PaletteIcon className="size-6" />
+             </div>
+             <h3 className="font-heading text-xl font-bold text-foreground mb-2">Harmonia Visual</h3>
+             <p className="text-sm text-muted-foreground leading-relaxed">
+               Paletas desenhadas como convites de luxo: Champagne, Rosé Floral e Noite de Gala. A tecnologia que respeita a beleza do seu evento.
+             </p>
+          </motion.div>
+
+           {/* Card 7: Saque Rápido */}
+           <motion.div 
+            className="gsap-bento md:col-span-6 lg:col-span-4 wedding-card p-6 sm:p-8"
+            whileHover={{ y: -4, scale: 0.995 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+          >
+             <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                <CheckCircle2Icon className="size-6" />
+             </div>
+             <h3 className="font-heading text-xl font-bold text-foreground mb-2">Dinheiro na Mão</h3>
+             <p className="text-sm text-muted-foreground leading-relaxed">
+               Ao final do evento, com um único comando, transfira o valor acumulado direto para a conta bancária do casal. Simples e seguro.
+             </p>
+          </motion.div>
+
         </div>
-      </section>
+      </main>
+
+      {/* Marquee Ribbon - Continuous elegant tape */}
+      <div className="border-y border-border bg-card/80 py-4 backdrop-blur-sm overflow-hidden">
+        <Marquee speedSecs={35} pauseOnHover>
+          <span className="inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground px-8">
+            🥂 Celebre com elegância
+          </span>
+          <span className="inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-widest text-primary px-8">
+            ⚡ Baixa Instantânea via PIX
+          </span>
+          <span className="inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground px-8">
+            📺 Diversão garantida na pista
+          </span>
+          <span className="inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-widest text-primary px-8">
+            🤵 Ferramenta de bolso para os padrinhos
+          </span>
+          <span className="inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground px-8">
+            ✈️ Ajuda real para a Lua de Mel
+          </span>
+        </Marquee>
+      </div>
 
       {/* Call to Action Footer */}
-      <section className="py-24 px-4 sm:px-8 border-t border-border text-center bg-card">
-        <div className="mx-auto max-w-3xl space-y-6">
-          <h2 className="font-heading text-4xl font-bold tracking-tight sm:text-5xl text-foreground">
-            Prontos para celebrar com alegria e leveza?
+      <section className="py-24 px-4 sm:px-8 bg-secondary/20">
+        <div className="mx-auto max-w-3xl space-y-8 text-center">
+          <h2 className="font-heading text-4xl font-bold tracking-tight sm:text-5xl text-foreground leading-[1.1]">
+            Prontos para brindar com leveza e praticidade?
           </h2>
-          <p className="text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
-            Crie sua conta agora mesmo e teste o link da sua rifa sem compromisso.
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
+            Crie sua conta agora mesmo. É gratuito para configurar e testar o link da sua rifa sem compromisso.
           </p>
-          <Button asChild size="lg" className="wedding-button h-13 px-8 rounded-full text-base font-semibold shadow-md">
-            <Link href="/cadastro">
-              Criar Rifa dos Noivos Grátis
-              <ArrowRightIcon className="size-4 ml-2" />
-            </Link>
-          </Button>
+          <div className="pt-4">
+            <Button asChild size="lg" className="wedding-button h-14 px-10 rounded-full text-lg font-semibold shadow-xl">
+              <Link href="/cadastro">
+                Começar Nossa Celebração
+                <ArrowRightIcon className="size-5 ml-2" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-8 px-4 sm:px-8 text-center text-xs text-muted-foreground bg-background">
-        <p>© {new Date().getFullYear()} Corta-Gravata • Celebrando o amor com elegância e diversão.</p>
+      <footer className="border-t border-border py-10 px-4 sm:px-8 text-center bg-background">
+        <p className="text-sm text-muted-foreground font-medium">
+          © {new Date().getFullYear()} Corta-Gravata • Onde a tradição encontra o requinte.
+        </p>
       </footer>
+      </div>
     </div>
-
   );
 }

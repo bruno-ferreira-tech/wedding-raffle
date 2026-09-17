@@ -1,0 +1,13 @@
+import { render } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import LandingPage from './page';
+
+describe('LandingPage', () => {
+  it('renders the fixed background canvas container', () => {
+    const { container } = render(<LandingPage />);
+    const canvasContainer = container.querySelector('.canvas-container');
+    expect(canvasContainer).not.toBeNull();
+    expect(canvasContainer?.className).toContain('fixed');
+    expect(canvasContainer?.className).toContain('z-0');
+  });
+});
