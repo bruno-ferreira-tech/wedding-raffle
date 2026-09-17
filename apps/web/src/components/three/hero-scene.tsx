@@ -126,6 +126,41 @@ export const HeroScene = forwardRef<HeroSceneHandle, HeroSceneProps>(
     ring2.position.y = 0.2;
     group.add(ring2);
 
+    // Diamond Solitaire on Ring 2
+    const diamondGeo = new THREE.OctahedronGeometry(0.2, 2);
+    const diamondMat = new THREE.MeshPhysicalMaterial({
+      color: 0xffffff,
+      metalness: 0.1,
+      roughness: 0.05,
+      transmission: 0.92,
+      thickness: 0.5,
+      ior: 2.417,
+      reflectivity: 0.9,
+    });
+    const diamond = new THREE.Mesh(diamondGeo, diamondMat);
+    diamond.position.set(0, 1.25, 0);
+    diamond.rotation.z = Math.PI / 4;
+    ring2.add(diamond);
+
+    // Diamond Prong setting (4 small golden prongs)
+    const prongGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.22, 8);
+    const prong1 = new THREE.Mesh(prongGeo, innerGoldMaterial);
+    prong1.position.set(0.1, 1.2, 0.1);
+    ring2.add(prong1);
+    const prong2 = new THREE.Mesh(prongGeo, innerGoldMaterial);
+    prong2.position.set(-0.1, 1.2, 0.1);
+    ring2.add(prong2);
+    const prong3 = new THREE.Mesh(prongGeo, innerGoldMaterial);
+    prong3.position.set(0.1, 1.2, -0.1);
+    ring2.add(prong3);
+    const prong4 = new THREE.Mesh(prongGeo, innerGoldMaterial);
+    prong4.position.set(-0.1, 1.2, -0.1);
+    ring2.add(prong4);
+
+    const diamondLight = new THREE.PointLight(0xffffff, 2, 4);
+    diamondLight.position.set(0, 1.35, 0.2);
+    ring2.add(diamondLight);
+
     // Sparkling floating micro-particles (golden specks)
     const particleCount = 45;
     const particleGeo = new THREE.BufferGeometry();
@@ -202,10 +237,41 @@ export const HeroScene = forwardRef<HeroSceneHandle, HeroSceneProps>(
       currentRotX += (targetRotX - currentRotX) * 0.05;
       currentRotY += (targetRotY - currentRotY) * 0.05;
 
+      const p = Math.max(0, Math.min(1, scrollProgressRef.current));
+
+      // Kinetic Separation Choreography:
+      // At p = 0: separation = 0 (rings intertwine in the Hero stage)
+      // As scroll proceeds past hero (p: 0 -> 0.22): rings glide outward to flanks
+      // In the middle (p: 0.22 -> 0.80): rings stay separated at the margins framing the Bento content
+      // Near bottom (p: 0.80 -> 1.0): rings smoothly converge back to center, interlocking at the CTA
+      let separation = 0;
+      if (p < 0.22) {
+        const t = p / 0.22;
+        separation = t * t * (3 - 2 * t);
+      } else if (p > 0.80) {
+        const t = (1 - p) / 0.20;
+        separation = t * t * (3 - 2 * t);
+      } else {
+        separation = 1;
+      }
+
+      // Base separation distance along X axis (moving toward screen flanks)
+      const maxSeparation = 2.6;
+      ring1.position.x = -0.45 - separation * maxSeparation;
+      ring1.position.z = separation * 0.35;
+      ring1.rotation.y = Math.PI / 6 + separation * (Math.PI * 0.4);
+
+      ring2.position.x = 0.45 + separation * maxSeparation;
+      ring2.position.z = -separation * 0.35;
+      ring2.rotation.y = -Math.PI / 4 - separation * (Math.PI * 0.4);
+
       // Base idle oscillation + mouse tilt + scroll sync
-      group.rotation.y = elapsed * 0.35 + currentRotY + scrollProgressRef.current * Math.PI * 2;
-      group.rotation.x = Math.sin(elapsed * 0.5) * 0.15 + currentRotX;
-      group.position.y = Math.sin(elapsed * 1.2) * 0.08 + scrollProgressRef.current * -2;
+      group.rotation.y = elapsed * 0.3 + currentRotY + p * Math.PI * 2;
+      group.rotation.x = Math.sin(elapsed * 0.5) * 0.12 + currentRotX;
+      group.position.y = Math.sin(elapsed * 1.2) * 0.08 + p * -1.8;
+
+      // Diamond sparkle dynamic pulsation
+      diamondLight.intensity = 1.4 + Math.sin(elapsed * 4.5) * 0.8;
 
       // Slowly rotate particle field
       particles.rotation.y = elapsed * 0.05;
@@ -223,8 +289,11 @@ export const HeroScene = forwardRef<HeroSceneHandle, HeroSceneProps>(
       renderer.dispose();
       ringGeo1.dispose();
       ringGeo2.dispose();
+      diamondGeo.dispose();
+      prongGeo.dispose();
       goldMaterial.dispose();
       innerGoldMaterial.dispose();
+      diamondMat.dispose();
       particleGeo.dispose();
       particleMat.dispose();
       if (container.contains(renderer.domElement)) {
