@@ -213,18 +213,17 @@ export function animateSVGDraw(svgPath: SVGElement, duration = 600) {
   }
 
   import("animejs").then((animeModule) => {
-    // Anime.js v4 exports `animate` and utilities directly
-    const anime = (animeModule as { default?: unknown; animate?: unknown }).default ?? animeModule;
     const length = (svgPath as SVGPathElement).getTotalLength?.() ?? 100;
     (svgPath as SVGPathElement).style.strokeDasharray = `${length}`;
     (svgPath as SVGPathElement).style.strokeDashoffset = `${length}`;
 
-    (anime as (opts: Record<string, unknown>) => void)({
-      targets: svgPath,
-      strokeDashoffset: [length, 0],
-      duration,
-      easing: "easeInOutCubic",
-    });
+    if (typeof animeModule.animate === "function") {
+      animeModule.animate(svgPath, {
+        strokeDashoffset: [length, 0],
+        duration,
+        ease: "easeInOutCubic",
+      });
+    }
   });
 }
 
@@ -235,14 +234,13 @@ export function animatePulse(element: HTMLElement, delay = 0) {
   if (prefersReducedMotion) return;
 
   import("animejs").then((animeModule) => {
-    const anime = (animeModule as { default?: unknown; animate?: unknown }).default ?? animeModule;
-
-    (anime as (opts: Record<string, unknown>) => void)({
-      targets: element,
-      scale: [1, 1.04, 1],
-      duration: 800,
-      delay,
-      easing: "easeInOutSine",
-    });
+    if (typeof animeModule.animate === "function") {
+      animeModule.animate(element, {
+        scale: [1, 1.04, 1],
+        duration: 800,
+        delay,
+        ease: "easeInOutSine",
+      });
+    }
   });
 }
