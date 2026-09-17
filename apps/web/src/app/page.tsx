@@ -20,6 +20,7 @@ import { Marquee } from '@/components/ui/marquee';
 import { HeroScene } from '@/components/three/hero-scene';
 import { formatBRL } from '@/lib/money';
 import { animatePulse } from '@/lib/animations';
+import { SplitText } from '@/components/ui/split-text';
 
 export default function LandingPage() {
   // Calculator state
@@ -166,7 +167,7 @@ export default function LandingPage() {
                 A tradição, sem constrangimento
               </Badge>
               <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.1]">
-                O Corta-Gravata que <span className="text-primary italic">arrecada mais</span> e alegra a festa.
+                <SplitText text="O Corta-Gravata que" /> <span className="text-primary italic">arrecada mais</span> <SplitText text="e alegra a festa." />
               </h1>
               <p className="text-muted-foreground text-base sm:text-lg leading-relaxed max-w-md">
                 Substitua o dinheiro picotado por uma experiência tátil e elegante. Os convidados participam pelo PIX e concorrem a um prêmio especial da noite.
