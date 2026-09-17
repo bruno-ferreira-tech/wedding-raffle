@@ -195,9 +195,9 @@ export default function LandingPage() {
 
           {/* Card 2: The Ticket Simulator (Spans 4 columns) - Inspired by paper receipts */}
           <motion.div 
-            className="gsap-bento md:col-span-4 wedding-card p-6 sm:p-8 flex flex-col justify-between min-h-[480px] sm:min-h-[520px] bg-card border-border"
-            whileHover={{ y: -4, scale: 0.995 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            className="gsap-bento receipt-card border-dashed border-2 md:col-span-4 wedding-card p-6 sm:p-8 flex flex-col justify-between min-h-[480px] sm:min-h-[520px] bg-card"
+            whileHover={{ scale: 0.985, y: 2 }}
+            transition={{ type: 'spring', stiffness: 350, damping: 25 }}
           >
             <div className="space-y-6">
               <div className="flex items-center justify-between pb-4 border-b border-border border-dashed">

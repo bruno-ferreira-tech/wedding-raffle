@@ -16,4 +16,11 @@ describe('LandingPage', () => {
     const trigger = container.querySelector('.gsap-trigger');
     expect(trigger).not.toBeNull();
   });
+
+  it('simulator card has tactile motion classes and dashed border', () => {
+    const { container } = render(<LandingPage />);
+    const simulator = container.querySelector('.receipt-card');
+    expect(simulator).not.toBeNull();
+    expect(simulator?.className).toContain('border-dashed');
+  });
 });
