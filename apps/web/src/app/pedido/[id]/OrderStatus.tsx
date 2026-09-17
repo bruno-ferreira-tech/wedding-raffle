@@ -20,6 +20,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
 import { BorderBeam } from '@/components/ui/border-beam';
 import { launchCelebrationConfetti } from '@/lib/confetti';
+import { motion, AnimatePresence } from 'motion/react';
+import { fadeUp, scalePop } from '@/lib/animations';
 import {
   ApiError,
   confirmFakePayment,
@@ -207,40 +209,66 @@ export function OrderStatus({ orderId, backHref = '/', themeId }: Props) {
           </Badge>
         </div>
 
-      {order.status === 'paid' ? (
-        <Card className="wedding-card border-primary/40 p-6 text-center space-y-4 shadow-md">
-          <div className="mx-auto size-16 rounded-full bg-primary/15 text-primary flex items-center justify-center">
-            <CheckIcon className="size-8 stroke-[2.5]" />
-          </div>
-          <div className="space-y-1">
-            <h2 className="font-heading text-2xl font-bold text-foreground">Pagamento Confirmado!</h2>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto">
-              Seus bilhetes foram registrados com sucesso e já estão concorrendo no sorteio dos noivos.
-            </p>
-          </div>
-          <div className="pt-2">
-            <Button asChild size="lg" className="wedding-button h-11 rounded-full px-8 shadow-sm">
-              <Link href={backHref}>Acompanhar Cartela</Link>
-            </Button>
-          </div>
-        </Card>
-      ) : null}
+      <AnimatePresence mode="wait">
+        {order.status === 'paid' ? (
+          <motion.div
+            key="status-paid"
+            variants={scalePop}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <Card className="wedding-card border-primary/40 p-6 text-center space-y-4 shadow-md">
+              <div className="mx-auto size-16 rounded-full bg-primary/15 text-primary flex items-center justify-center">
+                <CheckIcon className="size-8 stroke-[2.5]" />
+              </div>
+              <div className="space-y-1">
+                <h2 className="font-heading text-2xl font-bold text-foreground">Pagamento Confirmado!</h2>
+                <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                  Seus bilhetes foram registrados com sucesso e já estão concorrendo no sorteio dos noivos.
+                </p>
+              </div>
+              <div className="pt-2">
+                <Button asChild size="lg" className="wedding-button h-11 rounded-full px-8 shadow-sm">
+                  <Link href={backHref}>Acompanhar Cartela</Link>
+                </Button>
+              </div>
+            </Card>
+          </motion.div>
+        ) : null}
 
-      {order.status === 'expired' ? (
-        <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
-          <AlertTitle>Pedido expirado</AlertTitle>
-          <AlertDescription>
-            O prazo de pagamento terminou e os números voltaram para a cartela da festa.
-          </AlertDescription>
-        </Alert>
-      ) : null}
+        {order.status === 'expired' ? (
+          <motion.div
+            key="status-expired"
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
+              <AlertTitle>Pedido expirado</AlertTitle>
+              <AlertDescription>
+                O prazo de pagamento terminou e os números voltaram para a cartela da festa.
+              </AlertDescription>
+            </Alert>
+          </motion.div>
+        ) : null}
 
-      {order.status === 'cancelled' ? (
-        <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
-          <AlertTitle>Pedido cancelado</AlertTitle>
-          <AlertDescription>Você pode escolher novos bilhetes na cartela a qualquer momento.</AlertDescription>
-        </Alert>
-      ) : null}
+        {order.status === 'cancelled' ? (
+          <motion.div
+            key="status-cancelled"
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
+              <AlertTitle>Pedido cancelado</AlertTitle>
+              <AlertDescription>Você pode escolher novos bilhetes na cartela a qualquer momento.</AlertDescription>
+            </Alert>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
 
       <Card className="wedding-card shadow-sm">
         <CardHeader className="pb-3">

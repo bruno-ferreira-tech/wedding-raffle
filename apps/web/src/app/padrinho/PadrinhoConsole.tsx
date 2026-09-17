@@ -25,6 +25,8 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { launchCelebrationConfetti } from '@/lib/confetti';
+import { motion } from 'motion/react';
+import { fadeUp } from '@/lib/animations';
 import {
   ApiError,
   fetchNumberBoard,
@@ -173,7 +175,12 @@ export function PadrinhoConsole() {
 
   if (!authed) {
     return (
-      <div className="relative min-h-dvh w-full overflow-x-hidden bg-background text-foreground">
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
+        className="relative min-h-dvh w-full overflow-x-hidden bg-background text-foreground"
+      >
         <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-4 py-12">
           <header className="flex flex-col items-center text-center gap-3 mb-6">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
@@ -231,7 +238,7 @@ export function PadrinhoConsole() {
             <CardFooter className="pt-2">
               <Button
                 type="submit"
-                form="padrinho-auth-form"
+                form="padrinho-login"
                 size="lg"
                 className="wedding-button wedding-shimmer h-12 w-full rounded-2xl text-base font-semibold shadow-md"
                 disabled={pending || !password.trim()}
@@ -246,7 +253,7 @@ export function PadrinhoConsole() {
             </CardFooter>
           </Card>
         </div>
-      </div>
+      </motion.div>
     );
   }
 

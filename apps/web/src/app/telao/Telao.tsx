@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import {
   fetchState,
   getEventsUrl,
@@ -11,7 +12,7 @@ import {
 import { formatBRL, formatRaffleNumber } from '@/lib/money';
 import { parseRealtimeEvent } from '@/lib/sse';
 import { NumberTicker } from '@/components/ui/number-ticker';
-import { launchCelebrationConfetti } from '@/lib/confetti';
+import { ConfettiScene } from '@/components/three/confetti-scene';
 import styles from './telao.module.css';
 
 type RevealPhase = 'idle' | 'countdown' | 'number' | 'name';
@@ -45,6 +46,7 @@ export function Telao({ event }: TelaoProps = {}) {
   const [feedPulse, setFeedPulse] = useState<number | null>(null);
   const [reveal, setReveal] = useState<RevealState>(INITIAL_REVEAL);
   const [live, setLive] = useState(false);
+  const [showConfetti3D, setShowConfetti3D] = useState(false);
   const revealTimers = useRef<number[]>([]);
 
   const clearRevealTimers = useCallback(() => {
@@ -80,10 +82,10 @@ export function Telao({ event }: TelaoProps = {}) {
               phase: 'number',
               countdown: null,
             }));
-            launchCelebrationConfetti({ count: 120 });
+            // Launch Three.js 3D confetti on winner reveal
+            setShowConfetti3D(true);
             const nameId = window.setTimeout(() => {
               setReveal((prev) => ({ ...prev, phase: 'name' }));
-              launchCelebrationConfetti({ count: 80 });
             }, 1600);
             revealTimers.current.push(nameId);
             const dismissId = window.setTimeout(() => {
@@ -253,28 +255,84 @@ export function Telao({ event }: TelaoProps = {}) {
         </section>
       ) : null}
 
-      {revealing ? (
-        <div className={styles.reveal} role="dialog" aria-live="assertive">
-          <div className={styles.revealInner}>
-            <p className={styles.revealPrize}>{reveal.winner!.prizeLabel}</p>
-            {reveal.phase === 'countdown' && reveal.countdown !== null ? (
-              <p className={styles.revealCountdown} key={reveal.countdown}>
-                {reveal.countdown}
-              </p>
-            ) : null}
-            {reveal.phase === 'number' || reveal.phase === 'name' ? (
-              <p className={styles.revealNumber} key="number">
-                {formatRaffleNumber(reveal.winner!.numberId)}
-              </p>
-            ) : null}
-            {reveal.phase === 'name' ? (
-              <p className={styles.revealName} key="name">
-                {reveal.winner!.buyerName}
-              </p>
-            ) : null}
-          </div>
-        </div>
-      ) : null}
+      {/* Three.js 3D Confetti — only mounts on winner reveal */}
+      {showConfetti3D && (
+        <ConfettiScene
+          count={250}
+          duration={7000}
+          onComplete={() => setShowConfetti3D(false)}
+        />
+      )}
+
+      <AnimatePresence>
+        {revealing && (
+          <motion.div
+            className={styles.reveal}
+            role="dialog"
+            aria-live="assertive"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <motion.div
+              className={styles.revealInner}
+              initial={{ scale: 0.85, y: 32 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            >
+              <motion.p
+                className={styles.revealPrize}
+                initial={{ opacity: 0, y: -12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+              >
+                {reveal.winner!.prizeLabel}
+              </motion.p>
+              <AnimatePresence mode="wait">
+                {reveal.phase === 'countdown' && reveal.countdown !== null ? (
+                  <motion.p
+                    key={`countdown-${reveal.countdown}`}
+                    className={styles.revealCountdown}
+                    initial={{ opacity: 0, scale: 1.6 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.6 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 18 }}
+                  >
+                    {reveal.countdown}
+                  </motion.p>
+                ) : null}
+                {reveal.phase === 'number' || reveal.phase === 'name' ? (
+                  <motion.p
+                    key="winner-number"
+                    className={styles.revealNumber}
+                    initial={{ opacity: 0, scale: 0.5, y: 40 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ type: 'spring', stiffness: 350, damping: 16, delay: 0.05 }}
+                  >
+                    {formatRaffleNumber(reveal.winner!.numberId)}
+                  </motion.p>
+                ) : null}
+              </AnimatePresence>
+              <AnimatePresence>
+                {reveal.phase === 'name' ? (
+                  <motion.p
+                    key="winner-name"
+                    className={styles.revealName}
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+                  >
+                    {reveal.winner!.buyerName}
+                  </motion.p>
+                ) : null}
+              </AnimatePresence>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

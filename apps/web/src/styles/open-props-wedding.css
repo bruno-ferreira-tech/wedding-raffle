@@ -1,0 +1,54 @@
+/* ==============================================================================
+   Open Props Wedding — Design Token Foundation
+   Open Props provides the scale; we map it to wedding-specific semantics.
+   https://open-props.style/
+   ============================================================================== */
+
+/* Sub-pacotes do Open Props que usamos (só o que precisamos, não o bundle todo) */
+@import "open-props/sizes";
+@import "open-props/easings";
+@import "open-props/shadows";
+@import "open-props/animations";
+
+:root {
+  /* ── SPACING (via Open Props sizes) ────────────────────────────────────────── */
+  --wedding-space-1: var(--size-1);   /* 4px  */
+  --wedding-space-2: var(--size-2);   /* 8px  */
+  --wedding-space-3: var(--size-3);   /* 12px */
+  --wedding-space-4: var(--size-4);   /* 16px */
+  --wedding-space-5: var(--size-5);   /* 20px */
+  --wedding-space-6: var(--size-6);   /* 24px */
+  --wedding-space-8: var(--size-8);   /* 32px */
+  --wedding-space-10: var(--size-10); /* 40px */
+  --wedding-space-12: var(--size-12); /* 48px */
+  --wedding-space-fluid-sm: var(--size-fluid-1);
+  --wedding-space-fluid-md: var(--size-fluid-3);
+  --wedding-space-fluid-lg: var(--size-fluid-5);
+
+  /* ── EASINGS (via Open Props easings) ─────────────────────────────────────── */
+  /* Entrada de cards, hero, elementos da página */
+  --wedding-ease-enter: var(--ease-spring-2);
+  /* Saída suave */
+  --wedding-ease-exit: var(--ease-in-2);
+  /* Hover interativo com bounce elegante */
+  --wedding-ease-bounce: var(--ease-elastic-2);
+  /* Transições de estado (status PIX, etc.) */
+  --wedding-ease-smooth: var(--ease-3);
+  /* Snap de rolagem / quick response */
+  --wedding-ease-snap: var(--ease-spring-5);
+
+  /* ── SHADOWS (via Open Props shadows) ─────────────────────────────────────── */
+  /* Cartão de papel (superfície base) */
+  --wedding-shadow-card: var(--shadow-2);
+  /* Cartão elevado ao hover */
+  --wedding-shadow-raised: var(--shadow-3);
+  /* Modal/overlay sobre a superfície */
+  --wedding-shadow-overlay: var(--shadow-5);
+  /* Botão ativo pressionado */
+  --wedding-shadow-inset: var(--shadow-1);
+
+  /* ── FONT FAMILIES ────────────────────────────────────────────────────────── */
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+}

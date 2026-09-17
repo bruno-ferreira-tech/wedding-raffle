@@ -34,6 +34,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
 import { NumberTicker } from '@/components/ui/number-ticker';
 import { launchCelebrationConfetti } from '@/lib/confetti';
+import { motion } from 'motion/react';
+import { fadeUp, cardReveal, staggerContainer } from '@/lib/animations';
 import {
   ApiError,
   drawNext,
@@ -181,7 +183,12 @@ export function AdminConsole() {
 
   if (!authed) {
     return (
-      <div className="flex min-h-dvh w-full flex-col justify-center bg-background px-4 py-12 text-foreground">
+      <motion.div
+        className="flex min-h-dvh w-full flex-col justify-center bg-background px-4 py-12 text-foreground"
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
+      >
         <div className="mx-auto flex w-full max-w-md flex-col justify-center">
           <header className="flex flex-col items-center text-center gap-3 mb-6">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
@@ -250,7 +257,7 @@ export function AdminConsole() {
             </CardFooter>
           </Card>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
@@ -270,43 +277,56 @@ export function AdminConsole() {
         </header>
 
         {state ? (
-          <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <Card className="wedding-card p-3 text-center shadow-xs">
-              <CardDescription className="text-[10px] tracking-wider uppercase font-semibold text-muted-foreground">
-                Livres
-              </CardDescription>
-              <CardTitle className="wedding-numeral text-2xl font-bold mt-1 text-foreground">
-                <NumberTicker value={state.counts.disponivel} />
-              </CardTitle>
-            </Card>
-            <Card className="wedding-card p-3 text-center shadow-xs">
-              <CardDescription className="text-[10px] tracking-wider uppercase font-semibold text-muted-foreground">
-                Reservados
-              </CardDescription>
-              <CardTitle className="wedding-numeral text-2xl font-bold mt-1 text-amber-600">
-                <NumberTicker value={state.counts.reservado} />
-              </CardTitle>
-            </Card>
-            <Card className="wedding-card p-3 text-center shadow-xs">
-              <CardDescription className="text-[10px] tracking-wider uppercase font-semibold text-muted-foreground">
-                Pagos
-              </CardDescription>
-              <CardTitle className="wedding-numeral text-2xl font-bold mt-1 text-emerald-600">
-                <NumberTicker value={state.counts.pago} />
-              </CardTitle>
-            </Card>
-            <Card className="wedding-card border-primary/30 p-3 text-center shadow-xs">
-              <CardDescription className="text-[10px] tracking-wider uppercase font-semibold text-muted-foreground">
-                Arrecadado
-              </CardDescription>
-              <CardTitle className="wedding-numeral text-lg font-bold text-primary mt-1">
-                <NumberTicker
-                  value={state.arrecadadoCents}
-                  formatFn={(n) => formatBRL(Math.round(n))}
-                />
-              </CardTitle>
-            </Card>
-          </section>
+          <motion.section
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-2 gap-3 sm:grid-cols-4"
+          >
+            <motion.div variants={cardReveal}>
+              <Card className="wedding-card p-3 text-center shadow-xs">
+                <CardDescription className="text-[10px] tracking-wider uppercase font-semibold text-muted-foreground">
+                  Livres
+                </CardDescription>
+                <CardTitle className="wedding-numeral text-2xl font-bold mt-1 text-foreground">
+                  <NumberTicker value={state.counts.disponivel} />
+                </CardTitle>
+              </Card>
+            </motion.div>
+            <motion.div variants={cardReveal}>
+              <Card className="wedding-card p-3 text-center shadow-xs">
+                <CardDescription className="text-[10px] tracking-wider uppercase font-semibold text-muted-foreground">
+                  Reservados
+                </CardDescription>
+                <CardTitle className="wedding-numeral text-2xl font-bold mt-1 text-amber-600">
+                  <NumberTicker value={state.counts.reservado} />
+                </CardTitle>
+              </Card>
+            </motion.div>
+            <motion.div variants={cardReveal}>
+              <Card className="wedding-card p-3 text-center shadow-xs">
+                <CardDescription className="text-[10px] tracking-wider uppercase font-semibold text-muted-foreground">
+                  Pagos
+                </CardDescription>
+                <CardTitle className="wedding-numeral text-2xl font-bold mt-1 text-emerald-600">
+                  <NumberTicker value={state.counts.pago} />
+                </CardTitle>
+              </Card>
+            </motion.div>
+            <motion.div variants={cardReveal}>
+              <Card className="wedding-card border-primary/30 p-3 text-center shadow-xs">
+                <CardDescription className="text-[10px] tracking-wider uppercase font-semibold text-muted-foreground">
+                  Arrecadado
+                </CardDescription>
+                <CardTitle className="wedding-numeral text-lg font-bold text-primary mt-1">
+                  <NumberTicker
+                    value={state.arrecadadoCents}
+                    formatFn={(n) => formatBRL(Math.round(n))}
+                  />
+                </CardTitle>
+              </Card>
+            </motion.div>
+          </motion.section>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Skeleton className="h-20 w-full rounded-2xl" />

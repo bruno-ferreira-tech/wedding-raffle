@@ -46,6 +46,9 @@ import {
   type User,
 } from '@/lib/api';
 import { formatBRL } from '@/lib/money';
+// Motion.dev — used for stagger animations on financial stats cards
+import { motion } from 'motion/react';
+import { cardReveal, staggerContainer } from '@/lib/animations';
 
 export default function DashboardOverviewPage() {
   const router = useRouter();
@@ -259,9 +262,15 @@ export default function DashboardOverviewPage() {
         </div>
 
         {/* Financial Cards Grid */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
           {/* Card 1: Saldo Disponível para Saque */}
-          <Card className="wedding-card border-primary/40 shadow-md p-6 lg:col-span-1 flex flex-col justify-between">
+          <motion.div variants={cardReveal} className="lg:col-span-1">
+            <Card className="wedding-card border-primary/40 shadow-md p-6 h-full flex flex-col justify-between">
             <CardHeader className="p-0 pb-3">
               <div className="flex items-center justify-between">
                 <CardDescription className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">
@@ -298,9 +307,11 @@ export default function DashboardOverviewPage() {
               </Button>
             </CardFooter>
           </Card>
+        </motion.div>
 
-          {/* Card 2: Arrecadação Bruta & Líquida */}
-          <Card className="wedding-card shadow-sm p-6 flex flex-col justify-between">
+        {/* Card 2: Arrecadação Bruta & Líquida */}
+        <motion.div variants={cardReveal}>
+          <Card className="wedding-card shadow-sm p-6 h-full flex flex-col justify-between">
             <CardHeader className="p-0 pb-2">
               <CardDescription className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">
                 Arrecadação Bruta
@@ -342,9 +353,11 @@ export default function DashboardOverviewPage() {
               Calculado automaticamente a cada pagamento confirmado.
             </div>
           </Card>
+        </motion.div>
 
-          {/* Card 3: Histórico de Saques */}
-          <Card className="wedding-card shadow-sm p-6 flex flex-col justify-between">
+        {/* Card 3: Histórico de Saques */}
+        <motion.div variants={cardReveal}>
+          <Card className="wedding-card shadow-sm p-6 h-full flex flex-col justify-between">
             <CardHeader className="p-0 pb-2">
               <CardDescription className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">
                 Total Já Transferido
@@ -369,7 +382,8 @@ export default function DashboardOverviewPage() {
               Chave cadastrada: {balance?.pixKey || 'Nenhuma'}
             </div>
           </Card>
-        </div>
+        </motion.div>
+      </motion.div>
 
         {/* Quick Access Links */}
         <section className="space-y-4">

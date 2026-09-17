@@ -26,6 +26,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
 import { BorderBeam } from '@/components/ui/border-beam';
 import { launchCelebrationConfetti } from '@/lib/confetti';
+import { motion, AnimatePresence } from 'motion/react';
+import { scalePop, staggerContainer, cardReveal } from '@/lib/animations';
 import {
   ApiError,
   drawDashboardEvent,
@@ -172,126 +174,145 @@ export default function DashboardSorteioPage() {
           </Alert>
         ) : null}
 
-        {/* Step 1: Trava de Vendas */}
-        <Card className="wedding-card shadow-sm p-6 sm:p-7">
-          <CardHeader className="p-0 pb-4">
-            <CardTitle className="font-heading text-xl font-bold text-foreground">1. Congelar Vendas</CardTitle>
-            <CardDescription className="text-xs text-muted-foreground mt-0.5">
-              Para sortear com integridade, encerre as vendas para que os números participantes sejam congelados.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-0 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-2">
-            <div>
-              <p className="text-sm font-semibold">
-                Status atual:{' '}
-                <span className={isSalesClosed ? 'text-destructive font-semibold' : 'text-emerald-700 font-semibold'}>
-                  {isSalesClosed ? 'VENDAS TRAVADAS PARA O SORTEIO' : 'RECEBENDO VENDAS'}
-                </span>
-              </p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                <span className="wedding-numeral font-bold text-foreground">{eligibleCount}</span> bilhete(s) concorrendo neste momento.
-              </p>
-            </div>
-
-            {isSalesClosed ? (
-              <Button
-                variant="outline"
-                onClick={() => onToggleSales('open')}
-                disabled={salesPending}
-                className="rounded-full border-border bg-card hover:bg-muted text-xs uppercase h-10 px-5 font-semibold"
-              >
-                <UnlockIcon className="size-3.5 mr-1.5" />
-                Reabrir Vendas
-              </Button>
-            ) : (
-              <Button
-                variant="destructive"
-                onClick={() => onToggleSales('closed')}
-                disabled={salesPending}
-                className="rounded-full text-xs uppercase tracking-wider h-10 px-5 shadow-sm font-semibold"
-              >
-                <LockIcon className="size-3.5 mr-1.5" />
-                Travar Vendas para Sortear
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Step 2: Sorteio do Próximo Prêmio */}
-        <Card className="wedding-card relative overflow-hidden border-primary/30 shadow-md p-6 sm:p-7">
-          <BorderBeam size={240} duration={8} />
-          <CardHeader className="p-0 pb-4">
-            <div className="flex items-center gap-2">
-              <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <PartyPopperIcon className="size-4" />
-              </div>
-              <div>
-                <CardTitle className="font-heading text-xl font-bold text-foreground">2. Sortear Prêmio</CardTitle>
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="space-y-6"
+        >
+          {/* Step 1: Trava de Vendas */}
+          <motion.div variants={cardReveal}>
+            <Card className="wedding-card shadow-sm p-6 sm:p-7">
+              <CardHeader className="p-0 pb-4">
+                <CardTitle className="font-heading text-xl font-bold text-foreground">1. Congelar Vendas</CardTitle>
                 <CardDescription className="text-xs text-muted-foreground mt-0.5">
-                  O vencedor é sorteado aleatoriamente entre os números confirmados e transmitido na mesma hora no Telão.
+                  Para sortear com integridade, encerre as vendas para que os números participantes sejam congelados.
                 </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="p-0 space-y-4 pt-2">
-            <div className="flex flex-col sm:flex-row gap-3">
-              <div className="flex-1">
-                <label className="text-xs uppercase tracking-wider text-muted-foreground block mb-1.5 font-semibold">
-                  Nome do Prêmio Sorteado
-                </label>
-                <Input
-                  value={prizeLabel}
-                  onChange={(e) => setPrizeLabel(e.target.value)}
-                  placeholder="Ex: Whisky 12 Anos"
-                  disabled={drawPending}
-                  className="h-12 rounded-xl bg-background border-border focus:ring-2 focus:ring-primary shadow-2xs"
-                />
-              </div>
+              </CardHeader>
+              <CardContent className="p-0 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-2">
+                <div>
+                  <p className="text-sm font-semibold">
+                    Status atual:{' '}
+                    <span className={isSalesClosed ? 'text-destructive font-semibold' : 'text-emerald-700 font-semibold'}>
+                      {isSalesClosed ? 'VENDAS TRAVADAS PARA O SORTEIO' : 'RECEBENDO VENDAS'}
+                    </span>
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    <span className="wedding-numeral font-bold text-foreground">{eligibleCount}</span> bilhete(s) concorrendo neste momento.
+                  </p>
+                </div>
 
-              <div className="sm:self-end">
-                <Button
-                  size="lg"
-                  onClick={onDrawNext}
-                  disabled={!isSalesClosed || eligibleCount === 0 || drawPending}
-                  className="wedding-button wedding-shimmer h-12 w-full sm:w-auto font-semibold px-8 rounded-2xl shadow-md disabled:opacity-50"
-                >
-                  {drawPending ? <Spinner data-icon="inline-start" /> : <SparklesIcon className="size-4 mr-2" />}
-                  {drawPending ? 'Sorteando…' : 'Sortear Agora!'}
-                </Button>
-              </div>
-            </div>
+                {isSalesClosed ? (
+                  <Button
+                    variant="outline"
+                    onClick={() => onToggleSales('open')}
+                    disabled={salesPending}
+                    className="rounded-full border-border bg-card hover:bg-muted text-xs uppercase h-10 px-5 font-semibold"
+                  >
+                    <UnlockIcon className="size-3.5 mr-1.5" />
+                    Reabrir Vendas
+                  </Button>
+                ) : (
+                  <Button
+                    variant="destructive"
+                    onClick={() => onToggleSales('closed')}
+                    disabled={salesPending}
+                    className="rounded-full text-xs uppercase tracking-wider h-10 px-5 shadow-sm font-semibold"
+                  >
+                    <LockIcon className="size-3.5 mr-1.5" />
+                    Travar Vendas para Sortear
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
 
-            {!isSalesClosed ? (
-              <p className="text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
-                ⚠️ Você precisa travar as vendas no passo 1 antes de realizar o sorteio.
-              </p>
-            ) : eligibleCount === 0 ? (
-              <p className="text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
-                ⚠️ Nenhum número pago foi registrado ainda.
-              </p>
-            ) : null}
+          {/* Step 2: Sorteio do Próximo Prêmio */}
+          <motion.div variants={cardReveal}>
+            <Card className="wedding-card relative overflow-hidden border-primary/30 shadow-md p-6 sm:p-7">
+              <BorderBeam size={240} duration={8} />
+              <CardHeader className="p-0 pb-4">
+                <div className="flex items-center gap-2">
+                  <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <PartyPopperIcon className="size-4" />
+                  </div>
+                  <div>
+                    <CardTitle className="font-heading text-xl font-bold text-foreground">2. Sortear Prêmio</CardTitle>
+                    <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                      O vencedor é sorteado aleatoriamente entre os números confirmados e transmitido na mesma hora no Telão.
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-0 space-y-4 pt-2">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex-1">
+                    <label className="text-xs uppercase tracking-wider text-muted-foreground block mb-1.5 font-semibold">
+                      Nome do Prêmio Sorteado
+                    </label>
+                    <Input
+                      value={prizeLabel}
+                      onChange={(e) => setPrizeLabel(e.target.value)}
+                      placeholder="Ex: Whisky 12 Anos"
+                      disabled={drawPending}
+                      className="h-12 rounded-xl bg-background border-border focus:ring-2 focus:ring-primary shadow-2xs"
+                    />
+                  </div>
 
-            {lastWinner ? (
-              <div className="mt-4 rounded-2xl border border-primary/40 bg-primary/10 p-5 text-center shadow-xs">
-                <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/20 px-3 py-0.5 text-xs font-semibold text-primary mb-2">
-                  🎉 Último Sorteado
-                </span>
-                <h3 className="wedding-numeral text-4xl font-bold text-primary">
-                  Número {formatRaffleNumber(lastWinner.numberId)}
-                </h3>
-                <p className="text-xl font-bold text-foreground mt-1">
-                  {lastWinner.buyerName}
-                </p>
-                <p className="text-xs text-muted-foreground mt-0.5 uppercase tracking-wider font-semibold">
-                  Prêmio: {lastWinner.prizeLabel}
-                </p>
-              </div>
-            ) : null}
-          </CardContent>
-        </Card>
+                  <div className="sm:self-end">
+                    <Button
+                      size="lg"
+                      onClick={onDrawNext}
+                      disabled={!isSalesClosed || eligibleCount === 0 || drawPending}
+                      className="wedding-button wedding-shimmer h-12 w-full sm:w-auto font-semibold px-8 rounded-2xl shadow-md disabled:opacity-50"
+                    >
+                      {drawPending ? <Spinner data-icon="inline-start" /> : <SparklesIcon className="size-4 mr-2" />}
+                      {drawPending ? 'Sorteando…' : 'Sortear Agora!'}
+                    </Button>
+                  </div>
+                </div>
 
-        {/* Step 3: Histórico de Vencedores */}
-        <Card className="wedding-card shadow-sm overflow-hidden">
+                {!isSalesClosed ? (
+                  <p className="text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
+                    ⚠️ Você precisa travar as vendas no passo 1 antes de realizar o sorteio.
+                  </p>
+                ) : eligibleCount === 0 ? (
+                  <p className="text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
+                    ⚠️ Nenhum número pago foi registrado ainda.
+                  </p>
+                ) : null}
+
+                <AnimatePresence>
+                  {lastWinner ? (
+                    <motion.div
+                      key={lastWinner.numberId}
+                      variants={scalePop}
+                      initial="hidden"
+                      animate="visible"
+                      className="mt-4 rounded-2xl border border-primary/40 bg-primary/10 p-5 text-center shadow-xs"
+                    >
+                      <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/20 px-3 py-0.5 text-xs font-semibold text-primary mb-2">
+                        🎉 Último Sorteado
+                      </span>
+                      <h3 className="wedding-numeral text-4xl font-bold text-primary">
+                        Número {formatRaffleNumber(lastWinner.numberId)}
+                      </h3>
+                      <p className="text-xl font-bold text-foreground mt-1">
+                        {lastWinner.buyerName}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-0.5 uppercase tracking-wider font-semibold">
+                        Prêmio: {lastWinner.prizeLabel}
+                      </p>
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Step 3: Histórico de Vencedores */}
+          <motion.div variants={cardReveal}>
+            <Card className="wedding-card shadow-sm overflow-hidden">
           <CardHeader className="p-6 pb-4 border-b border-border">
             <div className="flex items-center gap-2">
               <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -344,7 +365,9 @@ export default function DashboardSorteioPage() {
             )}
           </CardContent>
         </Card>
-      </main>
-    </div>
+      </motion.div>
+    </motion.div>
+  </main>
+</div>
   );
 }

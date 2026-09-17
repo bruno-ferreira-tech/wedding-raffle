@@ -18,6 +18,8 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { ApiError, loginCouple } from '@/lib/api';
+import { motion } from 'motion/react';
+import { fadeUp } from '@/lib/animations';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -56,7 +58,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center bg-background px-4 py-12 text-foreground">
+    <motion.div
+      className="flex min-h-dvh flex-col items-center justify-center bg-background px-4 py-12 text-foreground"
+      variants={fadeUp}
+      initial="hidden"
+      animate="visible"
+    >
       <div className="w-full max-w-md space-y-6">
         <div className="text-center space-y-2">
           <Link href="/" className="inline-block font-heading text-3xl font-bold tracking-tight text-foreground hover:opacity-85">
@@ -142,6 +149,6 @@ export default function LoginPage() {
           </CardFooter>
         </Card>
       </div>
-    </div>
+    </motion.div>
   );
 }

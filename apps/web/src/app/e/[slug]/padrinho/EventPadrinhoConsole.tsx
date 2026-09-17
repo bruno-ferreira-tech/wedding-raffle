@@ -26,6 +26,8 @@ import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { NumberTicker } from '@/components/ui/number-ticker';
 import { launchCelebrationConfetti } from '@/lib/confetti';
+import { motion } from 'motion/react';
+import { fadeUp } from '@/lib/animations';
 import {
   ApiError,
   fetchNumberBoard,
@@ -212,7 +214,12 @@ export function EventPadrinhoConsole({ event }: Props) {
         </header>
 
         {!authed ? (
-          <div className="mx-auto w-full max-w-md">
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            className="mx-auto w-full max-w-md"
+          >
             <Card className="wedding-card shadow-lg p-2 sm:p-4">
               <CardHeader className="text-center pb-4">
                 <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
@@ -264,7 +271,7 @@ export function EventPadrinhoConsole({ event }: Props) {
                 </Button>
               </CardFooter>
             </Card>
-          </div>
+          </motion.div>
         ) : (
           <Card className="wedding-card shadow-lg overflow-hidden">
             <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border pb-5">
