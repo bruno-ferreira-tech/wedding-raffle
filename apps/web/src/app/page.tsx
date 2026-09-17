@@ -13,7 +13,7 @@ import {
   TvIcon,
   WalletIcon,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -28,20 +28,36 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { NumberTicker } from '@/components/ui/number-ticker';
 import { Marquee } from '@/components/ui/marquee';
+import { HeroScene } from '@/components/three/hero-scene';
 import { formatBRL } from '@/lib/money';
-import { cardReveal, staggerContainer } from '@/lib/animations';
+import { cardReveal, staggerContainer, animatePulse } from '@/lib/animations';
 
 export default function LandingPage() {
   // Calculator state
   const [guests, setGuests] = useState(150);
   const [ticketPrice, setTicketPrice] = useState(25);
   const [ticketsPerGuest, setTicketsPerGuest] = useState(2);
+  const netDisplayRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLAnchorElement>(null);
 
   const totalTickets = guests * ticketsPerGuest;
   const estimatedGross = totalTickets * ticketPrice * 100;
   const feePercent = 0.049;
   const estimatedFee = Math.round(estimatedGross * feePercent);
   const estimatedNet = estimatedGross - estimatedFee;
+
+  // GSAP kinetic reaction on calculator change
+  useEffect(() => {
+    if (netDisplayRef.current) {
+      import('gsap').then(({ default: gsap }) => {
+        gsap.fromTo(
+          netDisplayRef.current,
+          { scale: 1.06, filter: 'brightness(1.2)' },
+          { scale: 1, filter: 'brightness(1)', duration: 0.35, ease: 'back.out(2)' }
+        );
+      });
+    }
+  }, [estimatedNet]);
 
   return (
     <div className="min-h-dvh w-full bg-background text-foreground">
@@ -83,6 +99,11 @@ export default function LandingPage() {
             A tradição do casamento, sem constrangimento e com muita diversão
           </motion.div>
 
+          {/* Three.js 3D Interactive Wedding Emblem */}
+          <motion.div variants={cardReveal} className="flex justify-center -my-3 sm:-my-4">
+            <HeroScene />
+          </motion.div>
+
           <motion.h1
             variants={cardReveal}
             className="font-heading text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.15]"
@@ -105,8 +126,15 @@ export default function LandingPage() {
             variants={cardReveal}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
           >
-            <Button asChild size="lg" className="wedding-button wedding-shimmer h-13 px-8 rounded-full text-base font-semibold w-full sm:w-auto shadow-md">
-              <Link href="/cadastro">
+            <Button
+              asChild
+              size="lg"
+              className="wedding-button wedding-shimmer h-13 px-8 rounded-full text-base font-semibold w-full sm:w-auto shadow-md"
+              onMouseEnter={() => {
+                if (ctaRef.current) animatePulse(ctaRef.current);
+              }}
+            >
+              <Link ref={ctaRef} href="/cadastro">
                 Criar Rifa da Nossa Festa
                 <ArrowRightIcon className="size-4 ml-2" />
               </Link>
@@ -234,7 +262,7 @@ export default function LandingPage() {
                   <CardDescription className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
                     Estimativa Líquida para o Casal
                   </CardDescription>
-                  <CardTitle className="wedding-numeral text-4xl sm:text-5xl font-bold text-primary">
+                  <CardTitle ref={netDisplayRef} className="wedding-numeral text-4xl sm:text-5xl font-bold text-primary transition-transform origin-left">
                     <NumberTicker
                       value={estimatedNet}
                       formatFn={(n) => formatBRL(Math.round(n))}

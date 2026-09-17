@@ -4,48 +4,54 @@
    https://open-props.style/
    ============================================================================== */
 
-/* Sub-pacotes do Open Props que usamos (só o que precisamos, não o bundle todo) */
-@import "open-props/sizes";
-@import "open-props/easings";
-@import "open-props/shadows";
-@import "open-props/animations";
+/* ==============================================================================
+   Open Props Wedding — Design Token Foundation
+   Full Open Props integration + designsystems.one tactile materials
+   https://open-props.style/
+   https://www.designsystems.one/
+   ============================================================================== */
+
+@import "open-props/style";
+@import "open-props/buttons";
 
 :root {
-  /* ── SPACING (via Open Props sizes) ────────────────────────────────────────── */
-  --wedding-space-1: var(--size-1);   /* 4px  */
-  --wedding-space-2: var(--size-2);   /* 8px  */
+  /* ── OPEN PROPS SURFACES (Sand & Stone warmth) ───────────────────────────── */
+  --surface-canvas: var(--sand-1, #faf8f5);
+  --surface-card: #ffffff;
+  --surface-elevated: var(--sand-0, #ffffff);
+  --surface-subtle: var(--sand-2, #f5f0ea);
+  
+  /* ── OPEN PROPS TYPOGRAPHY & COLORS ───────────────────────────────────────── */
+  --ink-primary: var(--stone-11, #262320);
+  --ink-muted: var(--stone-7, #78716c);
+  --ink-subtle: var(--stone-6, #a8a29e);
+  
+  --gold-primary: #b89047;
+  --gold-light: #e5c158;
+  --gold-glow: rgba(184, 144, 71, 0.25);
+  --gold-surface: rgba(184, 144, 71, 0.08);
+
+  /* ── OPEN PROPS SPACING & SCALE ───────────────────────────────────────────── */
+  --wedding-space-1: var(--size-1);   /* 4px */
+  --wedding-space-2: var(--size-2);   /* 8px */
   --wedding-space-3: var(--size-3);   /* 12px */
   --wedding-space-4: var(--size-4);   /* 16px */
-  --wedding-space-5: var(--size-5);   /* 20px */
   --wedding-space-6: var(--size-6);   /* 24px */
   --wedding-space-8: var(--size-8);   /* 32px */
-  --wedding-space-10: var(--size-10); /* 40px */
   --wedding-space-12: var(--size-12); /* 48px */
-  --wedding-space-fluid-sm: var(--size-fluid-1);
-  --wedding-space-fluid-md: var(--size-fluid-3);
-  --wedding-space-fluid-lg: var(--size-fluid-5);
-
-  /* ── EASINGS (via Open Props easings) ─────────────────────────────────────── */
-  /* Entrada de cards, hero, elementos da página */
+  
+  /* ── OPEN PROPS EASINGS & SPRINGS ─────────────────────────────────────────── */
   --wedding-ease-enter: var(--ease-spring-2);
-  /* Saída suave */
   --wedding-ease-exit: var(--ease-in-2);
-  /* Hover interativo com bounce elegante */
   --wedding-ease-bounce: var(--ease-elastic-2);
-  /* Transições de estado (status PIX, etc.) */
   --wedding-ease-smooth: var(--ease-3);
-  /* Snap de rolagem / quick response */
-  --wedding-ease-snap: var(--ease-spring-5);
+  --wedding-ease-snap: var(--ease-spring-4);
 
-  /* ── SHADOWS (via Open Props shadows) ─────────────────────────────────────── */
-  /* Cartão de papel (superfície base) */
+  /* ── OPEN PROPS SHADOWS (Fine Stationery elevation) ───────────────────────── */
   --wedding-shadow-card: var(--shadow-2);
-  /* Cartão elevado ao hover */
-  --wedding-shadow-raised: var(--shadow-3);
-  /* Modal/overlay sobre a superfície */
-  --wedding-shadow-overlay: var(--shadow-5);
-  /* Botão ativo pressionado */
-  --wedding-shadow-inset: var(--shadow-1);
+  --wedding-shadow-raised: var(--shadow-4);
+  --wedding-shadow-overlay: var(--shadow-6);
+  --wedding-shadow-button: var(--shadow-2);
 
   /* ── FONT FAMILIES ────────────────────────────────────────────────────────── */
   --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
