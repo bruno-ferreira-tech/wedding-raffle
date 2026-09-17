@@ -10,4 +10,10 @@ describe('LandingPage', () => {
     expect(canvasContainer?.className).toContain('fixed');
     expect(canvasContainer?.className).toContain('z-0');
   });
+
+  it('has a gsap-trigger section for scroll animations', () => {
+    const { container } = render(<LandingPage />);
+    const trigger = container.querySelector('.gsap-trigger');
+    expect(trigger).not.toBeNull();
+  });
 });

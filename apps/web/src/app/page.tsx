@@ -29,12 +29,41 @@ export default function LandingPage() {
   const netDisplayRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLAnchorElement>(null);
   const bentoContainerRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLDivElement>(null);
 
   const totalTickets = guests * ticketsPerGuest;
   const estimatedGross = totalTickets * ticketPrice * 100;
   const feePercent = 0.049;
   const estimatedFee = Math.round(estimatedGross * feePercent);
   const estimatedNet = estimatedGross - estimatedFee;
+
+  useEffect(() => {
+    let ctx: { revert: () => void };
+    Promise.all([
+      import('gsap'),
+      import('gsap/ScrollTrigger')
+    ]).then(([{ default: gsap }, { default: ScrollTrigger }]) => {
+      gsap.registerPlugin(ScrollTrigger);
+      
+      if (!mainRef.current) return;
+      
+      ctx = gsap.context(() => {
+        // Create a scroll trigger that scrubs through the page
+        ScrollTrigger.create({
+          trigger: mainRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1,
+          onUpdate: (self) => {
+            // Dispatch a custom event to notify HeroScene
+            window.dispatchEvent(new CustomEvent('scroll-progress', { detail: self.progress }));
+          }
+        });
+      }, mainRef);
+    });
+    
+    return () => { if (ctx) ctx.revert(); };
+  }, []);
 
   useEffect(() => {
     // GSAP kinetic reaction on calculator change
@@ -89,7 +118,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="relative min-h-dvh w-full bg-background text-foreground overflow-x-hidden">
+    <div ref={mainRef} className="relative min-h-dvh w-full bg-background gsap-trigger text-foreground overflow-x-hidden">
       <div className="canvas-container fixed inset-0 z-0 pointer-events-none">
         <HeroScene className="w-full h-full" />
       </div>
