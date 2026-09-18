@@ -51,4 +51,12 @@ describe('LandingPage', () => {
     expect(ticketAct).not.toBeNull();
     expect(simAct).not.toBeNull();
   });
+
+  it('renders telao and finale stages in dedicated act viewports', () => {
+    const { container } = render(<LandingPage />);
+    const telaoAct = container.querySelector('.stage-act-telao');
+    const finaleAct = container.querySelector('.stage-act-finale');
+    expect(telaoAct).not.toBeNull();
+    expect(finaleAct).not.toBeNull();
+  });
 });

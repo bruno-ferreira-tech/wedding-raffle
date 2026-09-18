@@ -400,6 +400,104 @@ export default function LandingPage() {
                 </motion.div>
               </div>
             </div>
+
+            {/* Act 4: O Telão ao Vivo no Salão Nobre */}
+            <div
+              className={`stage-act-telao w-full max-w-2xl mx-auto flex-col items-center justify-center text-center space-y-4 sm:space-y-5 pointer-events-auto transition-opacity duration-300 ${
+                activeAct === 3 ? 'flex' : 'hidden'
+              }`}
+            >
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/80 px-3.5 py-1 text-xs font-semibold text-primary shadow-xs backdrop-blur-xs">
+                <TvIcon className="size-3.5 text-primary" />
+                Ato 4 • A Pista de Dança
+              </div>
+
+              <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground leading-[1.12]">
+                O Telão ao Vivo no <span className="text-primary italic">Salão Nobre</span>
+              </h2>
+
+              <p className="mx-auto max-w-lg text-sm sm:text-base text-muted-foreground font-normal leading-relaxed">
+                Conecte ao projetor em 1 clique. O painel monumenta os valores e o sorteio gera o ápice da noite.
+              </p>
+
+              <div className="w-full max-w-xl mx-auto pt-1 text-left">
+                <LiveTelaoPreview />
+              </div>
+
+              <div className="pt-1 flex items-center justify-center gap-1.5 text-xs text-muted-foreground/70 select-none">
+                <span>🥂 Projeção em tempo real com atualização contínua via Server-Sent Events</span>
+              </div>
+            </div>
+
+            {/* Act 5: A Celebração / Grand Finale */}
+            <div
+              className={`stage-act-finale w-full max-w-3xl mx-auto flex-col items-center justify-center text-center space-y-4 sm:space-y-5 pointer-events-auto transition-opacity duration-300 ${
+                activeAct === 4 ? 'flex' : 'hidden'
+              }`}
+            >
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/80 px-3.5 py-1 text-xs font-semibold text-primary shadow-xs backdrop-blur-xs">
+                <SparklesIcon className="size-3.5 text-primary" />
+                Ato 5 • A Celebração
+              </div>
+
+              <h2 className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground leading-[1.12]">
+                Prontos para brindar com <span className="text-primary italic">leveza e requinte?</span>
+              </h2>
+
+              <p className="mx-auto max-w-xl text-sm sm:text-base text-muted-foreground font-normal leading-relaxed">
+                Crie a rifa do seu casamento gratuitamente em menos de 3 minutos. Conecte padrinhos e convidados com uma experiência inesquecível.
+              </p>
+
+              {/* Warm wedding celebration panel */}
+              <div className="w-full max-w-xl mx-auto p-6 sm:p-8 rounded-2xl border border-primary/25 bg-card/90 shadow-md backdrop-blur-xs space-y-6 text-center">
+                <div className="space-y-2">
+                  <div className="size-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mx-auto">
+                    <SparklesIcon className="size-6 text-primary" />
+                  </div>
+                  <h3 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
+                    Comece agora sem custos
+                  </h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
+                    Arrecade com alegria e transparência, proporcionando aos seus convidados um momento acolhedor e memorável.
+                  </p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-1">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="wedding-button wedding-shimmer h-12 sm:h-14 px-8 rounded-full text-base sm:text-lg font-semibold w-full sm:w-auto shadow-md cursor-pointer"
+                  >
+                    <Link href="/cadastro">
+                      Criar Nossa Rifa Grátis
+                      <ArrowRightIcon className="size-4.5 ml-2" />
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="lg"
+                    className="h-12 sm:h-14 px-7 rounded-full border-border bg-card/80 text-foreground text-sm sm:text-base hover:bg-muted font-medium w-full sm:w-auto shadow-xs backdrop-blur-xs cursor-pointer"
+                  >
+                    <Link href="/e/bruno-moreira" target="_blank">
+                      Ver Exemplo ao Vivo
+                    </Link>
+                  </Button>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-muted-foreground font-medium pt-3 border-t border-border/60">
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2Icon className="size-3.5 text-primary" /> Sem mensalidade
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2Icon className="size-3.5 text-primary" /> Saque PIX direto
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2Icon className="size-3.5 text-primary" /> Pronto em 3 minutos
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Stage Bottom Progress Label */}
@@ -414,203 +512,120 @@ export default function LandingPage() {
 
         {/* Bento Grid Kinetic Showcase */}
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24" ref={bentoContainerRef}>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-auto">
-            
-            {/* Card 1: Interactive Revenue Simulator (4 cols) - Inspired by physical receipt voucher */}
+          <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
+            <Badge variant="outline" className="rounded-full border-primary/30 bg-card px-4 py-1 text-xs font-semibold text-primary">
+              Recursos da Plataforma
+            </Badge>
+            <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+              Tudo o que você precisa para o grande dia
+            </h2>
+            <p className="text-muted-foreground text-sm sm:text-base">
+              Pensado nos mínimos detalhes para os noivos, os padrinhos e todos os convidados.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-auto">
+            {/* Card 1: Modo Padrinhos */}
             <motion.div 
-              className="gsap-bento receipt-card border-dashed border-2 md:col-span-6 lg:col-span-5 wedding-card p-6 sm:p-8 flex flex-col justify-between min-h-[500px] bg-card"
-              whileHover={{ scale: 0.985, y: 2 }}
-              transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between"
+              whileHover={{ y: -4, scale: 0.995 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             >
-              <div className="space-y-6">
-                <div className="flex items-center justify-between pb-4 border-b border-border border-dashed">
-                  <h3 className="font-heading font-bold text-xl text-foreground flex items-center gap-2">
-                    <CalculatorIcon className="size-5 text-primary" />
-                    Simulador da Festa
-                  </h3>
-                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
-                    Em tempo real
-                  </span>
+              <div>
+                <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                  <ShieldCheckIcon className="size-6" />
                 </div>
-                
-                <div className="space-y-5 pt-1">
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="font-medium text-foreground">Convidados esperados</span>
-                      <span className="wedding-numeral font-bold text-primary">{guests} pessoas</span>
-                    </div>
-                    <input
-                      type="range" min="50" max="500" step="10" value={guests}
-                      onChange={(e) => setGuests(Number(e.target.value))}
-                      className="w-full accent-primary h-2 bg-muted rounded-full appearance-none cursor-pointer"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="font-medium text-foreground">Valor da cota</span>
-                      <span className="wedding-numeral font-bold text-primary">R$ {ticketPrice},00</span>
-                    </div>
-                    <input
-                      type="range" min="10" max="100" step="5" value={ticketPrice}
-                      onChange={(e) => setTicketPrice(Number(e.target.value))}
-                      className="w-full accent-primary h-2 bg-muted rounded-full appearance-none cursor-pointer"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="font-medium text-foreground">Cotas médias por convidado</span>
-                      <span className="wedding-numeral font-bold text-primary">{ticketsPerGuest} bilhetes</span>
-                    </div>
-                    <input
-                      type="range" min="1" max="5" step="1" value={ticketsPerGuest}
-                      onChange={(e) => setTicketsPerGuest(Number(e.target.value))}
-                      className="w-full accent-primary h-2 bg-muted rounded-full appearance-none cursor-pointer"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-t border-border border-dashed pt-5 space-y-1.5 mt-8">
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>Arrecadação bruta ({totalTickets} cotas)</span>
-                  <span className="wedding-numeral font-medium text-foreground">{formatBRL(estimatedGross)}</span>
-                </div>
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>Taxa de serviço e PIX (4.9%)</span>
-                  <span className="wedding-numeral font-medium text-muted-foreground">- {formatBRL(estimatedFee)}</span>
-                </div>
-                <div className="pt-2 border-t border-border/60 flex items-baseline justify-between">
-                  <div className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
-                    Líquido para a Lua de Mel
-                  </div>
-                  <div ref={netDisplayRef} className="font-heading font-bold text-3xl sm:text-4xl text-primary wedding-numeral tracking-tight">
-                    <NumberTicker value={estimatedNet} formatFn={(n) => formatBRL(Math.round(n))} />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Card 2: Interactive Raffle Ticket (7 cols) - UI Forager Paper Ticket Archetype */}
-            <motion.div 
-              className="gsap-bento md:col-span-6 lg:col-span-7 wedding-card p-6 sm:p-8 flex flex-col justify-between min-h-[500px] bg-card/90 backdrop-blur-xs"
-              whileHover={{ y: -3 }}
-              transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-            >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-xs font-semibold uppercase tracking-wider text-primary">
-                      Papelaria &amp; Tradição
-                    </span>
-                    <h3 className="font-heading font-bold text-2xl text-foreground">
-                      O Bilhete que o Convidado Recebe
-                    </h3>
-                  </div>
-                  <CoinsIcon className="size-6 text-primary/80" />
-                </div>
+                <h3 className="font-heading text-xl font-bold text-foreground mb-2">Modo Padrinhos</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Nada de impressos perdidos pelo chão: o convidado adquire pelo celular e tem em mãos um comprovante elegante, com número de sorteio autenticado e baixa instantânea.
+                  Uma ferramenta de bolso para os padrinhos circularem pelas mesas. Permite registrar pagamentos em dinheiro vivo ou via PIX com velocidade de 2 toques.
                 </p>
-
-                {/* Live Ticket Component responding to simulator */}
-                <div className="pt-2">
-                  <InteractiveRaffleTicket 
-                    ticketCount={ticketsPerGuest} 
-                    ticketPrice={ticketPrice}
-                    coupleNames="Noivos Felizes"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-4 flex items-center justify-between text-xs text-muted-foreground border-t border-border mt-4">
-                <span>✨ Clique no bilhete para simular o efeito tátil da confirmação</span>
-                <span className="font-semibold text-primary">100% Digital &amp; Tátil</span>
               </div>
             </motion.div>
 
-            {/* Card 3: Live Telão Projection Simulation (Full Width 12 cols) */}
+            {/* Card 2: PIX Direto */}
             <motion.div 
-              className="gsap-bento md:col-span-12 wedding-card p-6 sm:p-8 bg-card"
-              whileHover={{ y: -3 }}
-              transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-5 space-y-4">
-                  <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                    <TvIcon className="size-6" />
-                  </div>
-                  <h3 className="font-heading text-3xl font-bold text-foreground">
-                    O Telão que Transforma a Pista de Dança
-                  </h3>
-                  <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-                    Conecte o projetor do salão em 1 clique. O painel monumenta os valores em tempo real, exibe o feed de quem acabou de contribuir e gera o ápice da festa com o sorteio animado.
-                  </p>
-                  <ul className="space-y-2 text-sm text-muted-foreground font-medium pt-2">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2Icon className="size-4 text-primary" /> Atualização em milissegundos via SSE (Server-Sent Events)
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2Icon className="size-4 text-primary" /> Visual de gala com alto contraste para leitura à distância
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2Icon className="size-4 text-primary" /> Animação de sorteio com roleta e revelação dramática
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="lg:col-span-7">
-                  <LiveTelaoPreview />
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Card 4: Modo Padrinhos (Pocket Operator) */}
-            <motion.div 
-              className="gsap-bento md:col-span-6 lg:col-span-4 wedding-card p-6 sm:p-8"
+              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between"
               whileHover={{ y: -4, scale: 0.995 }}
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             >
-              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
-                <ShieldCheckIcon className="size-6" />
+              <div>
+                <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                  <WalletIcon className="size-6" />
+                </div>
+                <h3 className="font-heading text-xl font-bold text-foreground mb-2">PIX sem atrito</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Leitura instantânea de QR Code com baixa imediata. Sem exigir download de aplicativo e sem constrangimento para o convidado.
+                </p>
               </div>
-              <h3 className="font-heading text-xl font-bold text-foreground mb-2">Modo Padrinhos</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Uma ferramenta de bolso para os padrinhos circularem pelas mesas. Permite registrar pagamentos em dinheiro vivo ou via PIX com velocidade de 2 toques.
-              </p>
             </motion.div>
 
-            {/* Card 5: PIX Direto */}
+            {/* Card 3: Harmonia Visual */}
             <motion.div 
-              className="gsap-bento md:col-span-6 lg:col-span-4 wedding-card p-6 sm:p-8"
+              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between"
               whileHover={{ y: -4, scale: 0.995 }}
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             >
-              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
-                <WalletIcon className="size-6" />
+              <div>
+                <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                  <PaletteIcon className="size-6" />
+                </div>
+                <h3 className="font-heading text-xl font-bold text-foreground mb-2">Harmonia Visual</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Paletas nobres inspiradas em convites de alta papelaria: Champagne, Rosé Floral e Noite de Gala. O sistema se adapta perfeitamente à sua decoração.
+                </p>
               </div>
-              <h3 className="font-heading text-xl font-bold text-foreground mb-2">PIX sem atrito</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Leitura instantânea de QR Code com baixa imediata. Sem exigir download de aplicativo e sem constrangimento para o convidado.
-              </p>
             </motion.div>
 
-            {/* Card 6: Harmonia Visual */}
+            {/* Card 4: Sorteio Auditável */}
             <motion.div 
-              className="gsap-bento md:col-span-12 lg:col-span-4 wedding-card p-6 sm:p-8"
+              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between"
               whileHover={{ y: -4, scale: 0.995 }}
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             >
-              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
-                <PaletteIcon className="size-6" />
+              <div>
+                <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                  <TvIcon className="size-6" />
+                </div>
+                <h3 className="font-heading text-xl font-bold text-foreground mb-2">Sorteio Auditável</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Algoritmo transparente e animação empolgante no telão da festa, garantindo lisura total e o ápice de diversão no salão.
+                </p>
               </div>
-              <h3 className="font-heading text-xl font-bold text-foreground mb-2">Harmonia Visual</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Paletas nobres inspiradas em convites de alta papelaria: Champagne, Rosé Floral e Noite de Gala. O sistema se adapta perfeitamente à sua decoração.
-              </p>
             </motion.div>
 
+            {/* Card 5: Gestão em Tempo Real */}
+            <motion.div 
+              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between"
+              whileHover={{ y: -4, scale: 0.995 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            >
+              <div>
+                <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                  <CoinsIcon className="size-6" />
+                </div>
+                <h3 className="font-heading text-xl font-bold text-foreground mb-2">Gestão em Tempo Real</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Acompanhe cada bilhete vendido e o valor total acumulado direto pelo celular dos noivos, com exportação fácil de relatórios.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Card 6: Sem Mensalidade */}
+            <motion.div 
+              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between"
+              whileHover={{ y: -4, scale: 0.995 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            >
+              <div>
+                <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                  <SparklesIcon className="size-6" />
+                </div>
+                <h3 className="font-heading text-xl font-bold text-foreground mb-2">Sem Mensalidade</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Crie sua rifa gratuitamente e pague apenas uma pequena taxa sobre as cotas recebidas. O saldo arrecadado cai direto na sua conta.
+                </p>
+              </div>
+            </motion.div>
           </div>
         </main>
 
