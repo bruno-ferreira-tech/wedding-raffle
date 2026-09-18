@@ -14,7 +14,7 @@ import {
   TvIcon,
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { NumberTicker } from '@/components/ui/number-ticker';
@@ -135,11 +135,6 @@ export default function LandingPage() {
 
   return (
     <div ref={mainRef} className="relative min-h-dvh w-full bg-background gsap-trigger text-foreground overflow-x-hidden">
-      {/* Three.js Fixed Stage: Dual 3D Rings separate on scroll and reunite at bottom */}
-      <div className="canvas-container fixed inset-0 z-0 pointer-events-none">
-        <HeroScene className="w-full h-full" />
-      </div>
-
       {/* Warm Ivory Navigation Bar */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
         <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
@@ -177,6 +172,7 @@ export default function LandingPage() {
                   <button
                     key={label}
                     type="button"
+                    aria-current={isActive ? 'step' : undefined}
                     onClick={() => {
                       setActiveAct(index);
                       if (runwayRef.current && typeof window !== 'undefined') {
@@ -202,11 +198,89 @@ export default function LandingPage() {
 
           {/* Central Act Stage Viewport */}
           <div className="stage-content flex-1 w-full max-w-7xl mx-auto flex items-center justify-center p-4">
-            {/* Acts will be choreographed here in Tasks 2-4 */}
+            <AnimatePresence mode="wait">
+              {activeAct === 0 && (
+                <motion.div
+                  key="act-1-pedestal"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                  className="pedestal-stage w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center space-y-4 sm:space-y-5 pointer-events-auto"
+                >
+                  <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/80 px-3.5 py-1 text-xs font-semibold text-primary shadow-xs backdrop-blur-xs">
+                    <SparklesIcon className="size-3.5 text-primary" />
+                    A tradição do casamento, reinventada com requinte e alegria
+                  </div>
+
+                  <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground leading-[1.12]">
+                    <SplitText text="O Corta-Gravata que" />{' '}
+                    <span className="text-primary italic">arrecada mais</span>{' '}
+                    <SplitText text="e alegra a festa." />
+                  </h1>
+
+                  <p className="mx-auto max-w-xl text-sm sm:text-base text-muted-foreground font-normal leading-relaxed">
+                    Substitua a gravata picotada por uma celebração digital e acolhedora: os convidados participam pelo PIX na mesa, acompanham o telão ao vivo e concorrem a um mimo especial.
+                  </p>
+
+                  {/* Dedicated 3D Pedestal Arena */}
+                  <div className="canvas-container relative w-full flex items-center justify-center py-1 sm:py-2">
+                    <div className="relative">
+                      <div className="absolute inset-x-8 bottom-2 h-6 bg-gradient-to-t from-primary/15 to-transparent blur-md rounded-full pointer-events-none" />
+                      <HeroScene className="w-[300px] h-[260px] sm:w-[420px] sm:h-[340px] mx-auto" />
+                    </div>
+                  </div>
+
+                  {/* Clean action buttons below the pedestal */}
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-1 sm:pt-2">
+                    <Button
+                      asChild
+                      size="lg"
+                      className="wedding-button wedding-shimmer h-12 px-7 rounded-full text-sm sm:text-base font-semibold w-full sm:w-auto shadow-md cursor-pointer"
+                      onMouseEnter={() => {
+                        if (ctaRef.current) animatePulse(ctaRef.current);
+                      }}
+                    >
+                      <Link ref={ctaRef} href="/cadastro">
+                        Criar Rifa dos Noivos Grátis
+                        <ArrowRightIcon className="size-4 ml-2" />
+                      </Link>
+                    </Button>
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="lg"
+                      className="h-12 px-7 rounded-full border-border bg-card/80 text-foreground text-sm sm:text-base hover:bg-muted font-medium w-full sm:w-auto shadow-xs backdrop-blur-xs cursor-pointer"
+                    >
+                      <Link href="/e/bruno-moreira" target="_blank">
+                        Ver Exemplo ao Vivo
+                      </Link>
+                    </Button>
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-muted-foreground font-medium pt-1">
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2Icon className="size-3.5 text-primary" /> Sem mensalidade fixa
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2Icon className="size-3.5 text-primary" /> Saque PIX direto na conta
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2Icon className="size-3.5 text-primary" /> Pronto em 3 minutos
+                    </span>
+                  </div>
+
+                  <div className="pt-1 flex items-center justify-center gap-1.5 text-xs text-muted-foreground/70 select-none">
+                    <span>Role para explorar a experiência</span>
+                    <ChevronDownIcon className="size-3.5 text-primary animate-bounce" />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Stage Bottom Progress Label */}
-          <div className="stage-footer pb-4 px-4 text-center text-xs text-muted-foreground select-none">
+          <div className="stage-footer pb-4 px-4 text-center text-xs text-muted-foreground select-none tabular-nums">
             Ato {activeAct + 1} de 5
           </div>
         </div>
@@ -214,88 +288,6 @@ export default function LandingPage() {
 
       {/* Main Flow Layer */}
       <div className="scroll-content relative z-10 w-full">
-        {/* Hero Section: Centered over intertwined rings */}
-        <section className="min-h-[88vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-12 pb-16 text-center">
-          <div className="max-w-4xl mx-auto space-y-6">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/80 px-4 py-1.5 text-xs font-semibold text-primary shadow-xs backdrop-blur-xs"
-            >
-              <SparklesIcon className="size-3.5 text-primary" />
-              A tradição do casamento, reinventada com requinte e alegria
-            </motion.div>
-
-            <h1 className="font-heading text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.12]">
-              <SplitText text="O Corta-Gravata que" />{' '}
-              <span className="text-primary italic">arrecada mais</span>{' '}
-              <SplitText text="e alegra a festa." />
-            </h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15, ease: 'easeOut' }}
-              className="mx-auto max-w-2xl text-base sm:text-lg text-muted-foreground font-normal leading-relaxed"
-            >
-              Substitua a gravata picotada por uma celebração digital e acolhedora: os convidados participam pelo PIX na mesa, acompanham o telão ao vivo e concorrem a um mimo especial.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.25, ease: 'easeOut' }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
-            >
-              <Button
-                asChild
-                size="lg"
-                className="wedding-button wedding-shimmer h-13 px-8 rounded-full text-base font-semibold w-full sm:w-auto shadow-md cursor-pointer"
-                onMouseEnter={() => {
-                  if (ctaRef.current) animatePulse(ctaRef.current);
-                }}
-              >
-                <Link ref={ctaRef} href="/cadastro">
-                  Criar Rifa dos Noivos Grátis
-                  <ArrowRightIcon className="size-4 ml-2" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="h-13 px-8 rounded-full border-border bg-card/80 text-foreground text-base hover:bg-muted font-medium w-full sm:w-auto shadow-xs backdrop-blur-xs">
-                <Link href="/e/bruno-moreira" target="_blank">
-                  Ver Exemplo ao Vivo
-                </Link>
-              </Button>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="pt-4 flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground font-medium"
-            >
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2Icon className="size-4 text-primary" /> Sem mensalidade fixa
-              </span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2Icon className="size-4 text-primary" /> Saque PIX direto na conta
-              </span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2Icon className="size-4 text-primary" /> Pronto em 3 minutos
-              </span>
-            </motion.div>
-
-            {/* Hint to scroll down and see rings separate */}
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
-              className="pt-10 flex flex-col items-center gap-1.5 text-xs text-muted-foreground/80 select-none"
-            >
-              <span>Role para explorar a experiência</span>
-              <ChevronDownIcon className="size-4 text-primary" />
-            </motion.div>
-          </div>
-        </section>
 
         {/* Bento Grid Kinetic Showcase */}
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24" ref={bentoContainerRef}>
