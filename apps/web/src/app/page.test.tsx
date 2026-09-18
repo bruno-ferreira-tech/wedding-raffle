@@ -43,4 +43,12 @@ describe('LandingPage', () => {
     const footer = container.querySelector('.stage-footer');
     expect(footer?.className).toContain('tabular-nums');
   });
+
+  it('renders ticket and simulator stages in dedicated act viewports', () => {
+    const { container } = render(<LandingPage />);
+    const ticketAct = container.querySelector('.stage-act-ticket');
+    const simAct = container.querySelector('.stage-act-simulator');
+    expect(ticketAct).not.toBeNull();
+    expect(simAct).not.toBeNull();
+  });
 });

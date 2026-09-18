@@ -198,85 +198,208 @@ export default function LandingPage() {
 
           {/* Central Act Stage Viewport */}
           <div className="stage-content flex-1 w-full max-w-7xl mx-auto flex items-center justify-center p-4">
-            <AnimatePresence mode="wait">
-              {activeAct === 0 && (
-                <motion.div
-                  key="act-1-pedestal"
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.5, ease: 'easeOut' }}
-                  className="pedestal-stage w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center space-y-4 sm:space-y-5 pointer-events-auto"
+            {/* Act 1: O Vínculo (Pedestal Stage) */}
+            <div
+              className={`stage-act-pedestal pedestal-stage w-full max-w-4xl mx-auto flex-col items-center justify-center text-center space-y-4 sm:space-y-5 pointer-events-auto transition-opacity duration-300 ${
+                activeAct === 0 ? 'flex' : 'hidden'
+              }`}
+            >
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/80 px-3.5 py-1 text-xs font-semibold text-primary shadow-xs backdrop-blur-xs">
+                <SparklesIcon className="size-3.5 text-primary" />
+                A tradição do casamento, reinventada com requinte e alegria
+              </div>
+
+              <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground leading-[1.12]">
+                <SplitText text="O Corta-Gravata que" />{' '}
+                <span className="text-primary italic">arrecada mais</span>{' '}
+                <SplitText text="e alegra a festa." />
+              </h1>
+
+              <p className="mx-auto max-w-xl text-sm sm:text-base text-muted-foreground font-normal leading-relaxed">
+                Substitua a gravata picotada por uma celebração digital e acolhedora: os convidados participam pelo PIX na mesa, acompanham o telão ao vivo e concorrem a um mimo especial.
+              </p>
+
+              {/* Dedicated 3D Pedestal Arena */}
+              <div className="canvas-container relative w-full flex items-center justify-center py-1 sm:py-2">
+                <div className="relative">
+                  <div className="absolute inset-x-8 bottom-2 h-6 bg-gradient-to-t from-primary/15 to-transparent blur-md rounded-full pointer-events-none" />
+                  <HeroScene className="w-[300px] h-[260px] sm:w-[420px] sm:h-[340px] mx-auto" />
+                </div>
+              </div>
+
+              {/* Clean action buttons below the pedestal */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-1 sm:pt-2">
+                <Button
+                  asChild
+                  size="lg"
+                  className="wedding-button wedding-shimmer h-12 px-7 rounded-full text-sm sm:text-base font-semibold w-full sm:w-auto shadow-md cursor-pointer"
+                  onMouseEnter={() => {
+                    if (ctaRef.current) animatePulse(ctaRef.current);
+                  }}
                 >
-                  <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/80 px-3.5 py-1 text-xs font-semibold text-primary shadow-xs backdrop-blur-xs">
-                    <SparklesIcon className="size-3.5 text-primary" />
-                    A tradição do casamento, reinventada com requinte e alegria
-                  </div>
+                  <Link ref={ctaRef} href="/cadastro">
+                    Criar Rifa dos Noivos Grátis
+                    <ArrowRightIcon className="size-4 ml-2" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="h-12 px-7 rounded-full border-border bg-card/80 text-foreground text-sm sm:text-base hover:bg-muted font-medium w-full sm:w-auto shadow-xs backdrop-blur-xs cursor-pointer"
+                >
+                  <Link href="/e/bruno-moreira" target="_blank">
+                    Ver Exemplo ao Vivo
+                  </Link>
+                </Button>
+              </div>
 
-                  <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground leading-[1.12]">
-                    <SplitText text="O Corta-Gravata que" />{' '}
-                    <span className="text-primary italic">arrecada mais</span>{' '}
-                    <SplitText text="e alegra a festa." />
-                  </h1>
+              <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-muted-foreground font-medium pt-1">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2Icon className="size-3.5 text-primary" /> Sem mensalidade fixa
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2Icon className="size-3.5 text-primary" /> Saque PIX direto na conta
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2Icon className="size-3.5 text-primary" /> Pronto em 3 minutos
+                </span>
+              </div>
 
-                  <p className="mx-auto max-w-xl text-sm sm:text-base text-muted-foreground font-normal leading-relaxed">
-                    Substitua a gravata picotada por uma celebração digital e acolhedora: os convidados participam pelo PIX na mesa, acompanham o telão ao vivo e concorrem a um mimo especial.
-                  </p>
+              <div className="pt-1 flex items-center justify-center gap-1.5 text-xs text-muted-foreground/70 select-none">
+                <span>Role para explorar a experiência</span>
+                <ChevronDownIcon className="size-3.5 text-primary animate-bounce" />
+              </div>
+            </div>
 
-                  {/* Dedicated 3D Pedestal Arena */}
-                  <div className="canvas-container relative w-full flex items-center justify-center py-1 sm:py-2">
-                    <div className="relative">
-                      <div className="absolute inset-x-8 bottom-2 h-6 bg-gradient-to-t from-primary/15 to-transparent blur-md rounded-full pointer-events-none" />
-                      <HeroScene className="w-[300px] h-[260px] sm:w-[420px] sm:h-[340px] mx-auto" />
+            {/* Act 2: O Bilhete de Papelaria */}
+            <div
+              className={`stage-act-ticket w-full max-w-xl mx-auto flex-col items-center justify-center text-center space-y-4 sm:space-y-5 pointer-events-auto transition-opacity duration-300 ${
+                activeAct === 1 ? 'flex' : 'hidden'
+              }`}
+            >
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/80 px-3.5 py-1 text-xs font-semibold text-primary shadow-xs backdrop-blur-xs">
+                <CoinsIcon className="size-3.5 text-primary" />
+                Ato 2 • O Bilhete de Papelaria
+              </div>
+
+              <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground leading-[1.12]">
+                O Comprovante que o <span className="text-primary italic">Convidado Guarda</span>
+              </h2>
+
+              <p className="mx-auto max-w-md text-sm sm:text-base text-muted-foreground font-normal leading-relaxed">
+                Cada convidado recebe seu bilhete numerado no celular com QR Code e confirmação imediata.
+              </p>
+
+              <div className="w-full max-w-md mx-auto pt-1 text-left">
+                <InteractiveRaffleTicket
+                  ticketCount={ticketsPerGuest}
+                  ticketPrice={ticketPrice}
+                  coupleNames="Noivos Felizes"
+                />
+              </div>
+
+              <div className="pt-1 flex items-center justify-center gap-1.5 text-xs text-muted-foreground/70 select-none">
+                <span>✨ Clique no bilhete para simular o efeito tátil da confirmação</span>
+              </div>
+            </div>
+
+            {/* Act 3: A Matemática da Festa / Simulador */}
+            <div
+              className={`stage-act-simulator w-full max-w-xl mx-auto flex-col items-center justify-center text-center space-y-4 sm:space-y-5 pointer-events-auto transition-opacity duration-300 ${
+                activeAct === 2 ? 'flex' : 'hidden'
+              }`}
+            >
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/80 px-3.5 py-1 text-xs font-semibold text-primary shadow-xs backdrop-blur-xs">
+                <CalculatorIcon className="size-3.5 text-primary" />
+                Ato 3 • A Matemática da Festa
+              </div>
+
+              <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground leading-[1.12]">
+                Simulador em <span className="text-primary italic">Tempo Real</span>
+              </h2>
+
+              <p className="mx-auto max-w-md text-sm sm:text-base text-muted-foreground font-normal leading-relaxed">
+                Ajuste os parâmetros da festa e veja a arrecadação líquida estimada para a sua lua de mel.
+              </p>
+
+              <div className="w-full text-left pt-1">
+                <motion.div
+                  className="receipt-card border-dashed border-2 wedding-card p-5 sm:p-7 flex flex-col justify-between bg-card shadow-sm"
+                  whileHover={{ scale: 0.99, y: 1 }}
+                  transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                >
+                  <div className="space-y-4 sm:space-y-5">
+                    <div className="flex items-center justify-between pb-3 border-b border-border border-dashed">
+                      <h3 className="font-heading font-bold text-lg sm:text-xl text-foreground flex items-center gap-2">
+                        <CalculatorIcon className="size-5 text-primary" />
+                        Simulador da Festa
+                      </h3>
+                      <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                        Em tempo real
+                      </span>
+                    </div>
+
+                    <div className="space-y-3.5 pt-1">
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span className="font-medium text-foreground">Convidados esperados</span>
+                          <span className="wedding-numeral font-bold text-primary tabular-nums">{guests} pessoas</span>
+                        </div>
+                        <input
+                          type="range" min="50" max="500" step="10" value={guests}
+                          onChange={(e) => setGuests(Number(e.target.value))}
+                          className="w-full accent-primary h-2 bg-muted rounded-full appearance-none cursor-pointer"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span className="font-medium text-foreground">Valor da cota</span>
+                          <span className="wedding-numeral font-bold text-primary tabular-nums">R$ {ticketPrice},00</span>
+                        </div>
+                        <input
+                          type="range" min="10" max="100" step="5" value={ticketPrice}
+                          onChange={(e) => setTicketPrice(Number(e.target.value))}
+                          className="w-full accent-primary h-2 bg-muted rounded-full appearance-none cursor-pointer"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span className="font-medium text-foreground">Cotas médias por convidado</span>
+                          <span className="wedding-numeral font-bold text-primary tabular-nums">{ticketsPerGuest} bilhetes</span>
+                        </div>
+                        <input
+                          type="range" min="1" max="5" step="1" value={ticketsPerGuest}
+                          onChange={(e) => setTicketsPerGuest(Number(e.target.value))}
+                          className="w-full accent-primary h-2 bg-muted rounded-full appearance-none cursor-pointer"
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  {/* Clean action buttons below the pedestal */}
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-1 sm:pt-2">
-                    <Button
-                      asChild
-                      size="lg"
-                      className="wedding-button wedding-shimmer h-12 px-7 rounded-full text-sm sm:text-base font-semibold w-full sm:w-auto shadow-md cursor-pointer"
-                      onMouseEnter={() => {
-                        if (ctaRef.current) animatePulse(ctaRef.current);
-                      }}
-                    >
-                      <Link ref={ctaRef} href="/cadastro">
-                        Criar Rifa dos Noivos Grátis
-                        <ArrowRightIcon className="size-4 ml-2" />
-                      </Link>
-                    </Button>
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="lg"
-                      className="h-12 px-7 rounded-full border-border bg-card/80 text-foreground text-sm sm:text-base hover:bg-muted font-medium w-full sm:w-auto shadow-xs backdrop-blur-xs cursor-pointer"
-                    >
-                      <Link href="/e/bruno-moreira" target="_blank">
-                        Ver Exemplo ao Vivo
-                      </Link>
-                    </Button>
-                  </div>
-
-                  <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-muted-foreground font-medium pt-1">
-                    <span className="flex items-center gap-1.5">
-                      <CheckCircle2Icon className="size-3.5 text-primary" /> Sem mensalidade fixa
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <CheckCircle2Icon className="size-3.5 text-primary" /> Saque PIX direto na conta
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <CheckCircle2Icon className="size-3.5 text-primary" /> Pronto em 3 minutos
-                    </span>
-                  </div>
-
-                  <div className="pt-1 flex items-center justify-center gap-1.5 text-xs text-muted-foreground/70 select-none">
-                    <span>Role para explorar a experiência</span>
-                    <ChevronDownIcon className="size-3.5 text-primary animate-bounce" />
+                  <div className="border-t border-border border-dashed pt-4 space-y-1.5 mt-5">
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>Arrecadação bruta ({totalTickets} cotas)</span>
+                      <span className="wedding-numeral font-medium text-foreground tabular-nums">{formatBRL(estimatedGross)}</span>
+                    </div>
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>Taxa de serviço e PIX (4.9%)</span>
+                      <span className="wedding-numeral font-medium text-muted-foreground tabular-nums">- {formatBRL(estimatedFee)}</span>
+                    </div>
+                    <div className="pt-2 border-t border-border/60 flex items-baseline justify-between">
+                      <div className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                        Líquido para a Lua de Mel
+                      </div>
+                      <div ref={netDisplayRef} className="font-heading font-bold text-2xl sm:text-3xl text-primary wedding-numeral tracking-tight tabular-nums">
+                        <NumberTicker value={estimatedNet} formatFn={(n) => formatBRL(Math.round(n))} />
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
-              )}
-            </AnimatePresence>
+              </div>
+            </div>
           </div>
 
           {/* Stage Bottom Progress Label */}
