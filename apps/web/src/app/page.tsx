@@ -257,10 +257,7 @@ export default function LandingPage() {
 
               {/* Dedicated 3D Pedestal Arena */}
               <div className="canvas-container relative w-full flex items-center justify-center py-1 sm:py-2">
-                <div className="relative">
-                  <div className="absolute inset-x-8 bottom-2 h-6 bg-gradient-to-t from-primary/15 to-transparent blur-md rounded-full pointer-events-none" />
-                  <HeroScene className="w-[300px] h-[260px] sm:w-[420px] sm:h-[340px] mx-auto" />
-                </div>
+                <HeroScene className="w-[300px] h-[260px] sm:w-[420px] sm:h-[340px] mx-auto" />
               </div>
 
               {/* Clean action buttons below the pedestal */}
