@@ -96,17 +96,19 @@ export const HeroScene = forwardRef<HeroSceneHandle, HeroSceneProps>(
       groupRef.current = group;
       scene.add(group);
 
-    // Gold material with metallic luster
+    // Radiant 18K Yellow Gold material with warm luminescence and jewelry polish
     const goldMaterial = new THREE.MeshStandardMaterial({
-      color: 0xd4af37,
-      metalness: 0.88,
-      roughness: 0.22,
+      color: 0xffd54f,
+      emissive: 0x3e2e06,
+      metalness: 0.68,
+      roughness: 0.14,
     });
 
     const innerGoldMaterial = new THREE.MeshStandardMaterial({
-      color: 0xf5d77f,
-      metalness: 0.92,
-      roughness: 0.18,
+      color: 0xffe082,
+      emissive: 0x483508,
+      metalness: 0.72,
+      roughness: 0.12,
     });
 
     // Ring 1 (Torus)
@@ -157,7 +159,7 @@ export const HeroScene = forwardRef<HeroSceneHandle, HeroSceneProps>(
     prong4.position.set(-0.1, 1.2, -0.1);
     ring2.add(prong4);
 
-    const diamondLight = new THREE.PointLight(0xffffff, 2, 4);
+    const diamondLight = new THREE.PointLight(0xffffff, 2.5, 4);
     diamondLight.position.set(0, 1.35, 0.2);
     ring2.add(diamondLight);
 
@@ -173,29 +175,34 @@ export const HeroScene = forwardRef<HeroSceneHandle, HeroSceneProps>(
     particleGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
 
     const particleMat = new THREE.PointsMaterial({
-      color: 0xf5d77f,
-      size: 0.05,
+      color: 0xffe082,
+      size: 0.06,
       transparent: true,
-      opacity: 0.7,
+      opacity: 0.85,
     });
     const particles = new THREE.Points(particleGeo, particleMat);
     scene.add(particles);
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xfff7ed, 1.4);
+    // Bright, luminous jewelry lighting
+    const ambientLight = new THREE.AmbientLight(0xfff8eb, 2.2);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffd700, 1.5);
-    keyLight.position.set(-5, 5, 5);
+    const keyLight = new THREE.DirectionalLight(0xffea9f, 2.8);
+    keyLight.position.set(4, 5, 5);
     scene.add(keyLight);
 
-    const fillLight = new THREE.PointLight(0xb89047, 2, 10);
-    fillLight.position.set(-4, -2, 3);
-    scene.add(fillLight);
+    const frontFillLight = new THREE.PointLight(0xffffff, 2.0, 12);
+    frontFillLight.position.set(0, 1, 6);
+    scene.add(frontFillLight);
 
-    const rimLight = new THREE.PointLight(0xffffff, 1.8, 8);
-    rimLight.position.set(0, 3, -3);
-    scene.add(rimLight);
+    const goldRimLight = new THREE.PointLight(0xffc837, 3.2, 10);
+    goldRimLight.position.set(-4, -1, 3);
+    scene.add(goldRimLight);
+
+    const backRimLight = new THREE.PointLight(0xffffff, 2.2, 8);
+    backRimLight.position.set(0, 3, -3);
+    scene.add(backRimLight);
+
 
     // Mouse interaction tracking
     let targetRotX = 0;

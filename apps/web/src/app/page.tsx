@@ -207,39 +207,34 @@ export default function LandingPage() {
       {/* ACT 1: O VÍNCULO (Hero & Dedicated 3D Pedestal Stage) */}
       <section
         id="vinculo"
-        className="stage-act-pedestal pedestal-stage relative min-h-[92vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-8 pb-16 text-center border-b border-border/50"
+        className="stage-act-pedestal pedestal-stage relative min-h-[90vh] flex flex-col items-center justify-between px-4 sm:px-6 lg:px-8 pt-4 pb-8 text-center border-b border-border/50"
       >
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-4 pt-2">
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/80 px-4 py-1.5 text-xs font-semibold text-primary shadow-xs backdrop-blur-xs"
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/80 px-3.5 py-1 text-xs font-semibold text-primary shadow-xs backdrop-blur-xs"
           >
             <SparklesIcon className="size-3.5 text-primary" />
             A tradição do casamento, reinventada com requinte e alegria
           </motion.div>
 
-          <h1 className="font-heading text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.12]">
+          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground leading-[1.14]">
             <SplitText text="O Corta-Gravata que" />{' '}
             <span className="text-primary italic">arrecada mais</span>{' '}
             <SplitText text="e alegra a festa." />
           </h1>
 
-          <p className="mx-auto max-w-2xl text-base sm:text-lg text-muted-foreground font-normal leading-relaxed">
+          <p className="mx-auto max-w-xl text-sm sm:text-base text-muted-foreground font-normal leading-relaxed">
             Substitua a gravata picotada por uma celebração digital e acolhedora: os convidados participam pelo PIX na mesa, acompanham o telão ao vivo e concorrem a um mimo especial.
           </p>
 
-          {/* Dedicated 3D Pedestal Arena (Clear, No Text Overlapping) */}
-          <div className="canvas-container relative w-full flex items-center justify-center py-4">
-            <HeroScene className="w-[300px] h-[280px] sm:w-[440px] sm:h-[360px] mx-auto cursor-grab active:cursor-grabbing" />
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
             <Button
               asChild
               size="lg"
-              className="wedding-button wedding-shimmer h-13 px-8 rounded-full text-base font-semibold w-full sm:w-auto shadow-md cursor-pointer"
+              className="wedding-button wedding-shimmer h-12 px-8 rounded-full text-sm sm:text-base font-semibold w-full sm:w-auto shadow-md cursor-pointer"
               onMouseEnter={() => {
                 if (ctaRef.current) animatePulse(ctaRef.current);
               }}
@@ -253,7 +248,7 @@ export default function LandingPage() {
               asChild
               variant="outline"
               size="lg"
-              className="h-13 px-8 rounded-full border-border bg-card/80 text-foreground text-base hover:bg-muted font-medium w-full sm:w-auto shadow-xs backdrop-blur-xs cursor-pointer"
+              className="h-12 px-7 rounded-full border-border bg-card/80 text-foreground text-sm sm:text-base hover:bg-muted font-medium w-full sm:w-auto shadow-xs backdrop-blur-xs cursor-pointer"
             >
               <Link href="/e/bruno-moreira" target="_blank">
                 Ver Exemplo ao Vivo
@@ -261,17 +256,35 @@ export default function LandingPage() {
             </Button>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground font-medium pt-3">
+          <div className="flex flex-wrap items-center justify-center gap-5 text-xs text-muted-foreground font-medium pt-1">
             <span className="flex items-center gap-1.5">
-              <CheckCircle2Icon className="size-4 text-primary" /> Sem mensalidade fixa
+              <CheckCircle2Icon className="size-3.5 text-primary" /> Sem mensalidade fixa
             </span>
             <span className="flex items-center gap-1.5">
-              <CheckCircle2Icon className="size-4 text-primary" /> Saque PIX direto na conta
+              <CheckCircle2Icon className="size-3.5 text-primary" /> Saque PIX direto na conta
             </span>
             <span className="flex items-center gap-1.5">
-              <CheckCircle2Icon className="size-4 text-primary" /> Pronto em 3 minutos
+              <CheckCircle2Icon className="size-3.5 text-primary" /> Pronto em 3 minutos
             </span>
           </div>
+
+          {/* Dedicated Radiant 3D Pedestal Arena */}
+          <div className="canvas-container relative w-full flex items-center justify-center py-2">
+            <HeroScene className="w-[260px] h-[200px] sm:w-[340px] sm:h-[240px] mx-auto cursor-grab active:cursor-grabbing" />
+          </div>
+        </div>
+
+        {/* Clear, animated scroll indicator to explore Ato 2 */}
+        <div className="pt-4 pb-2">
+          <button
+            type="button"
+            onClick={() => scrollToSection('bilhete', 1)}
+            aria-label="Descer para o Ato 2: O Bilhete"
+            className="group inline-flex items-center gap-2 px-5 py-2 rounded-full border border-primary/30 bg-card hover:bg-primary/10 shadow-sm transition-all text-xs font-semibold text-primary cursor-pointer"
+          >
+            <span>Desça para ver o Ato 2: O Bilhete do Convidado</span>
+            <span className="text-base animate-bounce">↓</span>
+          </button>
         </div>
       </section>
 
