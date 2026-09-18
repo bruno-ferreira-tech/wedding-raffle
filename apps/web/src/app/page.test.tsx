@@ -23,4 +23,12 @@ describe('LandingPage', () => {
     expect(simulator).not.toBeNull();
     expect(simulator?.className).toContain('border-dashed');
   });
+
+  it('renders the pinned stage container and act indicator', () => {
+    const { container } = render(<LandingPage />);
+    const stage = container.querySelector('.pinned-stage');
+    const actIndicator = container.querySelector('.act-indicator');
+    expect(stage).not.toBeNull();
+    expect(actIndicator).not.toBeNull();
+  });
 });

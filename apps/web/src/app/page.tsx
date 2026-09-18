@@ -26,15 +26,25 @@ import { SplitText } from '@/components/ui/split-text';
 import { InteractiveRaffleTicket } from '@/components/wedding/interactive-raffle-ticket';
 import { LiveTelaoPreview } from '@/components/wedding/live-telao-preview';
 
+const ACTS = [
+  '1. O Vínculo',
+  '2. O Bilhete',
+  '3. A Arrecadação',
+  '4. O Telão',
+  '5. A Celebração',
+];
+
 export default function LandingPage() {
   // Calculator state
   const [guests, setGuests] = useState(150);
   const [ticketPrice, setTicketPrice] = useState(25);
   const [ticketsPerGuest, setTicketsPerGuest] = useState(2);
+  const [activeAct, setActiveAct] = useState(0);
   const netDisplayRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLAnchorElement>(null);
   const bentoContainerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
+  const runwayRef = useRef<HTMLDivElement>(null);
 
   const totalTickets = guests * ticketsPerGuest;
   const estimatedGross = totalTickets * ticketPrice * 100;
@@ -42,7 +52,7 @@ export default function LandingPage() {
   const estimatedFee = Math.round(estimatedGross * feePercent);
   const estimatedNet = estimatedGross - estimatedFee;
 
-  // GSAP ScrollTrigger to orchestrate full page scroll progress
+  // GSAP ScrollTrigger to orchestrate pinned stage runway and full page scroll progress
   useEffect(() => {
     let ctx: { revert: () => void };
     Promise.all([
@@ -51,20 +61,23 @@ export default function LandingPage() {
     ]).then(([{ default: gsap }, { default: ScrollTrigger }]) => {
       gsap.registerPlugin(ScrollTrigger);
       
-      if (!mainRef.current) return;
+      const triggerEl = runwayRef.current || mainRef.current;
+      if (!triggerEl) return;
       
       ctx = gsap.context(() => {
-        // Continuous scrub across the whole page to drive 3D ring separation & re-union
+        // Continuous scrub across runway to drive 3D ring separation and active act
         ScrollTrigger.create({
-          trigger: mainRef.current,
+          trigger: triggerEl,
           start: 'top top',
           end: 'bottom bottom',
           scrub: 0.8,
           onUpdate: (self) => {
+            const act = Math.min(4, Math.floor(self.progress * 5));
+            setActiveAct(act);
             window.dispatchEvent(new CustomEvent('scroll-progress', { detail: self.progress }));
           }
         });
-      }, mainRef);
+      }, triggerEl);
     });
     
     return () => { if (ctx) ctx.revert(); };
@@ -151,6 +164,53 @@ export default function LandingPage() {
           </nav>
         </div>
       </header>
+
+      {/* Main Runway with Pinned Stage */}
+      <div ref={runwayRef} className="relative min-h-[450vh] w-full">
+        <div className="pinned-stage sticky top-0 h-dvh w-full overflow-hidden flex flex-col justify-between pointer-events-none z-30">
+          {/* Top Act Indicator Bar */}
+          <div className="pt-4 px-4 w-full z-40 flex justify-center pointer-events-auto">
+            <div className="act-indicator mx-auto inline-flex items-center gap-1 sm:gap-2 p-1.5 rounded-full bg-card/85 backdrop-blur-md border border-border shadow-xs">
+              {ACTS.map((label, index) => {
+                const isActive = activeAct === index;
+                return (
+                  <button
+                    key={label}
+                    type="button"
+                    onClick={() => {
+                      setActiveAct(index);
+                      if (runwayRef.current && typeof window !== 'undefined') {
+                        const rect = runwayRef.current.getBoundingClientRect();
+                        const scrollTop = window.scrollY + rect.top;
+                        const runwayHeight = runwayRef.current.offsetHeight - window.innerHeight;
+                        const target = scrollTop + (index / 4) * Math.max(0, runwayHeight);
+                        window.scrollTo({ top: target, behavior: 'smooth' });
+                      }
+                    }}
+                    className={`px-3 py-1 text-xs font-medium rounded-full transition-all duration-300 select-none cursor-pointer tabular-nums ${
+                      isActive
+                        ? 'bg-primary text-primary-foreground shadow-xs font-semibold'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Central Act Stage Viewport */}
+          <div className="stage-content flex-1 w-full max-w-7xl mx-auto flex items-center justify-center p-4">
+            {/* Acts will be choreographed here in Tasks 2-4 */}
+          </div>
+
+          {/* Stage Bottom Progress Label */}
+          <div className="stage-footer pb-4 px-4 text-center text-xs text-muted-foreground select-none">
+            Ato {activeAct + 1} de 5
+          </div>
+        </div>
+      </div>
 
       {/* Main Flow Layer */}
       <div className="scroll-content relative z-10 w-full">
