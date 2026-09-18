@@ -52,13 +52,47 @@ export default function LandingPage() {
   const estimatedFee = Math.round(estimatedGross * feePercent);
   const estimatedNet = estimatedGross - estimatedFee;
 
+  const scrollToAct = (index: number) => {
+    const targetAct = Math.max(0, Math.min(4, index));
+    setActiveAct(targetAct);
+    if (runwayRef.current && typeof window !== 'undefined') {
+      const rect = runwayRef.current.getBoundingClientRect();
+      const scrollTop = window.scrollY + rect.top;
+      const runwayHeight = runwayRef.current.offsetHeight - window.innerHeight;
+      const target = scrollTop + (targetAct / 4) * Math.max(0, runwayHeight);
+      window.scrollTo({ top: target, behavior: 'smooth' });
+    }
+  };
+
+  const scrollToPrev = () => {
+    if (activeAct > 0) {
+      scrollToAct(activeAct - 1);
+    }
+  };
+
+  const scrollToNext = () => {
+    if (activeAct < 4) {
+      scrollToAct(activeAct + 1);
+    } else {
+      if (bentoContainerRef.current && typeof window !== 'undefined') {
+        bentoContainerRef.current.scrollIntoView({ behavior: 'smooth' });
+      } else if (runwayRef.current && typeof window !== 'undefined') {
+        const rect = runwayRef.current.getBoundingClientRect();
+        const target = window.scrollY + rect.bottom;
+        window.scrollTo({ top: target, behavior: 'smooth' });
+      }
+    }
+  };
+
   // GSAP ScrollTrigger to orchestrate pinned stage runway and full page scroll progress
   useEffect(() => {
-    let ctx: { revert: () => void };
+    let isMounted = true;
+    let ctx: { revert: () => void } | undefined;
     Promise.all([
       import('gsap'),
       import('gsap/ScrollTrigger')
     ]).then(([{ default: gsap }, { default: ScrollTrigger }]) => {
+      if (!isMounted) return;
       gsap.registerPlugin(ScrollTrigger);
       
       const triggerEl = runwayRef.current || mainRef.current;
@@ -80,13 +114,18 @@ export default function LandingPage() {
       }, triggerEl);
     });
     
-    return () => { if (ctx) ctx.revert(); };
+    return () => {
+      isMounted = false;
+      if (ctx) ctx.revert();
+    };
   }, []);
 
   // GSAP kinetic reaction on calculator slider change
   useEffect(() => {
+    let isMounted = true;
     if (netDisplayRef.current) {
       import('gsap').then(({ default: gsap }) => {
+        if (!isMounted || !netDisplayRef.current) return;
         gsap.fromTo(
           netDisplayRef.current,
           { scale: 1.08, filter: 'brightness(1.15)', color: '#d4af37' },
@@ -94,15 +133,20 @@ export default function LandingPage() {
         );
       });
     }
+    return () => {
+      isMounted = false;
+    };
   }, [estimatedNet]);
 
   // GSAP Bento Cards Reveal
   useEffect(() => {
-    let ctx: { revert: () => void };
+    let isMounted = true;
+    let ctx: { revert: () => void } | undefined;
     Promise.all([
       import('gsap'),
       import('gsap/ScrollTrigger')
     ]).then(([{ default: gsap }, { default: ScrollTrigger }]) => {
+      if (!isMounted) return;
       gsap.registerPlugin(ScrollTrigger);
       
       if (!bentoContainerRef.current) return;
@@ -129,6 +173,7 @@ export default function LandingPage() {
     });
 
     return () => {
+      isMounted = false;
       if (ctx) ctx.revert();
     };
   }, []);
@@ -173,16 +218,7 @@ export default function LandingPage() {
                     key={label}
                     type="button"
                     aria-current={isActive ? 'step' : undefined}
-                    onClick={() => {
-                      setActiveAct(index);
-                      if (runwayRef.current && typeof window !== 'undefined') {
-                        const rect = runwayRef.current.getBoundingClientRect();
-                        const scrollTop = window.scrollY + rect.top;
-                        const runwayHeight = runwayRef.current.offsetHeight - window.innerHeight;
-                        const target = scrollTop + (index / 4) * Math.max(0, runwayHeight);
-                        window.scrollTo({ top: target, behavior: 'smooth' });
-                      }
-                    }}
+                    onClick={() => scrollToAct(index)}
                     className={`px-3 py-1 text-xs font-medium rounded-full transition-all duration-300 select-none cursor-pointer tabular-nums ${
                       isActive
                         ? 'bg-primary text-primary-foreground shadow-xs font-semibold'
@@ -500,9 +536,30 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Stage Bottom Progress Label */}
-          <div className="stage-footer pb-4 px-4 text-center text-xs text-muted-foreground select-none tabular-nums">
-            Ato {activeAct + 1} de 5
+          {/* Stage Bottom Ergonomic Controls & Progress Label */}
+          <div className="stage-footer pb-4 px-4 flex items-center justify-between sm:justify-center gap-3 text-xs text-muted-foreground select-none tabular-nums pointer-events-auto w-full max-w-md mx-auto">
+            <button
+              type="button"
+              onClick={scrollToPrev}
+              disabled={activeAct === 0}
+              aria-label="Ato anterior"
+              className="px-3 py-1.5 rounded-full bg-card/85 backdrop-blur-md border border-border shadow-xs font-medium text-xs text-foreground transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer disabled:cursor-not-allowed inline-flex items-center gap-1"
+            >
+              ⬅ Anterior
+            </button>
+
+            <span className="font-medium text-xs px-2">
+              Ato {activeAct + 1} de 5
+            </span>
+
+            <button
+              type="button"
+              onClick={scrollToNext}
+              aria-label={activeAct < 4 ? 'Próximo ato' : 'Ver benefícios da plataforma'}
+              className="px-3 py-1.5 rounded-full bg-card/85 backdrop-blur-md border border-border shadow-xs font-medium text-xs text-foreground transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer inline-flex items-center gap-1"
+            >
+              {activeAct < 4 ? 'Próximo ➡' : 'Ver Benefícios ⬇'}
+            </button>
           </div>
         </div>
       </div>
