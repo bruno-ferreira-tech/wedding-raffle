@@ -78,19 +78,19 @@ export default function LandingPage() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-stone-600">
-            <a href="#como-funciona" className="hover:text-foreground transition-colors">Como Funciona</a>
-            <a href="#padrinhos" className="hover:text-foreground transition-colors">Modo Padrinhos</a>
-            <a href="#telao" className="hover:text-foreground transition-colors">Telão ao Vivo</a>
-            <a href="#calculadora" className="hover:text-foreground transition-colors">Simulador</a>
-            <a href="#duvidas" className="hover:text-foreground transition-colors">Dúvidas</a>
+            <a href="#como-funciona" className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Como Funciona</a>
+            <a href="#padrinhos" className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Modo Padrinhos</a>
+            <a href="#telao" className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Telão ao Vivo</a>
+            <a href="#calculadora" className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Simulador</a>
+            <a href="#duvidas" className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Dúvidas</a>
           </nav>
 
           <div className="flex items-center gap-3">
-            <Button asChild variant="ghost" size="sm" className="rounded-full font-medium text-sm text-stone-600 hover:text-foreground hover:bg-stone-900/[0.04]">
+            <Button asChild variant="ghost" size="sm" className="rounded-full font-medium text-sm text-stone-600 hover:text-foreground hover:bg-stone-900/[0.04] focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">
               <Link href="/login">Entrar</Link>
             </Button>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }} transition={springButton}>
-              <Button asChild size="sm" className="wedding-button rounded-full text-sm font-semibold shadow-[0_2px_8px_rgba(212,175,55,0.25),inset_0_1px_0_rgba(255,255,255,0.4)] border border-amber-400/30 cursor-pointer">
+              <Button asChild size="sm" className="wedding-button rounded-full text-sm font-semibold shadow-[0_2px_8px_rgba(212,175,55,0.25),inset_0_1px_0_rgba(255,255,255,0.4)] border border-amber-400/30 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">
                 <Link href="/cadastro" className="inline-flex items-center">
                   Criar Nossa Rifa <ArrowRightIcon className="size-3.5 ml-1.5 translate-x-0.5" />
                 </Link>
@@ -108,31 +108,31 @@ export default function LandingPage() {
             <div className="lg:col-span-7 space-y-8 text-center lg:text-left">
               <div className="flex items-center justify-center lg:justify-start gap-3">
                 <span className="h-px w-8 bg-amber-600/40" />
-                <p className="text-xs uppercase tracking-[0.2em] text-stone-500 font-medium">Casamentos · Brasil · 2026</p>
+                <p className="text-xs uppercase tracking-[0.25em] text-stone-500 font-medium">Casamentos · Brasil · 2026</p>
               </div>
               
-              <h1 className="font-heading text-5xl sm:text-6xl lg:text-[76px] xl:text-[84px] font-semibold tracking-tight text-foreground leading-[1.04]">
+              <h1 className="font-heading text-5xl sm:text-6xl lg:text-[76px] xl:text-[84px] font-semibold tracking-tight sm:tracking-tighter text-foreground leading-[1.03] text-balance">
                 O Corta-Gravata que{' '}
                 <span className="text-primary italic font-normal">arrecada mais</span>
                 {' '}e alegra a festa.
               </h1>
               
-              <p className="text-base sm:text-lg text-stone-600 font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0">
+              <p className="text-base sm:text-lg text-stone-600 font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0 text-pretty">
                 Sem o constrangimento de picotar gravata e sem notas amassadas pelo bolso. Seus convidados contribuem pelo celular no PIX, vibram com o sorteio no telão e você recebe direto na conta para a lua de mel.
               </p>
               
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }} transition={springButton} className="w-full sm:w-auto">
-                  <Button asChild size="lg" className="wedding-button h-14 px-8 rounded-full text-base font-semibold w-full shadow-[0_4px_16px_rgba(212,175,55,0.3),inset_0_1px_0_rgba(255,255,255,0.4)] border border-amber-400/40 cursor-pointer">
+                <motion.div whileHover={{ scale: 1.015, y: -1 }} whileTap={{ scale: 0.96 }} transition={springButton} className="w-full sm:w-auto">
+                  <Button asChild size="lg" className="wedding-button h-14 px-8 rounded-full text-base font-semibold w-full shadow-[0_4px_16px_rgba(212,175,55,0.3),inset_0_1px_0_rgba(255,255,255,0.4)] border border-amber-400/40 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">
                     <Link href="/cadastro" className="inline-flex items-center justify-center">
                       Criar Rifa dos Noivos Grátis
                       <ArrowRightIcon className="size-4 ml-2 translate-x-0.5" />
                     </Link>
                   </Button>
                 </motion.div>
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }} transition={springButton} className="w-full sm:w-auto">
-                  <Button asChild variant="outline" size="lg" className="h-14 px-8 rounded-full border-stone-900/[0.08] bg-white/90 text-foreground text-base hover:bg-stone-100 font-medium w-full shadow-[0_1px_3px_rgba(44,38,30,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] cursor-pointer">
+                <motion.div whileHover={{ scale: 1.015, y: -1 }} whileTap={{ scale: 0.96 }} transition={springButton} className="w-full sm:w-auto">
+                  <Button asChild variant="outline" size="lg" className="h-14 px-8 rounded-full border-stone-900/[0.08] bg-white/90 text-foreground text-base hover:bg-stone-100 font-medium w-full shadow-[0_1px_3px_rgba(44,38,30,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] cursor-pointer focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">
                     <Link href="/e/bruno-moreira" target="_blank">Ver Exemplo ao Vivo</Link>
                   </Button>
                 </motion.div>
@@ -180,7 +180,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-5xl">
           <div className="max-w-2xl mb-20 sm:mb-24">
             <p className="text-xs uppercase tracking-[0.2em] text-stone-400 font-medium mb-3">Dinâmica do Salão</p>
-            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-foreground leading-[1.08]">
+            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-foreground leading-[1.08] text-balance">
               Na festa.<br /><span className="italic font-normal text-stone-500">No salão. Em dois toques.</span>
             </h2>
           </div>
@@ -198,7 +198,7 @@ export default function LandingPage() {
               <h3 className="font-heading text-2xl sm:text-3xl font-semibold text-foreground mb-3">
                 QR Code na mesa
               </h3>
-              <p className="text-base sm:text-lg text-stone-600 font-normal leading-relaxed">
+              <p className="text-base sm:text-lg text-stone-600 font-normal leading-relaxed text-pretty">
                 Seu convidado senta, vê o QR Code discreto ao lado do cardápio e contribui pelo celular — sem app, sem senha, sem constrangimento.
               </p>
             </div>
@@ -215,7 +215,7 @@ export default function LandingPage() {
               <h3 className="font-heading text-2xl sm:text-3xl font-semibold text-foreground mb-3">
                 Padrinho com o celular
               </h3>
-              <p className="text-base sm:text-lg text-stone-600 font-normal leading-relaxed">
+              <p className="text-base sm:text-lg text-stone-600 font-normal leading-relaxed text-pretty">
                 Ele já está na pista. Dois toques e o PIX está registrado. O bilhete é emitido na hora.
               </p>
             </div>
@@ -232,7 +232,7 @@ export default function LandingPage() {
               <h3 className="font-heading text-2xl sm:text-3xl font-semibold text-foreground mb-3">
                 Clímax no telão
               </h3>
-              <p className="text-base sm:text-lg text-stone-600 font-normal leading-relaxed">
+              <p className="text-base sm:text-lg text-stone-600 font-normal leading-relaxed text-pretty">
                 O salão inteiro vê o valor crescer em tempo real. Na hora do brinde: a roleta gira e o sorteio acontece ao vivo.
               </p>
             </div>
@@ -245,39 +245,40 @@ export default function LandingPage() {
         <div className="mx-auto max-w-4xl text-center">
           <div className="max-w-xl mx-auto mb-12 sm:mb-16">
             <p className="text-xs uppercase tracking-[0.2em] text-stone-500 font-medium mb-3">Lembrança Física & Digital</p>
-            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-foreground leading-[1.08] mb-6">
+            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-foreground leading-[1.08] mb-6 text-balance">
               O Comprovante que o<br />Convidado Guarda
             </h2>
-            <p className="text-base sm:text-lg text-stone-600 font-normal leading-relaxed">
+            <p className="text-base sm:text-lg text-stone-600 font-normal leading-relaxed text-pretty">
               Não é um ticket qualquer. É um pedaço da festa — numerado, autenticado e elegante como o papel de algodão de um convite.
             </p>
           </div>
 
-          {/* Estojo Passe-Partout */}
-          <div className="relative mx-auto max-w-2xl rounded-3xl bg-[#faf8f5] border border-stone-900/[0.07] p-8 sm:p-12 shadow-[0_2px_6px_rgba(44,38,30,0.03),0_24px_48px_-12px_rgba(44,38,30,0.09),inset_0_1px_0_rgba(255,255,255,0.95)]">
+          {/* Estojo Passe-Partout com Pesponto de Papelaria */}
+          <div className="relative mx-auto max-w-2xl rounded-3xl bg-[#faf8f5] border border-stone-900/[0.07] p-8 sm:p-12 shadow-[0_2px_6px_rgba(44,38,30,0.03),0_24px_48px_-12px_rgba(44,38,30,0.09),inset_0_1px_0_rgba(255,255,255,0.95)] ring-1 ring-stone-900/[0.03]">
             <div className="flex justify-center">
               <InteractiveRaffleTicket ticketCount={1} ticketPrice={50} coupleNames="Ana & Bruno" />
             </div>
 
-            <div className="mt-8 pt-6 border-t border-stone-200/80 flex flex-wrap items-center justify-between gap-4 text-[11px] text-stone-400 font-medium">
+            <div className="mt-8 pt-6 border-t border-stone-200/80 flex flex-wrap items-center justify-between gap-4 text-[11px] text-stone-500 font-medium">
               <span className="flex items-center gap-1.5">
-                <span className="size-1.5 rounded-full bg-amber-500/60" />
+                <span className="size-1.5 rounded-full bg-amber-600/70" />
                 Papel Algodão 300g
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="size-1.5 rounded-full bg-amber-500/60" />
+                <span className="size-1.5 rounded-full bg-amber-600/70" />
                 Serrilha Picotada
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="size-1.5 rounded-full bg-amber-500/60" />
+                <span className="size-1.5 rounded-full bg-amber-600/70" />
                 QR Code & Sorteio Único
               </span>
             </div>
           </div>
 
-          <p className="mt-6 text-xs text-stone-500 italic">
-            ↑ Toque no bilhete para validar o carimbo interativo
-          </p>
+          <div className="mt-6 flex items-center justify-center gap-2 text-xs text-stone-500 font-medium">
+            <span className="inline-block animate-bounce text-primary text-sm">✦</span>
+            <span>Toque no bilhete acima para carimbar e validar o comprovante</span>
+          </div>
         </div>
       </section>
 
@@ -288,11 +289,11 @@ export default function LandingPage() {
             <div className="lg:col-span-6 space-y-8">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-stone-400 font-medium mb-3">Para os Padrinhos</p>
-                <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-foreground leading-[1.08]">
+                <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-foreground leading-[1.08] text-balance">
                   Padrinho de verdade<br /><span className="italic font-normal text-stone-500">não precisa de caderneta.</span>
                 </h2>
               </div>
-              <p className="text-base sm:text-lg text-stone-600 font-normal leading-relaxed">
+              <p className="text-base sm:text-lg text-stone-600 font-normal leading-relaxed text-pretty">
                 Com o celular no bolso, ele registra quem contribuiu — em dinheiro vivo ou PIX — sem sair da pista de dança. O bilhete é emitido e enviado na hora.
               </p>
               <div className="space-y-4 pt-2 text-sm text-stone-600">
@@ -313,7 +314,17 @@ export default function LandingPage() {
             
             {/* Padrinho Demo Mockup — Chassi de Bolso Refinado */}
             <div className="lg:col-span-6 flex justify-center">
-              <div className="w-full max-w-md p-6 sm:p-7 rounded-[28px] bg-[#faf8f5] border border-stone-900/[0.08] shadow-[0_4px_16px_rgba(44,38,30,0.04),0_20px_44px_-10px_rgba(44,38,30,0.08),inset_0_1px_0_rgba(255,255,255,0.95)] space-y-5 select-none">
+              <div className="w-full max-w-md p-6 sm:p-7 rounded-[32px] bg-[#faf8f5] border border-stone-900/[0.08] shadow-[0_4px_16px_rgba(44,38,30,0.04),0_24px_48px_-12px_rgba(44,38,30,0.08),inset_0_1px_0_rgba(255,255,255,0.95)] space-y-5 select-none ring-1 ring-stone-900/[0.03]">
+                {/* Mini Status Bar iOS */}
+                <div className="flex items-center justify-between text-[10px] font-sans text-stone-400 font-medium px-1">
+                  <span>23:42</span>
+                  <div className="flex items-center gap-1.5">
+                    <span>5G</span>
+                    <span className="size-1.5 rounded-full bg-stone-300" />
+                    <span>84%</span>
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-between border-b border-stone-200/80 pb-3.5">
                   <div className="flex items-center gap-2.5">
                     <span className="size-2 rounded-full bg-amber-600/70 ring-4 ring-amber-500/10" />
@@ -339,7 +350,7 @@ export default function LandingPage() {
                           setDemoCotas(n);
                           setDemoConfirmed(false);
                         }}
-                        className={`py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                        className={`py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-1 ${
                           demoCotas === n
                             ? 'border-primary bg-primary text-white shadow-[0_2px_8px_rgba(184,144,71,0.3)]'
                             : 'border-stone-200/80 bg-white text-stone-700 hover:bg-stone-50'
@@ -364,7 +375,7 @@ export default function LandingPage() {
                   whileTap={{ scale: 0.96 }}
                   transition={springButton}
                   onClick={() => setDemoConfirmed(true)}
-                  className="w-full py-3.5 rounded-xl wedding-button font-semibold text-xs shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-3.5 rounded-xl wedding-button font-semibold text-xs shadow-md flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2"
                 >
                   <CheckCircle2Icon className="size-4" />
                   <span>{demoConfirmed ? 'Contribuição Registrada!' : 'Confirmar no PIX / Dinheiro'}</span>
@@ -396,20 +407,30 @@ export default function LandingPage() {
               </p>
             </div>
             
-            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-white leading-[1.08]">
+            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-white leading-[1.08] text-balance">
               O salão inteiro<br /><span className="italic font-normal text-amber-300/90">vibra junto.</span>
             </h2>
             
-            <p className="text-stone-400 mt-5 text-sm sm:text-base font-normal leading-relaxed">
+            <p className="text-stone-400 mt-5 text-sm sm:text-base font-normal leading-relaxed text-pretty">
               O Telão ao Vivo no Salão Nobre sincroniza cada cota em tempo real. No momento do brinde, a roleta gira para revelar o vencedor diante de todos os convidados.
             </p>
           </div>
           
           {/* Moldura de Palco & Display de Alta Resolução */}
-          <div className="relative mx-auto max-w-5xl rounded-[32px] p-2 sm:p-4 bg-gradient-to-b from-[#2a241e] to-[#1a1614] border border-amber-500/20 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.1)]">
-            <div className="live-telao rounded-2xl overflow-hidden">
+          <div className="relative mx-auto max-w-5xl rounded-[32px] p-2 sm:p-4 bg-gradient-to-b from-[#2d2620] to-[#181412] border border-amber-500/25 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.12)] ring-1 ring-black/40">
+            {/* Barra de Status do Telão */}
+            <div className="px-4 py-2 mb-2 flex items-center justify-between text-[10px] uppercase tracking-wider text-amber-300/70 border-b border-white/[0.06]">
+              <div className="flex items-center gap-2">
+                <span className="size-1.5 rounded-full bg-emerald-400" />
+                <span>Transmissão ao Vivo · Salão Nobre</span>
+              </div>
+              <span className="font-mono text-stone-400">Taxa de Atualização: 60fps</span>
+            </div>
+
+            <div className="live-telao rounded-2xl overflow-hidden border border-white/[0.08]">
               <LiveTelaoPreview />
             </div>
+
             <div className="py-3 px-4 flex flex-wrap items-center justify-between gap-3 text-[11px] text-stone-400 font-medium">
               <span className="flex items-center gap-1.5 text-amber-400/90">
                 ✦ Transmissão ao vivo via navegador
@@ -425,10 +446,10 @@ export default function LandingPage() {
         <div className="mx-auto max-w-4xl">
           <div className="text-center max-w-xl mx-auto mb-14 sm:mb-18">
             <p className="text-xs uppercase tracking-[0.2em] text-stone-400 font-medium mb-3">Transparência Total</p>
-            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-foreground leading-[1.08]">
+            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-foreground leading-[1.08] text-balance">
               Quanto vai chegar<br /><span className="italic font-normal text-stone-500">na conta dos noivos?</span>
             </h2>
-            <p className="text-base sm:text-lg text-stone-600 font-normal mt-4 leading-relaxed">
+            <p className="text-base sm:text-lg text-stone-600 font-normal mt-4 leading-relaxed text-pretty">
               Ajuste e veja o número em tempo real. Sem pegadinhas, sem taxas escondidas.
             </p>
           </div>
@@ -463,7 +484,7 @@ export default function LandingPage() {
                       step="10"
                       value={guests}
                       onChange={(e) => setGuests(Number(e.target.value))}
-                      className="w-full accent-primary h-2 bg-stone-100 rounded-full appearance-none cursor-pointer border border-stone-200/60"
+                      className="w-full accent-primary h-2 bg-stone-100 rounded-full appearance-none cursor-pointer border border-stone-200/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2"
                     />
                   </div>
 
@@ -481,7 +502,7 @@ export default function LandingPage() {
                       step="5"
                       value={ticketPrice}
                       onChange={(e) => setTicketPrice(Number(e.target.value))}
-                      className="w-full accent-primary h-2 bg-stone-100 rounded-full appearance-none cursor-pointer border border-stone-200/60"
+                      className="w-full accent-primary h-2 bg-stone-100 rounded-full appearance-none cursor-pointer border border-stone-200/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2"
                     />
                   </div>
 
@@ -499,7 +520,7 @@ export default function LandingPage() {
                       step="1"
                       value={ticketsPerGuest}
                       onChange={(e) => setTicketsPerGuest(Number(e.target.value))}
-                      className="w-full accent-primary h-2 bg-stone-100 rounded-full appearance-none cursor-pointer border border-stone-200/60"
+                      className="w-full accent-primary h-2 bg-stone-100 rounded-full appearance-none cursor-pointer border border-stone-200/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2"
                     />
                   </div>
                 </div>
@@ -515,12 +536,14 @@ export default function LandingPage() {
                   <span>Taxa de serviço e PIX (4.9%)</span>
                   <span className="wedding-numeral font-medium text-stone-500 tabular-nums">- {formatBRL(estimatedFee)}</span>
                 </div>
-                <div className="pt-4 border-t border-stone-200/80 flex items-baseline justify-between">
-                  <div className="text-xs uppercase tracking-wider text-stone-500 font-semibold">
-                    Líquido para a Lua de Mel
-                  </div>
-                  <div key={tickerKey} className="font-heading font-bold text-3xl sm:text-4xl text-primary wedding-numeral tracking-tight tabular-nums">
-                    <NumberTicker value={estimatedNet} formatFn={(n) => formatBRL(Math.round(n))} />
+                <div className="pt-4 border-t border-stone-200/80">
+                  <div className="p-4 rounded-2xl bg-amber-500/[0.06] border border-amber-500/20 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
+                    <div className="text-xs uppercase tracking-wider text-stone-600 font-semibold">
+                      Líquido para a Lua de Mel
+                    </div>
+                    <div key={tickerKey} className="font-heading font-bold text-3xl sm:text-4xl text-primary wedding-numeral tracking-tight tabular-nums sm:text-right">
+                      <NumberTicker value={estimatedNet} formatFn={(n) => formatBRL(Math.round(n))} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -538,7 +561,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-5xl">
           <div className="max-w-2xl mb-16 sm:mb-20">
             <p className="text-xs uppercase tracking-[0.2em] text-stone-400 font-medium mb-3">Evolução do Rito</p>
-            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground leading-[1.12]">
+            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground leading-[1.12] text-balance">
               Por que abandonar a gravata tradicional?
             </h2>
           </div>
@@ -550,7 +573,7 @@ export default function LandingPage() {
                 <span className="text-xs uppercase tracking-widest text-stone-400 font-semibold">O Passado</span>
               </div>
               <h3 className="font-heading text-2xl font-semibold text-stone-700">A Gravata Tradicional</h3>
-              <p className="text-base text-stone-600 leading-relaxed">
+              <p className="text-base text-stone-600 leading-relaxed text-pretty">
                 Picotar a gravata do noivo garante risada, mas é constrangedor para quem não quer participar. Notas amassadas no bolso do smoking não chegam completas. A contabilidade some com a festa.
               </p>
               <div className="pt-2 text-xs text-stone-400 space-y-1.5">
@@ -567,7 +590,7 @@ export default function LandingPage() {
                 <span className="text-xs uppercase tracking-widest text-primary font-semibold">O Presente</span>
               </div>
               <h3 className="font-heading text-2xl font-semibold text-foreground">Com o Corta-Gravata</h3>
-              <p className="text-base text-stone-600 leading-relaxed">
+              <p className="text-base text-stone-600 leading-relaxed text-pretty">
                 PIX na hora, bilhete na tela, valor subindo no telão. Ninguém precisa carregar nota na carteira numa festa. O dinheiro chega direto na conta dos noivos, limpo e contabilizado.
               </p>
               <div className="pt-2 text-xs text-stone-500 space-y-1.5">
@@ -585,7 +608,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-3xl">
           <div className="text-center max-w-xl mx-auto mb-16">
             <p className="text-xs uppercase tracking-[0.2em] text-stone-400 font-medium mb-3">Tire Suas Dúvidas</p>
-            <h2 className="font-heading text-4xl sm:text-5xl font-semibold tracking-tight text-foreground leading-tight">
+            <h2 className="font-heading text-4xl sm:text-5xl font-semibold tracking-tight text-foreground leading-tight text-balance">
               Perguntas Frequentes
             </h2>
           </div>
@@ -601,7 +624,7 @@ export default function LandingPage() {
                   <button
                     type="button"
                     onClick={() => setOpenFaq(isOpen ? null : index)}
-                    className="w-full p-6 sm:p-7 text-left font-heading font-semibold text-base sm:text-lg text-foreground flex items-center justify-between gap-4 cursor-pointer hover:bg-stone-50/40 transition-colors"
+                    className="w-full p-6 sm:p-7 text-left font-heading font-semibold text-base sm:text-lg text-foreground flex items-center justify-between gap-4 cursor-pointer hover:bg-stone-50/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-inset"
                   >
                     <span>{faq.q}</span>
                     <motion.div
@@ -622,7 +645,7 @@ export default function LandingPage() {
                         transition={springAccordion}
                         className="overflow-hidden"
                       >
-                        <div className="px-6 sm:px-7 pb-6 sm:pb-7 pt-1 text-sm sm:text-base text-stone-600 leading-relaxed border-t border-stone-100 font-normal">
+                        <div className="px-6 sm:px-7 pb-6 sm:pb-7 pt-1 text-sm sm:text-base text-stone-600 leading-relaxed border-t border-stone-100 font-normal text-pretty">
                           {faq.a}
                         </div>
                       </motion.div>
@@ -638,23 +661,23 @@ export default function LandingPage() {
       {/* GRAND FINALE */}
       <section className="py-32 sm:py-40 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#f7f4ed] to-[#faf8f5]">
         <div className="mx-auto max-w-3xl text-center space-y-8">
-          <div className="inline-flex items-center justify-center size-10 rounded-full bg-amber-500/10 border border-amber-500/20 text-primary text-sm font-serif">
+          <div className="inline-flex items-center justify-center size-10 rounded-full bg-amber-500/10 border border-amber-500/20 text-primary text-sm font-serif shadow-xs">
             ✦
           </div>
 
-          <h2 className="font-heading text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight text-foreground leading-[1.06]">
+          <h2 className="font-heading text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight text-foreground leading-[1.06] text-balance">
             Prontos para brindar com<br /><span className="italic font-normal text-primary">leveza e requinte?</span>
           </h2>
           
-          <p className="text-base sm:text-lg text-stone-600 max-w-xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-stone-600 max-w-xl mx-auto leading-relaxed text-pretty">
             Celebre com elegância — crie a rifa dos noivos em 3 minutos e deixe a festa render o que ela merece para a sua lua de mel.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }} transition={springButton} className="w-full sm:w-auto">
-              <Button asChild size="lg" className="wedding-button h-15 px-10 rounded-full text-base font-semibold shadow-[0_4px_20px_rgba(212,175,55,0.35),inset_0_1px_0_rgba(255,255,255,0.45)] cursor-pointer border border-amber-400/40 w-full sm:w-auto">
+            <motion.div whileHover={{ scale: 1.015, y: -1 }} whileTap={{ scale: 0.96 }} transition={springButton} className="w-full sm:w-auto">
+              <Button asChild size="lg" className="wedding-button h-15 px-10 rounded-full text-base font-semibold shadow-[0_4px_20px_rgba(212,175,55,0.35),inset_0_1px_0_rgba(255,255,255,0.45)] cursor-pointer border border-amber-400/40 w-full sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2">
                 <Link href="/cadastro" className="inline-flex items-center justify-center">
-                  Criar Nossa Rifa Grátis <ArrowRightIcon className="size-4 ml-2" />
+                  Criar Nossa Rifa Grátis <ArrowRightIcon className="size-4 ml-2 translate-x-0.5" />
                 </Link>
               </Button>
             </motion.div>
@@ -672,24 +695,31 @@ export default function LandingPage() {
 
       {/* MARQUEE */}
       <div className="border-y border-stone-900/[0.06] py-4 overflow-hidden bg-white/40">
-        <Marquee speedSecs={30} pauseOnHover>
-          <span className="mx-8 text-xs sm:text-sm font-medium tracking-wide uppercase text-stone-400">Casamento de Ana & Rodrigo · São Paulo</span>
-          <span className="mx-8 text-xs sm:text-sm font-medium tracking-wide uppercase text-stone-400">Casamento de Beatriz & João · Rio de Janeiro</span>
-          <span className="mx-8 text-xs sm:text-sm font-medium tracking-wide uppercase text-stone-400">Casamento de Carolina & Pedro · Belo Horizonte</span>
-          <span className="mx-8 text-xs sm:text-sm font-medium tracking-wide uppercase text-stone-400">Casamento de Daniela & Lucas · Curitiba</span>
-          <span className="mx-8 text-xs sm:text-sm font-medium tracking-wide uppercase text-stone-400">Casamento de Mariana & Rafael · Porto Alegre</span>
+        <Marquee speedSecs={32} pauseOnHover>
+          <span className="mx-8 text-xs sm:text-sm font-medium tracking-wide uppercase text-stone-500">Casamento de Ana & Rodrigo · São Paulo</span>
+          <span className="text-primary/50 text-xs">✦</span>
+          <span className="mx-8 text-xs sm:text-sm font-medium tracking-wide uppercase text-stone-500">Casamento de Beatriz & João · Rio de Janeiro</span>
+          <span className="text-primary/50 text-xs">✦</span>
+          <span className="mx-8 text-xs sm:text-sm font-medium tracking-wide uppercase text-stone-500">Casamento de Carolina & Pedro · Belo Horizonte</span>
+          <span className="text-primary/50 text-xs">✦</span>
+          <span className="mx-8 text-xs sm:text-sm font-medium tracking-wide uppercase text-stone-500">Casamento de Daniela & Lucas · Curitiba</span>
+          <span className="text-primary/50 text-xs">✦</span>
+          <span className="mx-8 text-xs sm:text-sm font-medium tracking-wide uppercase text-stone-500">Casamento de Mariana & Rafael · Porto Alegre</span>
+          <span className="text-primary/50 text-xs">✦</span>
         </Marquee>
       </div>
 
       {/* FOOTER */}
-      <footer className="py-12 px-4 sm:px-6 lg:px-8 text-center space-y-3 bg-[#faf8f5]">
-        <p className="font-heading text-lg font-semibold text-stone-700">Corta-Gravata</p>
-        <p className="text-xs text-stone-400 max-w-md mx-auto">
+      <footer className="py-14 px-4 sm:px-6 lg:px-8 text-center space-y-4 bg-[#faf8f5]">
+        <p className="font-heading text-xl font-semibold text-stone-800 tracking-tight">Corta-Gravata</p>
+        <p className="text-xs text-stone-500 max-w-md mx-auto leading-relaxed text-pretty">
           O ateliê digital para a arrecadação da gravata e do sapatinho dos noivos com elegância, afeto e transparência.
         </p>
-        <p className="text-[11px] text-stone-400 pt-4 border-t border-stone-200/60 max-w-xs mx-auto">
-          © {new Date().getFullYear()} Corta-Gravata · Todos os direitos reservados.
-        </p>
+        <div className="pt-6 border-t border-stone-200/60 max-w-xs mx-auto">
+          <p className="text-[11px] text-stone-400 tabular-nums font-medium">
+            © {new Date().getFullYear()} Corta-Gravata · Todos os direitos reservados.
+          </p>
+        </div>
       </footer>
     </div>
   );
