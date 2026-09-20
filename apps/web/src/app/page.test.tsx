@@ -86,4 +86,10 @@ describe('LandingPage', () => {
     expect(telaoAct).not.toBeNull();
     expect(finaleAct).not.toBeNull();
   });
+
+  it('renders interactive raffle ticket with fine stationery styling and aria-label', () => {
+    const { container } = render(<LandingPage />);
+    const ticket = container.querySelector('[aria-label="Bilhete de rifa interativo"]');
+    expect(ticket).not.toBeNull();
+  });
 });

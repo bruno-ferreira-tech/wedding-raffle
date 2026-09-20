@@ -343,7 +343,7 @@ export default function LandingPage() {
         className="stage-act-ticket relative min-h-[85vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20 text-center border-b border-stone-900/[0.06] dark:border-white/[0.06] bg-[#f7f4ed] dark:bg-[#161311]"
       >
         <div className="max-w-3xl mx-auto space-y-6">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white dark:bg-stone-900 px-4 py-1.5 text-xs font-semibold text-primary shadow-xs">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-[#fdfbf7] dark:bg-[#1e1a16] px-4 py-1.5 text-xs font-semibold text-primary shadow-xs">
             <CoinsIcon className="size-3.5 text-primary" />
             <span className="leading-none">Ato 2 • Papelaria &amp; Tradição</span>
           </div>
