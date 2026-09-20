@@ -92,4 +92,33 @@ describe('LandingPage', () => {
     const ticket = container.querySelector('[aria-label="Bilhete de rifa interativo"]');
     expect(ticket).not.toBeNull();
   });
+
+  it('renders Modo Padrinhos showcase card with pocket tactile preview', () => {
+    const { container } = render(<LandingPage />);
+    expect(container.textContent).toContain('O Segredo da Arrecadação');
+    expect(container.textContent).toContain('Modo Padrinhos: Ferramenta de Bolso');
+    expect(container.textContent).toContain('Mesa 04 • Família Silva');
+    expect(container.textContent).toContain('Padrinho Lucas');
+    expect(container.textContent).toContain('2 cotas da sorte');
+    expect(container.textContent).toContain('R$ 50,00');
+    expect(container.textContent).toContain('Confirmado • Telão Sincronizado');
+  });
+
+  it('renders O Telão da Festa section with espresso velvet theme and LiveTelaoPreview', () => {
+    const { container } = render(<LandingPage />);
+    const telaoSection = container.querySelector('#telao');
+    expect(telaoSection).not.toBeNull();
+    expect(telaoSection?.className).toContain('bg-[#161311]');
+    expect(telaoSection?.className).toContain('border-amber-500/20');
+    expect(telaoSection?.className).toContain('shadow-[inset_0_1px_0_rgba(212,175,55,0.15)]');
+
+    expect(telaoSection?.textContent).toContain('O Telão ao Vivo no Salão Nobre');
+    expect(telaoSection?.textContent).toContain('Telão da Festa • Ao Vivo');
+    expect(telaoSection?.textContent).toContain('Total Arrecadado na Pista');
+    expect(telaoSection?.textContent).toContain('Simular PIX no Telão');
+    expect(telaoSection?.textContent).toContain(
+      'Atualização instantânea via Server-Sent Events e roleta ao vivo na hora do brinde'
+    );
+  });
 });
+

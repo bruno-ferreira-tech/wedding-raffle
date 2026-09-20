@@ -494,7 +494,7 @@ export default function LandingPage() {
           ───────────────────────────────────────────────────────────── */}
       <section
         id="telao"
-        className="stage-act-telao relative min-h-[85vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20 text-center border-b border-border/50 bg-[#161311] text-[#fbf9f6]"
+        className="stage-act-telao relative min-h-[85vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20 text-center border-b border-amber-500/20 shadow-[inset_0_1px_0_rgba(212,175,55,0.15)] bg-[#161311] text-[#fbf9f6]"
       >
         <div className="max-w-4xl mx-auto space-y-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-xs font-semibold text-[#f5d77f] shadow-[inset_0_1px_0_rgba(212,175,55,0.15)]">
