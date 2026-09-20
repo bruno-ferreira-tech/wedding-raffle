@@ -1,14 +1,39 @@
 .stage {
+  --telao-accent: #f3d078;
+  --telao-accent-soft: #e5c158;
+  --telao-gold-border: rgba(212, 175, 55, 0.25);
+  --telao-glow: rgba(212, 175, 55, 0.15);
   position: relative;
   min-height: 100dvh;
   overflow: hidden;
-  padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1.5rem, 5vw, 4rem);
-  background-color: #0d0c0b;
+  padding: clamp(1.5rem, 3.5vw, 3rem) clamp(1.5rem, 4vw, 3.5rem);
+  background-color: #0c0b0a;
   background-image: 
-    radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.12) 0%, transparent 60%),
-    radial-gradient(circle at 100% 100%, rgba(180, 130, 60, 0.06) 0%, transparent 50%);
-  color: #fbf9f5;
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 70%),
+    radial-gradient(circle at 100% 100%, rgba(44, 38, 30, 0.4) 0%, transparent 60%);
+  color: #fdfbf7;
   -webkit-font-smoothing: antialiased;
+}
+
+.stage[data-theme="rose-gold"] {
+  --telao-accent: #f5b7bc;
+  --telao-accent-soft: #e28e94;
+  --telao-gold-border: rgba(226, 142, 148, 0.35);
+  --telao-glow: rgba(226, 142, 148, 0.15);
+}
+
+.stage[data-theme="emerald-brass"] {
+  --telao-accent: #a3d9ab;
+  --telao-accent-soft: #70b07b;
+  --telao-gold-border: rgba(112, 176, 123, 0.35);
+  --telao-glow: rgba(112, 176, 123, 0.15);
+}
+
+.stage[data-theme="monochrome-slate"] {
+  --telao-accent: #f3d078;
+  --telao-accent-soft: #d4af37;
+  --telao-gold-border: rgba(212, 175, 55, 0.3);
+  --telao-glow: rgba(212, 175, 55, 0.15);
 }
 
 .vignette {
@@ -16,9 +41,9 @@
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    ellipse 85% 80% at 50% 40%,
-    transparent 50%,
-    rgba(0, 0, 0, 0.75) 100%
+    ellipse 90% 85% at 50% 45%,
+    transparent 55%,
+    rgba(0, 0, 0, 0.82) 100%
   );
   z-index: 1;
 }
@@ -32,8 +57,7 @@
 }
 
 .header,
-.counters,
-.feedSection,
+.cinemaGrid,
 .winnersStrip {
   position: relative;
   z-index: 3;
@@ -45,8 +69,34 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem 2rem;
-  margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
   animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fullscreenBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(26, 24, 22, 0.7);
+  color: #c4bcb0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fullscreenBtn:hover {
+  background: rgba(44, 40, 36, 0.9);
+  color: #fdfbf7;
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .brand {
@@ -54,10 +104,19 @@
   font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
   font-weight: 700;
   font-style: italic;
-  font-size: clamp(2.5rem, 7vw, 4.25rem);
+  font-size: clamp(2.25rem, 6vw, 3.75rem);
   line-height: 1.1;
   letter-spacing: -0.01em;
   color: #fdfbf7;
+}
+
+.brandSubtitle {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+  color: #c4bcb0;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 .live {
@@ -67,15 +126,15 @@
   gap: 0.6rem;
   padding: 0.45rem 1.1rem;
   border-radius: 9999px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  background: rgba(26, 24, 22, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(26, 24, 22, 0.85);
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #e5c158;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 .liveDotOn,
@@ -87,54 +146,73 @@
 }
 
 .liveDotOn {
-  background: #e5c158;
-  box-shadow: 0 0 10px rgba(229, 193, 88, 0.7);
+  background: #34d399;
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
   animation: pulse-soft 2s ease-in-out infinite;
 }
 
 .liveDotOff {
-  background: #6b665f;
+  background: #78716c;
+}
+
+/* 16:9 Cinema Split Layout */
+.cinemaGrid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.5rem);
 }
 
 .counters {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1rem, 2vw, 1.5rem);
-  margin-bottom: clamp(2rem, 4vw, 3rem);
+  gap: clamp(0.75rem, 1.5vw, 1.25rem);
 }
 
 .counter {
-  padding: 1.5rem 1.75rem;
+  padding: 1.25rem 1.5rem;
   border-radius: 1.25rem;
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  background: #171513;
-  box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #141210;
+  box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   animation: fade-up 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .counterWide {
-  grid-column: 1 / -1;
-  margin-top: 0.25rem;
-  border-color: rgba(212, 175, 55, 0.45);
-  background: linear-gradient(180deg, #1c1916 0%, #151311 100%);
-  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(212, 175, 55, 0.25);
+  padding: 1.5rem 2rem;
+  border-radius: 1.5rem;
+  border: 1px solid var(--telao-gold-border, rgba(212, 175, 55, 0.25));
+  background: linear-gradient(180deg, #1c1916 0%, #13110f 100%);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .counterLabel {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: clamp(0.72rem, 1.3vw, 0.82rem);
+  font-size: clamp(0.72rem, 1.2vw, 0.8rem);
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #a8a095;
+  color: #c4bcb0;
 }
 
 .counterValue {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 700;
-  font-size: clamp(2.5rem, 6vw, 4.25rem);
+  font-size: clamp(2rem, 5vw, 3.5rem);
   line-height: 1;
   font-variant-numeric: tabular-nums lining-nums;
   letter-spacing: -0.02em;
@@ -144,25 +222,125 @@
 .counterMoney {
   font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
   font-weight: 700;
-  font-size: clamp(3rem, 8vw, 5.25rem);
-  line-height: 1;
+  font-size: clamp(2.75rem, 6.5vw, 4.75rem);
+  line-height: 1.05;
   font-variant-numeric: tabular-nums lining-nums;
   letter-spacing: -0.02em;
-  color: #e5c158;
+  color: var(--telao-accent, #f3d078);
 }
 
+/* QR Code Section for Guests in the Hall */
+.qrCard {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem 1.75rem;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #141210;
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.qrBox {
+  flex-shrink: 0;
+  width: 5.5rem;
+  height: 5.5rem;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  padding: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.qrImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.qrInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.qrHeading {
+  margin: 0;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fdfbf7;
+  letter-spacing: -0.01em;
+}
+
+.qrSubtext {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #c4bcb0;
+  line-height: 1.4;
+}
+
+.qrUrl {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: var(--telao-accent-soft, #e5c158);
+  font-weight: 600;
+  word-break: break-all;
+}
+
+/* Prizes Card in Left Column */
+.prizesCard {
+  margin-top: 1rem;
+  padding: 1rem 1.4rem;
+  border-radius: 1.25rem;
+  background: #141210;
+  border: 1px solid var(--telao-gold-border, rgba(212, 175, 55, 0.2));
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.prizesTitle {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--telao-accent-soft, #e5c158);
+  margin-bottom: 0.6rem;
+}
+
+.prizesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.prizeBadge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fdfbf7;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Feed Section */
 .feedSection {
-  max-width: 56rem;
+  width: 100%;
   animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
 }
 
 .feedTitle {
-  margin: 0 0 1.25rem;
+  margin: 0 0 1rem;
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.8rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #d4af37;
+  color: var(--telao-accent-soft, #e5c158);
   font-weight: 700;
 }
 
@@ -173,17 +351,18 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  max-height: min(44vh, 30rem);
-  overflow: hidden;
+  max-height: min(48vh, 32rem);
+  overflow-y: auto;
   border-radius: 1.25rem;
-  border: 1px solid rgba(212, 175, 55, 0.15);
-  background: #141311;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #141210;
+  box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .feedEmpty {
-  color: #8c857b;
-  font-size: 1.05rem;
-  padding: 2rem;
+  color: #a8a095;
+  font-size: 1rem;
+  padding: 2.5rem 1.5rem;
   text-align: center;
   font-family: var(--font-sans), system-ui, sans-serif;
   font-style: italic;
@@ -191,36 +370,39 @@
 
 .feedItem {
   display: grid;
-  grid-template-columns: 6.5rem 1fr;
-  gap: 1.25rem;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 1rem;
   align-items: center;
-  padding: 0.85rem 1.25rem;
-  border-radius: 0.85rem;
-  background: rgba(255, 255, 255, 0.03);
+  padding: 0.75rem 1.1rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.04);
   animation: fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 .feedItemPulse {
-  background: rgba(212, 175, 55, 0.16);
-  border-color: rgba(212, 175, 55, 0.5);
-  box-shadow: 0 0 20px -4px rgba(212, 175, 55, 0.3);
+  background: rgba(212, 175, 55, 0.12);
+  border-color: var(--telao-gold-border, rgba(212, 175, 55, 0.35));
+  box-shadow: 0 0 16px -4px var(--telao-glow, rgba(212, 175, 55, 0.2));
 }
 
 .feedNumber {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 700;
-  font-size: clamp(1.25rem, 2.8vw, 1.75rem);
-  color: #e5c158;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  color: var(--telao-accent, #f3d078);
   font-variant-numeric: tabular-nums lining-nums;
   letter-spacing: 0.02em;
 }
 
 .feedName {
-  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
   font-weight: 500;
   color: #fdfbf7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .winnersStrip {
@@ -229,7 +411,7 @@
   gap: 0.75rem 1.25rem;
   margin-top: clamp(1.5rem, 3vw, 2.25rem);
   padding-top: 1.25rem;
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   animation: fade-up 0.6s ease 0.28s both;
 }
 
@@ -240,8 +422,8 @@
   min-width: 9rem;
   padding: 0.85rem 1.25rem;
   border-radius: 0.85rem;
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  background: #171513;
+  border: 1px solid var(--telao-gold-border, rgba(212, 175, 55, 0.2));
+  background: #161412;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
@@ -250,7 +432,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #e5c158;
+  color: var(--telao-accent-soft, #e5c158);
   font-weight: 700;
 }
 
@@ -265,7 +447,7 @@
 .winnerChipName {
   font-size: 0.95rem;
   font-weight: 500;
-  color: #b3aba0;
+  color: #c4bcb0;
 }
 
 .reveal {
@@ -274,7 +456,7 @@
   z-index: 50;
   display: grid;
   place-items: center;
-  background: rgba(10, 9, 8, 0.92);
+  background: rgba(10, 9, 8, 0.94);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   animation: reveal-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -284,12 +466,12 @@
   text-align: center;
   padding: clamp(2.5rem, 6vw, 4.5rem);
   border-radius: 2rem;
-  border: 1px solid rgba(212, 175, 55, 0.4);
-  background: #171513;
+  border: 1px solid var(--telao-gold-border, rgba(212, 175, 55, 0.35));
+  background: #161412;
   box-shadow: 
     0 30px 80px -20px rgba(0, 0, 0, 0.9),
-    0 0 60px -10px rgba(212, 175, 55, 0.2),
-    inset 0 1px 0 rgba(212, 175, 55, 0.3);
+    0 0 50px -10px var(--telao-glow, rgba(212, 175, 55, 0.15)),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   max-width: 48rem;
   width: 90vw;
 }
@@ -300,7 +482,7 @@
   font-size: clamp(1rem, 2vw, 1.35rem);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #e5c158;
+  color: var(--telao-accent-soft, #e5c158);
   font-weight: 700;
   animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -312,7 +494,7 @@
   font-size: clamp(6.5rem, 24vw, 13rem);
   line-height: 1;
   font-variant-numeric: tabular-nums lining-nums;
-  color: #e5c158;
+  color: var(--telao-accent, #f3d078);
   animation: countdown-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
@@ -387,17 +569,31 @@
   }
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 900px) {
+  .cinemaGrid {
+    grid-template-columns: 1fr;
+  }
+
   .counters {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .feed {
     max-height: 36vh;
   }
 }
+
+@media (max-width: 600px) {
+  .counters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .counterWide {
+    grid-column: 1 / -1;
+  }
+}
+
 

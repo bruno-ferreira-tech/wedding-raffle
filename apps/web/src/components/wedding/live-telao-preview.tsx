@@ -67,7 +67,7 @@ export function LiveTelaoPreview() {
 
         <span className="inline-flex items-center gap-1.5 rounded-full bg-[#b89047]/15 border border-[#b89047]/30 px-3 py-0.5 text-[11px] font-medium text-[#f5d77f]">
           <span className="size-1.5 rounded-full bg-[#d4af37]" />
-          Transmissão Contínua
+          Tempo Real
         </span>
       </div>
 

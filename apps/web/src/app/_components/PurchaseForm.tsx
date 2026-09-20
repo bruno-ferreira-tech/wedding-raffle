@@ -248,14 +248,14 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
           </div>
         </header>
 
-      <Card className="wedding-card shadow-md">
-        <CardHeader className="pb-4">
-          <CardTitle className="font-heading text-2xl font-bold text-foreground">Cartela da Sorte</CardTitle>
-          <CardDescription className="text-muted-foreground">
-            Clique nos números que deseja levar. Os números dourados serão reservados para você.
+      <Card className="rounded-[24px] border border-stone-200/90 bg-white shadow-[0_1px_3px_rgba(44,38,30,0.03),0_12px_24px_-6px_rgba(44,38,30,0.05)] p-6 sm:p-7">
+        <CardHeader className="p-0 pb-4">
+          <CardTitle className="font-heading text-2xl font-bold text-stone-900">Cartela da Sorte</CardTitle>
+          <CardDescription className="text-xs text-stone-600 font-medium mt-0.5">
+            Toque nos números desejados para selecionar. Bilhetes confirmados são reservados imediatamente para você.
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-6">
+        <CardContent className="p-0 flex flex-col gap-6 pt-2">
           <BingoBoard
             cells={board}
             selected={selected}
@@ -264,7 +264,7 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
             onToggle={toggleNumber}
           />
 
-          <Separator className="bg-border" />
+          <Separator className="bg-stone-200" />
 
           <form
             id="purchase-form"
@@ -277,7 +277,7 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
                   Boolean(error && !buyerName.trim()) || undefined
                 }
               >
-                <FieldLabel htmlFor={nameId} className="text-sm font-semibold text-foreground">Seu Nome Completo</FieldLabel>
+                <FieldLabel htmlFor={nameId} className="text-xs font-semibold uppercase tracking-wider text-stone-700">Seu Nome Completo *</FieldLabel>
                 <Input
                   id={nameId}
                   value={buyerName}
@@ -286,7 +286,7 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
                   required
                   autoComplete="name"
                   placeholder="Ex: Pedro Henrique Silva"
-                  className="h-11 rounded-xl border-border bg-background px-4 text-foreground focus-visible:ring-primary shadow-2xs"
+                  className="h-12 rounded-xl border border-stone-300 bg-stone-50/50 px-4 text-stone-900 font-medium focus-visible:ring-2 focus-visible:ring-stone-900 shadow-2xs"
                   aria-invalid={
                     Boolean(error && !buyerName.trim()) || undefined
                   }
@@ -294,25 +294,25 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
               </Field>
             </FieldGroup>
 
-            <div className="flex items-end justify-between gap-4 rounded-2xl border border-border bg-secondary/40 p-4">
+            <div className="flex items-end justify-between gap-4 rounded-2xl border border-stone-200 bg-stone-50/80 p-4 sm:p-5">
               <div className="flex flex-col gap-1">
-                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                <span className="text-xs font-semibold uppercase tracking-wider text-stone-600">
                   Bilhetes Escolhidos
                 </span>
-                <span className="text-sm font-semibold text-foreground">
-                  {selected.length === 0
-                    ? 'Nenhum bilhete selecionado'
-                    : `${selected.length} bilhete(s) · ${selected
-                        .slice(0, 8)
-                        .map(formatRaffleNumber)
-                        .join(', ')}${selected.length > 8 ? '…' : ''}`}
-                </span>
+                  <span className="text-sm font-semibold text-stone-900">
+                    {selected.length === 0
+                      ? 'Nenhum bilhete selecionado'
+                      : `${selected.length} ${selected.length === 1 ? 'bilhete' : 'bilhetes'} · ${selected
+                          .slice(0, 8)
+                          .map(formatRaffleNumber)
+                          .join(', ')}${selected.length > 8 ? '…' : ''}`}
+                  </span>
               </div>
               <div className="text-right">
-                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                <span className="text-xs font-semibold uppercase tracking-wider text-stone-600">
                   Valor Total
                 </span>
-                <p className="wedding-numeral text-3xl font-bold text-primary">
+                <p className="wedding-numeral text-3xl font-bold text-stone-900 tabular-nums">
                   <NumberTicker
                     value={selected.length === 0 ? 0 : total}
                     formatFn={(n) => formatBRL(Math.round(n))}
@@ -329,16 +329,16 @@ export function PurchaseForm({ event }: PurchaseFormProps = {}) {
             ) : null}
           </form>
         </CardContent>
-        <CardFooter className="pt-2 pb-6">
+        <CardFooter className="p-0 pt-6">
           <Button
             type="submit"
             form="purchase-form"
             size="lg"
-            className="wedding-button wedding-shimmer h-12 w-full rounded-full text-base font-semibold shadow-md"
+            className="h-13 w-full rounded-full text-base font-semibold bg-stone-900 hover:bg-stone-800 text-stone-50 shadow-[0_1px_3px_rgba(0,0,0,0.1),0_12px_28px_-6px_rgba(44,38,30,0.15),inset_0_1px_0_rgba(255,255,255,0.15)] active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50"
             disabled={salesClosed || pending || selected.length === 0}
           >
             {pending ? <Spinner data-icon="inline-start" className="mr-2" /> : null}
-            {pending ? 'Preparando bilhetes…' : `Confirmar Bilhetes · ${formatBRL(total)}`}
+            {pending ? 'Preparando bilhetes…' : `Pagar com PIX · ${formatBRL(total)}`}
           </Button>
         </CardFooter>
       </Card>

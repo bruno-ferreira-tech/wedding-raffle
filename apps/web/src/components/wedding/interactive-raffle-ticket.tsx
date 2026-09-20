@@ -68,13 +68,13 @@ export function InteractiveRaffleTicket({
   };
 
   return (
-    <div className="space-y-3">
+    <div className="w-full max-w-md mx-auto space-y-3">
       <motion.div
         ref={ticketRef}
         role="button"
         tabIndex={0}
         aria-label="Bilhete de rifa interativo"
-        whileHover={{ y: -4, scale: 1.01 }}
+        whileHover={{ y: -3, scale: 1.01 }}
         whileTap={{ scale: 0.98 }}
         transition={{ type: 'spring', stiffness: 350, damping: 25 }}
         onClick={handleTriggerValidation}
@@ -84,55 +84,55 @@ export function InteractiveRaffleTicket({
             handleTriggerValidation();
           }
         }}
-        className={`group relative cursor-pointer overflow-hidden rounded-2xl border transition-all duration-300 p-5 sm:p-6 select-none ${
+        className={`group relative w-full cursor-pointer overflow-hidden rounded-2xl border transition-all duration-300 p-4 sm:p-6 select-none ${
           isStamped
             ? 'border-[#b89047] bg-[#fcf9f2] shadow-[0_8px_24px_-4px_rgba(184,144,71,0.22)]'
             : 'border-[#dcd3c4] bg-[#fdfbf7] shadow-[0_4px_16px_-2px_rgba(44,38,30,0.08),0_1px_3px_rgba(44,38,30,0.04)] hover:border-[#b89047]/60'
         }`}
       >
         {/* Decorative notch cutouts on both ends to simulate physical paper stub with debossed shadow */}
-        <div className="absolute -left-3.5 top-1/2 -mt-3.5 size-7 rounded-full bg-background border border-[#dcd3c4] shadow-[inset_0_2px_4px_rgba(44,38,30,0.12),inset_0_-1px_1px_rgba(255,255,255,0.8)]" />
-        <div className="absolute -right-3.5 top-1/2 -mt-3.5 size-7 rounded-full bg-background border border-[#dcd3c4] shadow-[inset_0_2px_4px_rgba(44,38,30,0.12),inset_0_-1px_1px_rgba(255,255,255,0.8)]" />
+        <div className="absolute -left-3.5 top-1/2 -mt-3.5 size-7 rounded-full bg-[#faf8f5] border border-[#dcd3c4] shadow-[inset_0_2px_4px_rgba(44,38,30,0.12),inset_0_-1px_1px_rgba(255,255,255,0.8)]" />
+        <div className="absolute -right-3.5 top-1/2 -mt-3.5 size-7 rounded-full bg-[#faf8f5] border border-[#dcd3c4] shadow-[inset_0_2px_4px_rgba(44,38,30,0.12),inset_0_-1px_1px_rgba(255,255,255,0.8)]" />
 
         {/* Ticket Header */}
-        <div className="flex items-center justify-between border-b border-dashed border-[#e3dacd] pb-3.5">
-          <div className="flex items-center gap-2">
-            <HeartIcon className="size-4 text-[#b89047] fill-[#b89047]/20" />
-            <span className="font-heading text-sm font-semibold tracking-wide text-foreground">
+        <div className="flex items-center justify-between gap-2 border-b border-dashed border-[#e3dacd] pb-3">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <HeartIcon className="size-3.5 sm:size-4 text-[#b89047] fill-[#b89047]/20 shrink-0" />
+            <span className="font-heading text-xs sm:text-sm font-semibold tracking-wide text-foreground truncate">
               {coupleNames} • 2026
             </span>
           </div>
-          <span className="wedding-numeral text-xs font-semibold tracking-wider text-[#9a7837] bg-[#b89047]/10 px-2.5 py-0.5 rounded-full border border-[#b89047]/20">
+          <span className="wedding-numeral text-[11px] sm:text-xs font-semibold tracking-wider text-[#9a7837] bg-[#b89047]/10 px-2 sm:px-2.5 py-0.5 rounded-full border border-[#b89047]/20 shrink-0 whitespace-nowrap">
             {serial}
           </span>
         </div>
 
         {/* Ticket Body */}
-        <div className="py-4 space-y-3 relative z-10">
-          <div className="flex items-baseline justify-between">
+        <div className="py-3.5 space-y-2.5 relative z-10">
+          <div className="flex items-baseline justify-between gap-2">
             <div>
-              <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-                Participação na Festa
+              <div className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+                Participação
               </div>
-              <div className="text-xl font-heading font-bold text-foreground">
+              <div className="text-lg sm:text-xl font-heading font-bold text-foreground">
                 {ticketCount} {ticketCount === 1 ? 'cota' : 'cotas'} da sorte
               </div>
             </div>
 
             <div className="text-right">
-              <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+              <div className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                 Valor do Apoio
               </div>
-              <div className="wedding-numeral text-xl font-bold text-[#b89047]">
+              <div className="wedding-numeral text-lg sm:text-xl font-bold text-[#b89047]">
                 {formatBRL(totalValue)}
               </div>
             </div>
           </div>
 
           {/* Live Status indicator */}
-          <div className="flex items-center justify-between text-xs text-muted-foreground pt-1">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] sm:text-xs text-muted-foreground pt-1">
             <span className="flex items-center gap-1.5">
-              <span className={`size-2 rounded-full ${isStamped ? 'bg-[#b89047] ring-4 ring-[#b89047]/20' : 'bg-[#b89047]/80 ring-2 ring-[#b89047]/15'}`} />
+              <span className={`size-2 rounded-full shrink-0 ${isStamped ? 'bg-[#b89047] ring-4 ring-[#b89047]/20' : 'bg-[#b89047]/80 ring-2 ring-[#b89047]/15'}`} />
               {isStamped ? 'Confirmado no Telão!' : 'Válido para o Sorteio no Telão'}
             </span>
             <span className="wedding-numeral font-medium text-foreground">
@@ -142,13 +142,13 @@ export function InteractiveRaffleTicket({
         </div>
 
         {/* Ticket Footer / Tear Strip */}
-        <div className="border-t border-dashed border-[#e3dacd] pt-3.5 flex items-center justify-between text-xs text-muted-foreground relative z-10">
-          <div className="flex items-center gap-1.5 text-[11px]">
-            <QrCodeIcon className="size-3.5 text-foreground/70" />
+        <div className="border-t border-dashed border-[#e3dacd] pt-3 flex items-center justify-between gap-2 text-xs text-muted-foreground relative z-10">
+          <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px]">
+            <QrCodeIcon className="size-3.5 text-foreground/70 shrink-0" />
             <span>Autenticado via PIX</span>
           </div>
-          <span className="inline-flex items-center gap-1 text-[#b89047] font-semibold text-xs group-hover:underline">
-            <SparklesIcon className="size-3.5 text-[#b89047]" />
+          <span className="inline-flex items-center gap-1 text-[#b89047] font-semibold text-[11px] sm:text-xs group-hover:underline">
+            <SparklesIcon className="size-3 sm:size-3.5 text-[#b89047] shrink-0" />
             {isStamped ? 'Validado com sucesso!' : 'Toque para testar'}
           </span>
         </div>
@@ -157,14 +157,14 @@ export function InteractiveRaffleTicket({
         <AnimatePresence>
           {isStamped && (
             <motion.div
-              initial={{ scale: 2.4, opacity: 0, rotate: -25 }}
-              animate={{ scale: 1, opacity: 0.95, rotate: -6 }}
+              initial={{ scale: 2.2, opacity: 0, rotate: -25 }}
+              animate={{ scale: 1, opacity: 0.95, rotate: -5 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ type: 'spring', stiffness: 450, damping: 18 }}
-              className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
+              className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none p-2"
             >
-              <div className="border-2 border-[#b89047] text-[#7a5a1e] bg-[#fdfbf7]/95 px-4 py-2 rounded-lg uppercase tracking-widest font-heading font-bold text-xs sm:text-sm shadow-md rotate-[-6deg] flex items-center gap-2 backdrop-blur-xs border-dashed">
-                <CheckCircle2Icon className="size-4 text-[#b89047]" />
+              <div className="border-2 border-[#b89047] text-[#7a5a1e] bg-[#fdfbf7]/95 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg uppercase tracking-wider sm:tracking-widest font-heading font-bold text-[11px] sm:text-xs shadow-md rotate-[-5deg] flex items-center gap-1.5 backdrop-blur-xs border-dashed">
+                <CheckCircle2Icon className="size-3.5 sm:size-4 text-[#b89047] shrink-0" />
                 <span>AUTENTICADO • TELÃO AO VIVO</span>
               </div>
             </motion.div>

@@ -220,20 +220,20 @@ export function EventPadrinhoConsole({ event }: Props) {
             animate="visible"
             className="mx-auto w-full max-w-md"
           >
-            <Card className="wedding-card shadow-lg p-2 sm:p-4">
-              <CardHeader className="text-center pb-4">
-                <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                  <LogInIcon className="size-6" />
+            <Card className="rounded-[24px] border border-stone-200/90 bg-white shadow-[0_1px_3px_rgba(44,38,30,0.03),0_12px_24px_-6px_rgba(44,38,30,0.05)] p-6 sm:p-7">
+              <CardHeader className="p-0 text-center pb-5">
+                <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-2xl bg-stone-900 text-stone-50 shadow-sm">
+                  <LogInIcon className="size-5" />
                 </div>
-                <CardTitle className="font-heading text-2xl font-bold text-foreground">Identificação do Padrinho</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground pt-1">
-                  Digite a senha de 4 dígitos informada pelos noivos para liberar a marcação de bilhetes.
+                <CardTitle className="font-heading text-2xl font-bold text-stone-900">Acesso dos Padrinhos</CardTitle>
+                <CardDescription className="text-xs text-stone-600 font-medium pt-1">
+                  Digite a senha de 4 dígitos informada pelos noivos para liberar a marcação de bilhetes na festa.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="pt-2">
+              <CardContent className="p-0 pt-2">
                 <form id="padrinho-login-form" className="flex flex-col gap-5" onSubmit={onLogin}>
                   <Field data-invalid={Boolean(error) || undefined}>
-                    <FieldLabel htmlFor={pinId} className="text-xs font-semibold uppercase tracking-wider text-muted-foreground text-center block">
+                    <FieldLabel htmlFor={pinId} className="text-xs font-semibold uppercase tracking-wider text-stone-700 text-center block">
                       Senha de 4 dígitos
                     </FieldLabel>
                     <Input
@@ -245,7 +245,7 @@ export function EventPadrinhoConsole({ event }: Props) {
                       disabled={pending}
                       required
                       placeholder="••••"
-                      className="h-14 text-center font-mono text-3xl tracking-[0.4em] rounded-2xl bg-background border-border focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-2xs"
+                      className="h-14 text-center font-mono text-3xl tracking-[0.4em] rounded-2xl bg-stone-50/50 border border-stone-300 focus:border-stone-900 focus:ring-2 focus:ring-stone-900 shadow-2xs font-bold text-stone-900"
                       autoFocus
                     />
                   </Field>
@@ -258,12 +258,12 @@ export function EventPadrinhoConsole({ event }: Props) {
                   ) : null}
                 </form>
               </CardContent>
-              <CardFooter className="pt-2">
+              <CardFooter className="p-0 pt-6">
                 <Button
                   type="submit"
                   form="padrinho-login-form"
                   size="lg"
-                  className="wedding-button h-12 w-full rounded-2xl text-base font-semibold shadow-md"
+                  className="h-12 w-full rounded-full text-base font-semibold bg-stone-900 hover:bg-stone-800 text-stone-50 shadow-[0_1px_3px_rgba(0,0,0,0.1),0_12px_28px_-6px_rgba(44,38,30,0.15),inset_0_1px_0_rgba(255,255,255,0.15)] cursor-pointer disabled:opacity-50"
                   disabled={pending || !pin.trim()}
                 >
                   {pending ? <Spinner data-icon="inline-start" /> : <LogInIcon data-icon="inline-start" className="size-4 mr-2" />}
@@ -273,15 +273,15 @@ export function EventPadrinhoConsole({ event }: Props) {
             </Card>
           </motion.div>
         ) : (
-          <Card className="wedding-card shadow-lg overflow-hidden">
-            <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border pb-5">
+          <Card className="rounded-[24px] border border-stone-200/90 bg-white shadow-[0_1px_3px_rgba(44,38,30,0.03),0_12px_24px_-6px_rgba(44,38,30,0.05)] overflow-hidden p-6 sm:p-7">
+            <CardHeader className="p-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-stone-200 pb-5">
               <div>
-                <CardTitle className="font-heading text-2xl font-bold text-foreground">Cartela da Festa</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground mt-0.5">
+                <CardTitle className="font-heading text-2xl font-bold text-stone-900">Cartela da Festa</CardTitle>
+                <CardDescription className="text-xs text-stone-600 font-medium mt-0.5">
                   {livres !== null ? (
                     <span>
-                      <strong className="text-foreground">{livres}</strong> números livres ·{' '}
-                      <span className="text-primary font-semibold">{formatBRL(event.ticketPriceCents)}</span> cada
+                      <strong className="text-stone-900">{livres}</strong> números livres ·{' '}
+                      <span className="text-[#855b1b] font-bold">{formatBRL(event.ticketPriceCents)}</span> cada
                     </span>
                   ) : (
                     'Carregando cartela…'
@@ -291,7 +291,7 @@ export function EventPadrinhoConsole({ event }: Props) {
               <Button
                 variant="outline"
                 size="sm"
-                className="rounded-full border-border bg-card text-xs text-muted-foreground hover:text-foreground"
+                className="rounded-full border-stone-300 bg-white text-xs font-semibold text-stone-700 hover:text-stone-900 hover:bg-stone-50"
                 onClick={() => {
                   setActivePin(null);
                   setPin('');
@@ -300,7 +300,7 @@ export function EventPadrinhoConsole({ event }: Props) {
                 Trocar Senha
               </Button>
             </CardHeader>
-            <CardContent className="flex flex-col gap-6 pt-6">
+            <CardContent className="p-0 flex flex-col gap-6 pt-6">
               <BingoBoard
                 cells={board}
                 selected={selected}
@@ -309,12 +309,12 @@ export function EventPadrinhoConsole({ event }: Props) {
                 onToggle={toggleNumber}
               />
 
-              <div className="rounded-2xl border border-border bg-secondary/30 p-4 sm:p-5">
+              <div className="rounded-2xl border border-stone-200 bg-stone-50/80 p-4 sm:p-5">
                 <form id="mark-paid-form" className="flex flex-col gap-5" onSubmit={onMarkPaid}>
                   <FieldGroup>
                     <Field data-invalid={Boolean(error && !buyerName.trim()) || undefined}>
-                      <FieldLabel htmlFor={nameId} className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Nome do Convidado Comprador
+                      <FieldLabel htmlFor={nameId} className="text-xs font-semibold uppercase tracking-wider text-stone-700">
+                        Nome de quem está pagando *
                       </FieldLabel>
                       <Input
                         id={nameId}
@@ -323,27 +323,27 @@ export function EventPadrinhoConsole({ event }: Props) {
                         disabled={pending}
                         required
                         placeholder="Ex: Tio Roberto ou Carlos Oliveira"
-                        className="h-12 rounded-xl bg-background border-border px-4 text-base focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-2xs"
+                        className="h-12 rounded-xl bg-white border border-stone-300 px-4 text-base focus:border-stone-900 focus:ring-2 focus:ring-stone-900 shadow-2xs font-medium text-stone-900"
                       />
                     </Field>
                   </FieldGroup>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-border pt-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-stone-200 pt-4">
                     <div className="flex flex-col gap-1">
-                      <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-stone-600">
                         Números Escolhidos ({selected.length})
                       </span>
-                      <span className="text-sm font-semibold text-foreground">
+                      <span className="text-sm font-semibold text-stone-900">
                         {selected.length === 0
                           ? 'Toque nos números livres acima'
                           : `${selected.slice(0, 8).map(formatRaffleNumber).join(', ')}${selected.length > 8 ? '…' : ''}`}
                       </span>
                     </div>
                     <div className="sm:text-right">
-                      <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-stone-600">
                         Valor Total em Mãos
                       </span>
-                      <p className="wedding-numeral text-3xl font-bold text-primary">
+                      <p className="wedding-numeral text-3xl font-bold text-stone-900 tabular-nums">
                         <NumberTicker
                           value={total}
                           formatFn={(n) => formatBRL(Math.round(n))}
@@ -361,12 +361,12 @@ export function EventPadrinhoConsole({ event }: Props) {
                 </form>
               </div>
             </CardContent>
-            <CardFooter className="border-t border-border bg-secondary/10 p-4 sm:p-6">
+            <CardFooter className="p-0 pt-6">
               <Button
                 type="submit"
                 form="mark-paid-form"
                 size="lg"
-                className="wedding-button wedding-shimmer h-14 w-full rounded-2xl text-base font-semibold shadow-md disabled:opacity-50"
+                className="h-13 w-full rounded-full text-base font-semibold bg-stone-900 hover:bg-stone-800 text-stone-50 shadow-[0_1px_3px_rgba(0,0,0,0.1),0_12px_28px_-6px_rgba(44,38,30,0.15),inset_0_1px_0_rgba(255,255,255,0.15)] active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50"
                 disabled={pending || selected.length === 0}
               >
                 {pending ? <Spinner data-icon="inline-start" /> : <CheckIcon data-icon="inline-start" className="size-5 mr-2" />}

@@ -1,24 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { CheckIcon, CopyIcon } from 'lucide-react';
+import { CheckIcon, CopyIcon, ArrowLeftIcon } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
-import { BorderBeam } from '@/components/ui/border-beam';
 import { launchCelebrationConfetti } from '@/lib/confetti';
 import { motion, AnimatePresence } from 'motion/react';
 import { fadeUp, scalePop } from '@/lib/animations';
@@ -49,7 +40,7 @@ function formatCountdown(ms: number): string {
 function statusLabel(status: OrderStatusValue): string {
   switch (status) {
     case 'pending':
-      return 'Aguardando pagamento';
+      return 'Aguardando PIX';
     case 'paid':
       return 'Pago';
     case 'expired':
@@ -111,12 +102,10 @@ export function OrderStatus({ orderId, backHref = '/', themeId }: Props) {
 
   useEffect(() => {
     void refresh();
-
     const interval = window.setInterval(() => {
       setNow(Date.now());
       void refresh();
     }, 2000);
-
     return () => {
       window.clearInterval(interval);
     };
@@ -154,10 +143,11 @@ export function OrderStatus({ orderId, backHref = '/', themeId }: Props) {
   if (!order && !error) {
     return (
       <div {...themeAttr} className="min-h-dvh w-full text-foreground bg-background">
-        <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-4 px-4 py-8">
-          <Skeleton className="h-6 w-40" />
-          <Skeleton className="h-10 w-56" />
-          <Skeleton className="h-40 w-full" />
+        <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col gap-5 px-4 py-8 sm:py-12">
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-8 w-40" />
+          <Skeleton className="h-44 w-full rounded-3xl" />
+          <Skeleton className="h-64 w-full rounded-3xl" />
         </div>
       </div>
     );
@@ -166,11 +156,14 @@ export function OrderStatus({ orderId, backHref = '/', themeId }: Props) {
   if (!order) {
     return (
       <div {...themeAttr} className="min-h-dvh w-full text-foreground bg-background">
-        <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-4 px-4 py-8">
-          <Button variant="link" asChild className="w-fit px-0 font-heading">
-            <Link href={backHref}>← Voltar para a cartela</Link>
+        <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col gap-4 px-4 py-8">
+          <Button variant="ghost" asChild className="w-fit px-2 rounded-full text-stone-700">
+            <Link href={backHref}>
+              <ArrowLeftIcon className="size-4 mr-1.5" />
+              Voltar
+            </Link>
           </Button>
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
             <AlertTitle>Erro</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
@@ -184,192 +177,218 @@ export function OrderStatus({ orderId, backHref = '/', themeId }: Props) {
     : 0;
   const showFake =
     order.status === 'pending' && isFakePaymentProvider(order.pixCopyPaste);
+  const ticketCount = order.numberIds.length;
 
   return (
     <div {...themeAttr} className="min-h-dvh w-full text-foreground bg-background transition-colors duration-300">
-      <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
-        <Button variant="ghost" asChild className="w-fit px-3 rounded-full text-primary hover:bg-black/5">
-          <Link href={backHref}>← Voltar para a cartela</Link>
+      <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col gap-5 px-4 py-8 sm:py-12">
+
+        {/* Back link */}
+        <Button
+          variant="ghost"
+          asChild
+          className="w-fit -ml-2 px-2 rounded-full text-xs font-semibold text-stone-600 hover:text-stone-900 hover:bg-stone-900/[0.05]"
+        >
+          <Link href={backHref}>
+            <ArrowLeftIcon className="size-3.5 mr-1" />
+            Voltar para a cartela
+          </Link>
         </Button>
 
-        <div className="flex items-center justify-between">
+        {/* Order header */}
+        <div className="flex items-start justify-between gap-3">
           <div>
-            <h1 className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-500 mb-1">
+              Comprovante
+            </p>
+            <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
               Pedido #{order.id}
             </h1>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Participante: <strong className="text-foreground font-semibold">{order.buyerName}</strong>
+            <p className="text-sm text-stone-600 mt-0.5 font-medium">
+              {order.buyerName}
             </p>
           </div>
-          <Badge variant={statusVariant(order.status)} className="rounded-full px-3 py-1 text-xs uppercase tracking-wider font-semibold">
+          <Badge
+            variant={statusVariant(order.status)}
+            className="rounded-full px-3 py-1 text-xs font-semibold shrink-0 mt-1"
+          >
             {order.status === 'pending' ? (
-              <span className="size-1.5 mr-1.5 animate-pulse rounded-full bg-primary" />
+              <span className="size-1.5 mr-1.5 animate-pulse rounded-full bg-current inline-block" />
             ) : null}
             {statusLabel(order.status)}
           </Badge>
         </div>
 
-      <AnimatePresence mode="wait">
-        {order.status === 'paid' ? (
-          <motion.div
-            key="status-paid"
-            variants={scalePop}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-          >
-            <Card className="wedding-card border-primary/40 p-6 text-center space-y-4 shadow-md">
-              <div className="mx-auto size-16 rounded-full bg-primary/15 text-primary flex items-center justify-center">
-                <CheckIcon className="size-8 stroke-[2.5]" />
-              </div>
-              <div className="space-y-1">
-                <h2 className="font-heading text-2xl font-bold text-foreground">Pagamento Confirmado!</h2>
-                <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                  Seus bilhetes foram registrados com sucesso e já estão concorrendo no sorteio dos noivos.
-                </p>
-              </div>
-              <div className="pt-2">
-                <Button asChild size="lg" className="wedding-button h-11 rounded-full px-8 shadow-sm">
-                  <Link href={backHref}>Acompanhar Cartela</Link>
+        {/* Status banners */}
+        <AnimatePresence mode="wait">
+          {order.status === 'paid' ? (
+            <motion.div
+              key="status-paid"
+              variants={scalePop}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+            >
+              <div className="rounded-[24px] border border-emerald-200 bg-emerald-50 p-6 text-center space-y-3">
+                <div className="mx-auto size-14 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                  <CheckIcon className="size-7 stroke-[2.5]" />
+                </div>
+                <div className="space-y-1">
+                  <h2 className="font-heading text-xl font-bold text-emerald-900">Pagamento confirmado!</h2>
+                  <p className="text-sm text-emerald-800/80 max-w-xs mx-auto leading-relaxed">
+                    Seus bilhetes estão registrados e já concorrem ao sorteio.
+                  </p>
+                </div>
+                <Button
+                  asChild
+                  size="sm"
+                  className="rounded-full bg-emerald-800 hover:bg-emerald-900 text-emerald-50 font-semibold text-xs px-5 h-9"
+                >
+                  <Link href={backHref}>Ver a cartela</Link>
                 </Button>
               </div>
-            </Card>
-          </motion.div>
-        ) : null}
+            </motion.div>
+          ) : null}
 
-        {order.status === 'expired' ? (
-          <motion.div
-            key="status-expired"
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-          >
-            <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
-              <AlertTitle>Pedido expirado</AlertTitle>
-              <AlertDescription>
-                O prazo de pagamento terminou e os números voltaram para a cartela da festa.
-              </AlertDescription>
-            </Alert>
-          </motion.div>
-        ) : null}
+          {order.status === 'expired' ? (
+            <motion.div key="status-expired" variants={fadeUp} initial="hidden" animate="visible" exit="hidden">
+              <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
+                <AlertTitle>Pedido expirado</AlertTitle>
+                <AlertDescription>
+                  O prazo de pagamento terminou e os números voltaram para a cartela.
+                </AlertDescription>
+              </Alert>
+            </motion.div>
+          ) : null}
 
-        {order.status === 'cancelled' ? (
-          <motion.div
-            key="status-cancelled"
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-          >
-            <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
-              <AlertTitle>Pedido cancelado</AlertTitle>
-              <AlertDescription>Você pode escolher novos bilhetes na cartela a qualquer momento.</AlertDescription>
-            </Alert>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+          {order.status === 'cancelled' ? (
+            <motion.div key="status-cancelled" variants={fadeUp} initial="hidden" animate="visible" exit="hidden">
+              <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
+                <AlertTitle>Pedido cancelado</AlertTitle>
+                <AlertDescription>
+                  Você pode escolher novos bilhetes na cartela a qualquer momento.
+                </AlertDescription>
+              </Alert>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
 
-      <Card className="wedding-card shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="font-heading text-lg font-semibold text-foreground">Resumo dos Bilhetes</CardTitle>
-          <CardDescription className="text-xs">
-            {order.numberIds.length} bilhete(s) reservado(s) neste pedido
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto pr-1">
+        {/* Ticket summary */}
+        <div className="rounded-[24px] border border-stone-200/90 bg-white shadow-[0_1px_3px_rgba(44,38,30,0.03),0_12px_24px_-6px_rgba(44,38,30,0.05)] p-5 sm:p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+              {ticketCount === 1 ? '1 bilhete' : `${ticketCount} bilhetes`}
+            </span>
+            <span className="wedding-numeral text-2xl font-bold text-stone-900 tabular-nums">
+              {formatBRL(order.totalCents)}
+            </span>
+          </div>
+
+          <Separator className="bg-stone-100" />
+
+          <div className="flex flex-wrap gap-1.5 max-h-[9rem] overflow-y-auto">
             {order.numberIds
               .slice()
               .sort((a, b) => a - b)
               .map((id) => (
-                <Badge key={id} variant="outline" className="rounded-md border-border bg-secondary/50 font-mono text-xs px-2.5 py-1 text-foreground font-semibold">
+                <span
+                  key={id}
+                  className="inline-flex items-center rounded-lg border border-stone-200 bg-stone-50 px-2.5 py-1 font-mono text-xs font-semibold text-stone-800"
+                >
                   {formatRaffleNumber(id)}
-                </Badge>
+                </span>
               ))}
           </div>
-          <Separator className="bg-border" />
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Valor total</span>
-            <p className="wedding-numeral text-3xl font-bold text-primary">
-              {formatBRL(order.totalCents)}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {order.status === 'pending' ? (
-        <Card className="wedding-card relative overflow-hidden border-primary/30 shadow-md">
-          <BorderBeam size={220} duration={8} />
-          <CardHeader className="pb-3 text-center">
-            <CardTitle className="font-heading text-2xl font-bold text-foreground">Pague com PIX</CardTitle>
-            <CardDescription className="text-xs">
-              {order.expiresAt
-                ? `Tempo restante para pagamento: ${formatCountdown(remainingMs)}`
-                : 'Aguardando confirmação bancária'}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center gap-4">
+        {/* PIX payment block */}
+        {order.status === 'pending' ? (
+          <div className="rounded-[24px] border border-stone-300 bg-white shadow-[0_2px_8px_rgba(44,38,30,0.04),0_18px_36px_-6px_rgba(44,38,30,0.08)] p-5 sm:p-6 space-y-5">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h2 className="font-heading text-xl font-bold text-stone-900">Pague com PIX</h2>
+                <p className="text-xs text-stone-600 mt-0.5 font-medium">
+                  {order.expiresAt ? (
+                    <>
+                      Expira em{' '}
+                      <span className="font-mono font-bold text-stone-900 tabular-nums">
+                        {formatCountdown(remainingMs)}
+                      </span>
+                    </>
+                  ) : (
+                    'Aguardando confirmação bancária'
+                  )}
+                </p>
+              </div>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-800 shrink-0">
+                <span className="size-1.5 rounded-full bg-amber-500 animate-pulse" />
+                Pendente
+              </span>
+            </div>
+
             {order.pixQrBase64 ? (
-              <div className="rounded-2xl bg-white p-4 border border-border shadow-sm">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={`data:image/png;base64,${order.pixQrBase64}`}
-                  alt="QR Code PIX"
-                  className="size-52"
-                />
+              <div className="flex justify-center">
+                <div className="rounded-2xl bg-white p-3 border border-stone-200 shadow-sm inline-block">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`data:image/png;base64,${order.pixQrBase64}`}
+                    alt="QR Code PIX"
+                    className="w-44 h-44 sm:w-52 sm:h-52"
+                  />
+                </div>
               </div>
             ) : null}
 
             {order.pixCopyPaste ? (
-              <div className="w-full space-y-2">
-                <span className="text-xs text-muted-foreground uppercase tracking-wider block text-center font-medium">
-                  Chave Copia e Cola
+              <div className="space-y-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 block">
+                  Ou copie o código
                 </span>
-                <pre className="overflow-x-auto rounded-xl border border-border bg-secondary/50 p-3 font-mono text-xs leading-relaxed text-foreground break-all select-all">
+                <pre className="w-full overflow-x-auto rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 font-mono text-[11px] leading-relaxed text-stone-700 break-all select-all whitespace-pre-wrap">
                   {order.pixCopyPaste}
                 </pre>
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">Gerando cobrança PIX…</p>
+              <p className="text-sm text-stone-500 text-center">Gerando cobrança PIX…</p>
             )}
-          </CardContent>
-          <CardFooter className="flex flex-col sm:flex-row gap-3 pt-2 pb-6">
-            <Button
-              type="button"
-              className="wedding-button wedding-shimmer h-11 w-full rounded-full font-semibold shadow-sm"
-              onClick={() => void onCopyPix()}
-              disabled={!order.pixCopyPaste}
-            >
-              {copied ? (
-                <CheckIcon className="size-4 mr-2" />
-              ) : (
-                <CopyIcon className="size-4 mr-2" />
-              )}
-              {copied ? 'Código PIX Copiado!' : 'Copiar Código PIX'}
-            </Button>
-            {showFake ? (
+
+            <div className="flex flex-col gap-2.5">
               <Button
                 type="button"
-                variant="outline"
-                className="h-11 w-full rounded-full border-border bg-card text-xs font-medium hover:bg-muted"
-                onClick={() => void onConfirmFake()}
-                disabled={confirming}
+                className="h-12 w-full rounded-full text-sm font-semibold bg-stone-900 hover:bg-stone-800 text-stone-50 shadow-[0_1px_3px_rgba(0,0,0,0.1),0_12px_28px_-6px_rgba(44,38,30,0.15),inset_0_1px_0_rgba(255,255,255,0.15)] cursor-pointer disabled:opacity-50"
+                onClick={() => void onCopyPix()}
+                disabled={!order.pixCopyPaste}
               >
-                {confirming ? <Spinner className="size-4 mr-2" /> : null}
-                {confirming ? 'Simulando…' : 'Simular Pagamento (Ambiente de Teste)'}
+                {copied ? (
+                  <CheckIcon className="size-4 mr-2" />
+                ) : (
+                  <CopyIcon className="size-4 mr-2" />
+                )}
+                {copied ? 'Código copiado!' : 'Copiar código PIX'}
               </Button>
-            ) : null}
-          </CardFooter>
-        </Card>
-      ) : null}
+              {showFake ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-10 w-full rounded-full border-stone-300 bg-white text-xs font-medium text-stone-700 hover:bg-stone-50"
+                  onClick={() => void onConfirmFake()}
+                  disabled={confirming}
+                >
+                  {confirming ? <Spinner className="size-4 mr-2" /> : null}
+                  {confirming ? 'Simulando…' : 'Simular pagamento (teste)'}
+                </Button>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
 
-      {error ? (
-        <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
-          <AlertTitle>Erro</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      ) : null}
+        {error ? (
+          <Alert variant="destructive" className="rounded-2xl border-destructive/30 bg-destructive/10">
+            <AlertTitle>Erro</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        ) : null}
+
       </div>
     </div>
   );
