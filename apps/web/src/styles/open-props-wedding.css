@@ -27,9 +27,17 @@
   --ink-subtle: var(--stone-6, #a8a29e);
   
   --gold-primary: #b89047;
+  --gold-deep: #8c6b2d;
+  --gold-champagne: #f5d77f;
   --gold-light: #e5c158;
   --gold-glow: rgba(184, 144, 71, 0.25);
   --gold-surface: rgba(184, 144, 71, 0.08);
+  --gold-border: rgba(184, 144, 71, 0.35);
+
+  /* ── FLUID TYPOGRAPHY (Open Props clamp scale) ────────────────────────────── */
+  --font-hero-fluid: clamp(2.75rem, 5vw + 1rem, 5.25rem);
+  --font-h2-fluid: clamp(2rem, 3.5vw + 0.8rem, 3.75rem);
+  --font-body-fluid: clamp(1rem, 0.5vw + 0.875rem, 1.125rem);
 
   /* ── OPEN PROPS SPACING & SCALE ───────────────────────────────────────────── */
   --wedding-space-1: var(--size-1);   /* 4px */
@@ -46,15 +54,52 @@
   --wedding-ease-bounce: var(--ease-elastic-2);
   --wedding-ease-smooth: var(--ease-3);
   --wedding-ease-snap: var(--ease-spring-4);
+  --spring-snappy: cubic-bezier(0.175, 0.885, 0.32, 1.15);
+  --spring-gentle: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-atelier: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* ── OPEN PROPS SHADOWS (Fine Stationery elevation) ───────────────────────── */
   --wedding-shadow-card: var(--shadow-2);
   --wedding-shadow-raised: var(--shadow-4);
   --wedding-shadow-overlay: var(--shadow-6);
   --wedding-shadow-button: var(--shadow-2);
+  --shadow-stationery-sm: 0 1px 2px rgba(44, 38, 30, 0.04), 0 2px 4px rgba(44, 38, 30, 0.03);
+  --shadow-stationery-md: 0 2px 6px rgba(44, 38, 30, 0.04), 0 12px 24px -4px rgba(44, 38, 30, 0.07);
+  --shadow-stationery-lg: 0 4px 12px rgba(44, 38, 30, 0.05), 0 24px 48px -8px rgba(44, 38, 30, 0.10);
 
   /* ── FONT FAMILIES ────────────────────────────────────────────────────────── */
   --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
   --font-body: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+}
+
+/* ── GLOBAL EDITORIAL RULES (Rounds 11 & 12) ────────────────────────────────── */
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* ── FINE STATIONERY ELEVATION & CARDS (Round 06 & 21) ─────────────────────── */
+.card-stationery {
+  background-color: var(--surface-card);
+  border: 1px solid rgba(44, 38, 30, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), var(--shadow-stationery-md);
+}
+
+/* ── MONOCHROME TACTILE GRAIN OVERLAY (Round 10) ────────────────────────────── */
+.bg-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E");
+}
+
+/* ── PREFERS REDUCED MOTION (Round 40) ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

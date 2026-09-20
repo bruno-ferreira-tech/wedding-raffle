@@ -64,7 +64,7 @@ export default function LandingPage() {
   }, [estimatedNet]);
 
   return (
-    <div className="relative min-h-dvh w-full bg-[#faf8f5] text-[#1c1917] overflow-x-hidden font-sans">
+    <div className="relative min-h-dvh w-full bg-[#faf8f5] text-[#1c1917] overflow-x-hidden font-sans bg-grain">
       {/* HEADER */}
       <header className="sticky top-0 z-50 border-b border-stone-900/[0.06] bg-[#faf8f5]/92 backdrop-blur-md">
         <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
@@ -163,14 +163,14 @@ export default function LandingPage() {
           
           {/* Scroll affordance editorial */}
           <div className="mt-16 flex flex-col items-center gap-2">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-stone-400 font-medium">
-              Role para descobrir
-            </span>
             <motion.div
-              animate={{ y: [0, 6, 0] }}
+              animate={{ y: [0, 8, 0] }}
               transition={{ repeat: Infinity, duration: 2, ease: [0.25, 1, 0.5, 1] }}
-              className="w-px h-6 bg-gradient-to-b from-stone-400 to-transparent"
+              className="w-[1.5px] h-8 bg-gradient-to-b from-[#b89047] to-transparent"
             />
+            <span className="text-[11px] uppercase tracking-[0.2em] text-stone-500 font-medium">
+              Role para ver como a festa ganha vida
+            </span>
           </div>
         </div>
       </section>

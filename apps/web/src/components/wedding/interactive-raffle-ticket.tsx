@@ -18,7 +18,7 @@ export function InteractiveRaffleTicket({
   coupleNames = 'Ana & Rodrigo',
   onSimulateDraw,
 }: InteractiveRaffleTicketProps) {
-  const [serial] = useState('№ 0482');
+  const [serial] = useState('SÉRIE A • № 0482');
   const [isStamped, setIsStamped] = useState(false);
   const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number }>>([]);
   const ticketRef = useRef<HTMLDivElement>(null);
