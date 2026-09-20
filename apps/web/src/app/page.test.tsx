@@ -19,7 +19,7 @@ describe('LandingPage', () => {
     const { container } = render(<LandingPage />);
     const header = container.querySelector('header');
     expect(header).not.toBeNull();
-    const withinHeader = within(header!);
+    const withinHeader = within(header as HTMLElement);
     expect(withinHeader.getByText('Corta-Gravata')).toBeDefined();
     expect(withinHeader.getByText('Rifa do Casal')).toBeDefined();
     expect(withinHeader.getByText('Entrar')).toBeDefined();
@@ -30,7 +30,7 @@ describe('LandingPage', () => {
     const { container } = render(<LandingPage />);
     const hero = container.querySelector('#vinculo');
     expect(hero).not.toBeNull();
-    const withinHero = within(hero!);
+    const withinHero = within(hero as HTMLElement);
     const h1 = hero!.querySelector('h1');
     expect(h1?.textContent).toContain('O Corta-Gravata que');
     expect(h1?.textContent).toContain('arrecada mais');
@@ -168,6 +168,79 @@ describe('LandingPage', () => {
     expect(telaoSection?.textContent).toContain('Simular PIX no Telão');
     expect(telaoSection?.textContent).toContain(
       'Atualização instantânea via Server-Sent Events e roleta ao vivo na hora do brinde'
+    );
+  });
+
+  it('renders Grand Finale (Ato 5) with champagne gold badge, monumental headline, tactile CTAs and guarantees', () => {
+    const { container } = render(<LandingPage />);
+    const finaleSection = container.querySelector('#celebracao');
+    expect(finaleSection).not.toBeNull();
+    expect(finaleSection?.className).toContain('stage-act-finale');
+
+    // Badge "Ato 5 • A Celebração" em marfim/ouro champanhe
+    expect(finaleSection?.textContent).toContain('Ato 5 • A Celebração');
+    const badge = finaleSection?.querySelector('.border-amber-500\\/25');
+    expect(badge).not.toBeNull();
+    expect(badge?.className).toContain('text-[#9a7837]');
+
+    // Manchete monumental
+    expect(finaleSection?.textContent).toContain('Prontos para brindar com');
+    expect(finaleSection?.textContent).toContain('leveza e requinte?');
+
+    // Texto de apoio caloroso
+    expect(finaleSection?.textContent).toContain(
+      'Crie a rifa do seu casamento gratuitamente agora mesmo. Leva menos de 3 minutos e você pode testar o link com seus padrinhos hoje.'
+    );
+
+    // CTA Primário com borda ouro 18K e specular highlight
+    const primaryBtn = finaleSection?.querySelector('a[href="/cadastro"]');
+    expect(primaryBtn).not.toBeNull();
+    expect(primaryBtn?.textContent).toContain('Criar Nossa Rifa Grátis');
+    const primaryBtnWrapper = primaryBtn?.closest('.wedding-button');
+    expect(primaryBtnWrapper?.className).toContain('shadow-[0_4px_16px_rgba(212,175,55,0.3),inset_0_1px_0_rgba(255,255,255,0.4)]');
+    expect(primaryBtnWrapper?.className).toContain('border-amber-400/30');
+
+    // CTA Secundário com borda hairline e sombra suave
+    const secondaryBtn = finaleSection?.querySelector('a[href="/e/bruno-moreira"]');
+    expect(secondaryBtn).not.toBeNull();
+    expect(secondaryBtn?.textContent).toContain('Ver Demonstração');
+
+    // Três garantias com checks ópticos
+    expect(finaleSection?.textContent).toContain('Sem mensalidade fixa');
+    expect(finaleSection?.textContent).toContain('Saque PIX direto na conta');
+    expect(finaleSection?.textContent).toContain('Pronto em 3 minutos');
+  });
+
+  it('renders Fita Marquee Acetinada with hairline borders, backdrop blur and micro-tracked messages', () => {
+    const { container } = render(<LandingPage />);
+    const marqueeRibbon = container.querySelector('.shadow-\\[inset_0_1px_0_rgba\\(255\\,255\\,255\\,0\\.7\\)\\]');
+    expect(marqueeRibbon).not.toBeNull();
+    expect(marqueeRibbon?.className).toContain('border-y');
+    expect(marqueeRibbon?.className).toContain('border-stone-900/[0.08]');
+    expect(marqueeRibbon?.className).toContain('dark:border-white/[0.08]');
+    expect(marqueeRibbon?.className).toContain('bg-white/85');
+    expect(marqueeRibbon?.className).toContain('dark:bg-stone-900/85');
+    expect(marqueeRibbon?.className).toContain('backdrop-blur-sm');
+
+    // Mensagens em caixa alta com micro-tracking elegante
+    const marqueeSpans = marqueeRibbon?.querySelectorAll('span.tracking-\\[0\\.12em\\]');
+    expect(marqueeSpans && marqueeSpans.length).toBeGreaterThanOrEqual(5);
+    expect(marqueeRibbon?.textContent).toContain('Celebre com elegância');
+    expect(marqueeRibbon?.textContent).toContain('Baixa Instantânea via PIX');
+    expect(marqueeRibbon?.textContent).toContain('Diversão garantida no telão da pista');
+    expect(marqueeRibbon?.textContent).toContain('Ferramenta ágil para os padrinhos');
+    expect(marqueeRibbon?.textContent).toContain('Dinheiro direto para a Lua de Mel');
+  });
+
+  it('renders editorial footer with copyright and subtle hairline border', () => {
+    const { container } = render(<LandingPage />);
+    const footer = container.querySelector('footer');
+    expect(footer).not.toBeNull();
+    expect(footer?.className).toContain('border-t');
+    expect(footer?.className).toContain('border-stone-900/[0.06]');
+    expect(footer?.className).toContain('dark:border-white/[0.06]');
+    expect(footer?.textContent).toContain(
+      `© ${new Date().getFullYear()} Corta-Gravata • Onde a tradição encontra o requinte.`
     );
   });
 });

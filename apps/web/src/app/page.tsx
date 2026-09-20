@@ -526,59 +526,6 @@ export default function LandingPage() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          ATO 5: A CELEBRAÇÃO / GRAND FINALE (taste-skill + emil-kowalski)
-          ───────────────────────────────────────────────────────────── */}
-      <section
-        id="celebracao"
-        className="stage-act-finale relative min-h-[85vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-24 text-center border-b border-stone-900/[0.06] dark:border-white/[0.06] bg-[#f7f4ed] dark:bg-[#161311]"
-      >
-        <div className="max-w-3xl mx-auto space-y-8">
-          <Badge variant="outline" className="rounded-full border-primary/30 bg-white dark:bg-stone-900 px-4 py-1.5 text-xs font-semibold text-primary shadow-xs">
-            Ato 5 • A Celebração
-          </Badge>
-
-          <h2 className="font-heading text-4xl sm:text-6xl font-bold tracking-tight text-foreground leading-[1.12]">
-            Prontos para brindar com <span className="text-primary italic">leveza e requinte?</span>
-          </h2>
-
-          <p className="text-base sm:text-lg text-stone-600 dark:text-stone-300 max-w-xl mx-auto leading-relaxed">
-            Crie a rifa do seu casamento gratuitamente agora mesmo. Leva menos de 3 minutos e você pode testar o link com seus padrinhos hoje.
-          </p>
-
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }} transition={springButton} className="w-full sm:w-auto">
-              <Button asChild size="lg" className="wedding-button wedding-shimmer h-14 px-10 rounded-full text-lg font-semibold shadow-xl cursor-pointer w-full border border-amber-400/30 shadow-[0_4px_16px_rgba(212,175,55,0.3),inset_0_1px_0_rgba(255,255,255,0.4)]">
-                <Link href="/cadastro" className="inline-flex items-center justify-center">
-                  Criar Nossa Rifa Grátis
-                  <ArrowRightIcon className="size-5 ml-2 translate-x-0.5" />
-                </Link>
-              </Button>
-            </motion.div>
-            
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }} transition={springButton} className="w-full sm:w-auto">
-              <Button asChild variant="outline" size="lg" className="h-14 px-8 rounded-full border-stone-900/[0.08] dark:border-white/[0.12] bg-white dark:bg-stone-900 text-foreground text-base hover:bg-stone-100 dark:hover:bg-stone-800 font-medium w-full shadow-[0_1px_3px_rgba(44,38,30,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] cursor-pointer">
-                <Link href="/e/bruno-moreira" target="_blank">
-                  Ver Demonstração
-                </Link>
-              </Button>
-            </motion.div>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-stone-500 dark:text-stone-400 font-medium pt-4">
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2Icon className="size-4 text-primary" /> Sem mensalidade fixa
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2Icon className="size-4 text-primary" /> Saque PIX direto na conta
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2Icon className="size-4 text-primary" /> Pronto em 3 minutos
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* ─────────────────────────────────────────────────────────────
           VITRINE EDITORIAL ASSIMÉTRICA DOS RECURSOS (taste-skill)
           ───────────────────────────────────────────────────────────── */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 border-b border-stone-900/[0.06] dark:border-white/[0.06] bg-[#fbf9f6] dark:bg-[#141210]" ref={bentoContainerRef}>
@@ -746,6 +693,60 @@ export default function LandingPage() {
                 <span className="translate-x-0.5">→</span>
               </div>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────────
+          ATO 5: A CELEBRAÇÃO / GRAND FINALE (taste-skill + emil-kowalski)
+          ───────────────────────────────────────────────────────────── */}
+      <section
+        id="celebracao"
+        className="stage-act-finale relative min-h-[85vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-24 text-center border-b border-stone-900/[0.06] dark:border-white/[0.06] bg-[#f7f4ed] dark:bg-[#161311]"
+      >
+        <div className="max-w-3xl mx-auto space-y-8">
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/25 bg-amber-500/10 dark:bg-amber-500/15 px-4 py-1.5 text-xs font-semibold text-[#9a7837] dark:text-[#f5d77f] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+            <SparklesIcon className="size-3.5 text-amber-500" />
+            <span className="leading-none">Ato 5 • A Celebração</span>
+          </div>
+
+          <h2 className="font-heading text-4xl sm:text-6xl font-bold tracking-tight text-foreground leading-[1.12]">
+            Prontos para brindar com <span className="text-primary italic">leveza e requinte?</span>
+          </h2>
+
+          <p className="text-base sm:text-lg text-stone-600 dark:text-stone-300 max-w-xl mx-auto leading-relaxed">
+            Crie a rifa do seu casamento gratuitamente agora mesmo. Leva menos de 3 minutos e você pode testar o link com seus padrinhos hoje.
+          </p>
+
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }} transition={springButton} className="w-full sm:w-auto">
+              <Button asChild size="lg" className="wedding-button wedding-shimmer h-14 px-10 rounded-full text-lg font-semibold shadow-xl cursor-pointer w-full border border-amber-400/30 shadow-[0_4px_16px_rgba(212,175,55,0.3),inset_0_1px_0_rgba(255,255,255,0.4)]">
+                <Link href="/cadastro" className="inline-flex items-center justify-center">
+                  Criar Nossa Rifa Grátis
+                  <ArrowRightIcon className="size-5 ml-2 translate-x-0.5" />
+                </Link>
+              </Button>
+            </motion.div>
+            
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }} transition={springButton} className="w-full sm:w-auto">
+              <Button asChild variant="outline" size="lg" className="h-14 px-8 rounded-full border-stone-900/[0.08] dark:border-white/[0.12] bg-white dark:bg-stone-900 text-foreground text-base hover:bg-stone-100 dark:hover:bg-stone-800 font-medium w-full shadow-[0_1px_3px_rgba(44,38,30,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] cursor-pointer">
+                <Link href="/e/bruno-moreira" target="_blank">
+                  Ver Demonstração
+                </Link>
+              </Button>
+            </motion.div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-stone-500 dark:text-stone-400 font-medium pt-4">
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2Icon className="size-4 text-primary" /> Sem mensalidade fixa
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2Icon className="size-4 text-primary" /> Saque PIX direto na conta
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2Icon className="size-4 text-primary" /> Pronto em 3 minutos
+            </span>
           </div>
         </div>
       </section>
