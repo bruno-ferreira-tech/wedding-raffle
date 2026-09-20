@@ -31,25 +31,35 @@ export function NumberTicker({
       return;
     }
 
+    let rafId: number;
+    let isMounted = true;
     const startTime = performance.now();
 
     const animate = (currentTime: number) => {
+      if (!isMounted || !spanRef.current) return;
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
       // Easing suave (easeOutExpo)
       const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
       const current = start + (end - start) * ease;
 
-      el.textContent = formatFn(current);
+      if (spanRef.current) {
+        spanRef.current.textContent = formatFn(current);
+      }
 
       if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        el.textContent = formatFn(end);
+        rafId = requestAnimationFrame(animate);
+      } else if (spanRef.current) {
+        spanRef.current.textContent = formatFn(end);
       }
     };
 
-    requestAnimationFrame(animate);
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      isMounted = false;
+      cancelAnimationFrame(rafId);
+    };
   }, [value, duration, formatFn]);
 
   return (
