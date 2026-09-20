@@ -179,18 +179,20 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 border-b border-stone-900/[0.06] dark:border-white/[0.08] bg-[#faf8f5]/90 dark:bg-[#12100e]/90 backdrop-blur-md">
         <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center gap-3">
-            <Link href="/" className="font-heading text-2xl font-bold tracking-tight text-foreground transition-opacity hover:opacity-85">
+            <Link href="/" className="font-heading text-2xl font-bold tracking-tight text-[#1c1917] dark:text-[#fbf9f6] transition-opacity hover:opacity-85">
               Corta-Gravata
             </Link>
-            <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-amber-500/10 text-[#9a7837] dark:text-[#f5d77f] border border-amber-500/20">
+            <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-amber-500/10 text-[#9a7837] dark:text-[#f5d77f] border border-amber-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
               Rifa do Casal
             </span>
           </div>
 
           <nav className="flex items-center gap-3 sm:gap-4">
-            <Button asChild variant="ghost" size="sm" className="rounded-full font-medium text-sm text-stone-600 dark:text-stone-300 hover:text-foreground hover:bg-stone-900/[0.04]">
-              <Link href="/login">Entrar</Link>
-            </Button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }} transition={springButton}>
+              <Button asChild variant="ghost" size="sm" className="rounded-full font-medium text-sm text-stone-600 dark:text-stone-300 hover:text-[#1c1917] dark:hover:text-white hover:bg-stone-900/[0.04]">
+                <Link href="/login">Entrar</Link>
+              </Button>
+            </motion.div>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }} transition={springButton}>
               <Button asChild size="sm" className="wedding-button rounded-full text-sm font-semibold shadow-[0_2px_8px_rgba(212,175,55,0.25),inset_0_1px_0_rgba(255,255,255,0.4)] border border-amber-400/30">
                 <Link href="/cadastro" className="inline-flex items-center">
@@ -255,7 +257,7 @@ export default function LandingPage() {
           </motion.div>
 
           {/* Título Monumental com Contraste Editorial */}
-          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground leading-[1.14]">
+          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#1c1917] dark:text-[#fbf9f6] leading-[1.14]">
             <SplitText text="O Corta-Gravata que" />{' '}
             <span className="text-primary italic">arrecada mais</span>{' '}
             <SplitText text="e alegra a festa." />

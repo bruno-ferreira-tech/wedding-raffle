@@ -1,9 +1,9 @@
-import { render } from '@testing-library/react';
+import { render, within } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import LandingPage from './page';
 
 describe('LandingPage', () => {
-  it('renders the 3D canvas container in the pedestal stage', () => {
+  it('renders the 3D canvas container in the hero pedestal', () => {
     const { container } = render(<LandingPage />);
     const canvasContainer = container.querySelector('.canvas-container');
     expect(canvasContainer).not.toBeNull();
@@ -13,6 +13,33 @@ describe('LandingPage', () => {
     const { container } = render(<LandingPage />);
     const trigger = container.querySelector('.gsap-trigger');
     expect(trigger).not.toBeNull();
+  });
+
+  it('renders the editorial header with brand, badge and action buttons', () => {
+    const { container } = render(<LandingPage />);
+    const header = container.querySelector('header');
+    expect(header).not.toBeNull();
+    const withinHeader = within(header!);
+    expect(withinHeader.getByText('Corta-Gravata')).toBeDefined();
+    expect(withinHeader.getByText('Rifa do Casal')).toBeDefined();
+    expect(withinHeader.getByText('Entrar')).toBeDefined();
+    expect(withinHeader.getByText(/Criar Nossa Rifa/i)).toBeDefined();
+  });
+
+  it('renders the hero with headline, guarantees and 3D pedestal', () => {
+    const { container } = render(<LandingPage />);
+    const hero = container.querySelector('#vinculo');
+    expect(hero).not.toBeNull();
+    const withinHero = within(hero!);
+    const h1 = hero!.querySelector('h1');
+    expect(h1?.textContent).toContain('O Corta-Gravata que');
+    expect(h1?.textContent).toContain('arrecada mais');
+    expect(h1?.textContent).toContain('e alegra a festa.');
+    expect(withinHero.getByText('Sem mensalidade fixa')).toBeDefined();
+    expect(withinHero.getByText('Saque PIX direto na conta')).toBeDefined();
+    expect(withinHero.getByText('Pronto em 3 minutos')).toBeDefined();
+    const canvasContainer = hero!.querySelector('.canvas-container');
+    expect(canvasContainer).not.toBeNull();
   });
 
   it('simulator card has tactile motion classes and dashed border', () => {
