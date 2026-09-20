@@ -421,7 +421,7 @@ export default function LandingPage() {
             {/* Barra de Status do Telão */}
             <div className="px-4 py-2 mb-2 flex items-center justify-between text-[10px] uppercase tracking-wider text-amber-300/70 border-b border-white/[0.06]">
               <div className="flex items-center gap-2">
-                <span className="size-1.5 rounded-full bg-emerald-400" />
+                <span className="size-1.5 rounded-full bg-amber-400/90 shadow-[0_0_6px_rgba(251,191,36,0.5)]" />
                 <span>Transmissão ao Vivo · Salão Nobre</span>
               </div>
               <span className="font-mono text-stone-400">Taxa de Atualização: 60fps</span>

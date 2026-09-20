@@ -132,7 +132,7 @@ export function InteractiveRaffleTicket({
           {/* Live Status indicator */}
           <div className="flex items-center justify-between text-xs text-muted-foreground pt-1">
             <span className="flex items-center gap-1.5">
-              <span className={`size-2 rounded-full ${isStamped ? 'bg-emerald-500 ring-4 ring-emerald-500/20' : 'bg-emerald-500 animate-pulse'}`} />
+              <span className={`size-2 rounded-full ${isStamped ? 'bg-[#b89047] ring-4 ring-[#b89047]/20' : 'bg-[#b89047]/80 ring-2 ring-[#b89047]/15'}`} />
               {isStamped ? 'Confirmado no Telão!' : 'Válido para o Sorteio no Telão'}
             </span>
             <span className="wedding-numeral font-medium text-foreground">
@@ -148,24 +148,24 @@ export function InteractiveRaffleTicket({
             <span>Autenticado via PIX</span>
           </div>
           <span className="inline-flex items-center gap-1 text-[#b89047] font-semibold text-xs group-hover:underline">
-            <SparklesIcon className={`size-3.5 ${isStamped ? 'text-emerald-600' : 'text-amber-500'}`} />
+            <SparklesIcon className="size-3.5 text-[#b89047]" />
             {isStamped ? 'Validado com sucesso!' : 'Toque para testar'}
           </span>
         </div>
 
-        {/* Authentic Red/Gold Ink Stamp Overlay when clicked */}
+        {/* Authentic Gold Leaf / Atelier Ink Stamp Overlay when clicked */}
         <AnimatePresence>
           {isStamped && (
             <motion.div
               initial={{ scale: 2.4, opacity: 0, rotate: -25 }}
-              animate={{ scale: 1, opacity: 0.95, rotate: -8 }}
+              animate={{ scale: 1, opacity: 0.95, rotate: -6 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ type: 'spring', stiffness: 450, damping: 18 }}
               className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
             >
-              <div className="border-4 border-emerald-700/85 text-emerald-800 bg-emerald-50/85 px-4 py-1.5 rounded-xl uppercase tracking-widest font-heading font-black text-sm sm:text-base shadow-lg rotate-[-8deg] flex items-center gap-2 backdrop-blur-xs">
-                <CheckCircle2Icon className="size-5 text-emerald-700" />
-                <span>CONFIRMADO • PAGO</span>
+              <div className="border-2 border-[#b89047] text-[#7a5a1e] bg-[#fdfbf7]/95 px-4 py-2 rounded-lg uppercase tracking-widest font-heading font-bold text-xs sm:text-sm shadow-md rotate-[-6deg] flex items-center gap-2 backdrop-blur-xs border-dashed">
+                <CheckCircle2Icon className="size-4 text-[#b89047]" />
+                <span>AUTENTICADO • TELÃO AO VIVO</span>
               </div>
             </motion.div>
           )}
@@ -186,9 +186,9 @@ export function InteractiveRaffleTicket({
       {/* Action feedback bar */}
       <div className="flex items-center justify-between text-xs px-1">
         {isStamped ? (
-          <span className="text-emerald-700 font-medium flex items-center gap-1.5">
-            <CheckCircle2Icon className="size-3.5 text-emerald-600" />
-            Simulação ativa: Bilhete validado e cotas somadas!
+          <span className="text-[#8a6828] font-medium flex items-center gap-1.5">
+            <CheckCircle2Icon className="size-3.5 text-[#b89047]" />
+            Simulação ativa: Bilhete autenticado e cotas somadas!
           </span>
         ) : (
           <span className="text-muted-foreground">

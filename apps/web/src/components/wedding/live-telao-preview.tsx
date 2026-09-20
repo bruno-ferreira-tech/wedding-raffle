@@ -65,9 +65,9 @@ export function LiveTelaoPreview() {
           </div>
         </div>
 
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 px-3 py-0.5 text-[11px] font-medium text-emerald-400">
-          <span className="size-1.5 rounded-full bg-emerald-400 animate-ping" />
-          Tempo Real
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#b89047]/15 border border-[#b89047]/30 px-3 py-0.5 text-[11px] font-medium text-[#f5d77f]">
+          <span className="size-1.5 rounded-full bg-[#d4af37]" />
+          Transmissão Contínua
         </span>
       </div>
 
@@ -131,7 +131,7 @@ export function LiveTelaoPreview() {
           type="button"
           onClick={handleSimulatePurchase}
           disabled={isAnimating}
-          className="inline-flex items-center gap-1.5 rounded-full bg-[#b89047] hover:bg-[#c9a24d] active:scale-95 text-stone-950 px-3.5 py-1.5 text-xs font-semibold shadow-md transition-all cursor-pointer"
+          className="inline-flex items-center gap-1.5 rounded-full bg-[#b89047] hover:bg-[#c9a24d] active:scale-95 text-stone-950 px-3.5 py-1.5 text-xs font-semibold shadow-md transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#171513]"
         >
           <SparklesIcon className="size-3.5" />
           Simular PIX no Telão
