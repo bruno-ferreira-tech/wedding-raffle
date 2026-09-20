@@ -419,6 +419,7 @@ export default function LandingPage() {
                       <span className="wedding-numeral font-bold text-primary tabular-nums">{guests} pessoas</span>
                     </div>
                     <input
+                      aria-label="Convidados esperados"
                       type="range"
                       min="50"
                       max="500"
@@ -436,6 +437,7 @@ export default function LandingPage() {
                       <span className="wedding-numeral font-bold text-primary tabular-nums">R$ {ticketPrice},00</span>
                     </div>
                     <input
+                      aria-label="Valor da cota"
                       type="range"
                       min="10"
                       max="100"
@@ -453,6 +455,7 @@ export default function LandingPage() {
                       <span className="wedding-numeral font-bold text-primary tabular-nums">{ticketsPerGuest} bilhetes</span>
                     </div>
                     <input
+                      aria-label="Cotas médias por convidado"
                       type="range"
                       min="1"
                       max="5"

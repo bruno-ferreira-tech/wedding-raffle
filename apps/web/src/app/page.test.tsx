@@ -1,4 +1,4 @@
-import { render, within } from '@testing-library/react';
+import { render, within, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import LandingPage from './page';
 
@@ -42,11 +42,61 @@ describe('LandingPage', () => {
     expect(canvasContainer).not.toBeNull();
   });
 
-  it('simulator card has tactile motion classes and dashed border', () => {
+  it('renders honeymoon calculator as physical receipt card with dashed borders, multi-stop shadow and tabular numerals', () => {
     const { container } = render(<LandingPage />);
-    const simulator = container.querySelector('.receipt-card');
-    expect(simulator).not.toBeNull();
-    expect(simulator?.className).toContain('border-dashed');
+    const receiptCard = container.querySelector('.receipt-card');
+    expect(receiptCard).not.toBeNull();
+    expect(receiptCard?.className).toContain('border-dashed');
+    expect(receiptCard?.className).toContain('border-2');
+    expect(receiptCard?.className).toContain('border-stone-300');
+    expect(receiptCard?.className).toContain('dark:border-stone-700');
+    expect(receiptCard?.className).toContain('rounded-2xl');
+    expect(receiptCard?.className).toContain(
+      'shadow-[0_2px_8px_rgba(44,38,30,0.04),0_12px_28px_-4px_rgba(44,38,30,0.06),inset_0_1px_0_rgba(255,255,255,0.9)]'
+    );
+
+    // Check sliders
+    const guestsInput = container.querySelector('input[aria-label="Convidados esperados"]') as HTMLInputElement;
+    expect(guestsInput).not.toBeNull();
+    expect(guestsInput.min).toBe('50');
+    expect(guestsInput.max).toBe('500');
+    expect(guestsInput.step).toBe('10');
+
+    const ticketPriceInput = container.querySelector('input[aria-label="Valor da cota"]') as HTMLInputElement;
+    expect(ticketPriceInput).not.toBeNull();
+    expect(ticketPriceInput.min).toBe('10');
+    expect(ticketPriceInput.max).toBe('100');
+    expect(ticketPriceInput.step).toBe('5');
+
+    const ticketsPerGuestInput = container.querySelector('input[aria-label="Cotas médias por convidado"]') as HTMLInputElement;
+    expect(ticketsPerGuestInput).not.toBeNull();
+    expect(ticketsPerGuestInput.min).toBe('1');
+    expect(ticketsPerGuestInput.max).toBe('5');
+    expect(ticketsPerGuestInput.step).toBe('1');
+
+    // Check all numbers in receipt card have tabular-nums and wedding-numeral
+    const numerals = receiptCard!.querySelectorAll('.wedding-numeral');
+    expect(numerals.length).toBeGreaterThanOrEqual(4);
+    numerals.forEach((el) => {
+      expect(el.className).toContain('tabular-nums');
+      expect(el.className).toContain('wedding-numeral');
+    });
+  });
+
+  it('updates honeymoon calculator calculations dynamically when changing sliders', () => {
+    const { container } = render(<LandingPage />);
+    const guestsInput = container.querySelector('input[aria-label="Convidados esperados"]') as HTMLInputElement;
+    const ticketPriceInput = container.querySelector('input[aria-label="Valor da cota"]') as HTMLInputElement;
+    const ticketsPerGuestInput = container.querySelector('input[aria-label="Cotas médias por convidado"]') as HTMLInputElement;
+
+    fireEvent.change(guestsInput, { target: { value: '200' } });
+    fireEvent.change(ticketPriceInput, { target: { value: '50' } });
+    fireEvent.change(ticketsPerGuestInput, { target: { value: '3' } });
+
+    expect(container.textContent).toContain('200 pessoas');
+    expect(container.textContent).toContain('R$ 50,00');
+    expect(container.textContent).toContain('3 bilhetes');
+    expect(container.textContent).toContain('Arrecadação bruta (600 cotas)');
   });
 
   it('renders the pinned stage container and act indicator', () => {
