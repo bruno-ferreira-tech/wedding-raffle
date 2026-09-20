@@ -90,9 +90,9 @@ export function InteractiveRaffleTicket({
             : 'border-[#dcd3c4] bg-[#fdfbf7] shadow-[0_4px_16px_-2px_rgba(44,38,30,0.08),0_1px_3px_rgba(44,38,30,0.04)] hover:border-[#b89047]/60'
         }`}
       >
-        {/* Decorative notch cutouts on both ends to simulate physical paper stub */}
-        <div className="absolute -left-3 top-1/2 -mt-3.5 size-7 rounded-full bg-background border border-[#dcd3c4] shadow-inner" />
-        <div className="absolute -right-3 top-1/2 -mt-3.5 size-7 rounded-full bg-background border border-[#dcd3c4] shadow-inner" />
+        {/* Decorative notch cutouts on both ends to simulate physical paper stub with debossed shadow */}
+        <div className="absolute -left-3.5 top-1/2 -mt-3.5 size-7 rounded-full bg-background border border-[#dcd3c4] shadow-[inset_0_2px_4px_rgba(44,38,30,0.12),inset_0_-1px_1px_rgba(255,255,255,0.8)]" />
+        <div className="absolute -right-3.5 top-1/2 -mt-3.5 size-7 rounded-full bg-background border border-[#dcd3c4] shadow-[inset_0_2px_4px_rgba(44,38,30,0.12),inset_0_-1px_1px_rgba(255,255,255,0.8)]" />
 
         {/* Ticket Header */}
         <div className="flex items-center justify-between border-b border-dashed border-[#e3dacd] pb-3.5">

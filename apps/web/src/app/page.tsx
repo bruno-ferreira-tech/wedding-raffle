@@ -78,11 +78,11 @@ export default function LandingPage() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-stone-600">
-            <a href="#como-funciona" className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Como Funciona</a>
-            <a href="#padrinhos" className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Modo Padrinhos</a>
-            <a href="#telao" className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Telão ao Vivo</a>
-            <a href="#calculadora" className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Simulador</a>
-            <a href="#duvidas" className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Dúvidas</a>
+            <a href="#como-funciona" className="nav-link-editorial hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Como Funciona</a>
+            <a href="#padrinhos" className="nav-link-editorial hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Modo Padrinhos</a>
+            <a href="#telao" className="nav-link-editorial hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Telão ao Vivo</a>
+            <a href="#calculadora" className="nav-link-editorial hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Simulador</a>
+            <a href="#duvidas" className="nav-link-editorial hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f5]">Dúvidas</a>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -536,7 +536,7 @@ export default function LandingPage() {
                   <span>Taxa de serviço e PIX (4.9%)</span>
                   <span className="wedding-numeral font-medium text-stone-500 tabular-nums">- {formatBRL(estimatedFee)}</span>
                 </div>
-                <div className="pt-4 border-t border-stone-200/80">
+                <div className="pt-4 border-t border-stone-200/80 space-y-2.5">
                   <div className="p-4 rounded-2xl bg-amber-500/[0.06] border border-amber-500/20 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
                     <div className="text-xs uppercase tracking-wider text-stone-600 font-semibold">
                       Líquido para a Lua de Mel
@@ -544,6 +544,16 @@ export default function LandingPage() {
                     <div key={tickerKey} className="font-heading font-bold text-3xl sm:text-4xl text-primary wedding-numeral tracking-tight tabular-nums sm:text-right">
                       <NumberTicker value={estimatedNet} formatFn={(n) => formatBRL(Math.round(n))} />
                     </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[11px] text-[#8c6b2d] font-medium px-1">
+                    <span className="text-primary font-serif">✦</span>
+                    <span>
+                      {estimatedNet >= 2000000
+                        ? 'Meta da Lua de Mel: Viagem internacional completa para o casal!'
+                        : estimatedNet >= 1000000
+                        ? 'Meta da Lua de Mel: Passagens aéreas e hospedagem dos sonhos cobertas!'
+                        : 'Meta da Lua de Mel: Jantares românticos e passeios inesquecíveis!'}
+                    </span>
                   </div>
                 </div>
               </div>
