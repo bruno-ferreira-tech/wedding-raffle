@@ -11,6 +11,7 @@ import {
   CalculatorIcon,
   CoinsIcon,
   TvIcon,
+  SmartphoneIcon,
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
@@ -182,7 +183,7 @@ export default function LandingPage() {
 
       {/* Floating Act Navigation Indicator (Pinned Stage Navigator) */}
       <div className="pinned-stage sticky top-20 z-40 w-full flex justify-center px-4 py-2 pointer-events-none">
-        <div className="act-indicator inline-flex items-center gap-1 sm:gap-2 p-1.5 rounded-full bg-card/90 backdrop-blur-md border border-border shadow-md pointer-events-auto overflow-x-auto max-w-full">
+        <div className="act-indicator inline-flex items-center gap-1 sm:gap-1.5 p-1.5 rounded-full bg-card/90 backdrop-blur-md border border-stone-900/[0.08] shadow-[0_2px_12px_rgba(44,38,30,0.06),inset_0_1px_0_rgba(255,255,255,0.85)] pointer-events-auto overflow-x-auto max-w-full">
           {ACTS.map((act, index) => {
             const isActive = activeAct === index;
             return (
@@ -191,13 +192,20 @@ export default function LandingPage() {
                 type="button"
                 aria-current={isActive ? 'step' : undefined}
                 onClick={() => scrollToSection(act.id, index)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-300 select-none cursor-pointer whitespace-nowrap tabular-nums ${
+                className={`relative px-3.5 py-1.5 text-xs font-medium rounded-full transition-colors duration-200 select-none cursor-pointer whitespace-nowrap tabular-nums ${
                   isActive
-                    ? 'bg-primary text-primary-foreground shadow-xs font-semibold'
+                    ? 'text-primary-foreground font-semibold'
                     : 'text-muted-foreground hover:text-foreground hover:bg-black/5'
                 }`}
               >
-                {act.label}
+                {isActive && (
+                  <motion.div
+                    layoutId="active-act-pill"
+                    className="absolute inset-0 rounded-full bg-primary shadow-xs"
+                    transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+                  />
+                )}
+                <span className="relative z-10">{act.label}</span>
               </button>
             );
           })}
@@ -231,29 +239,43 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
-            <Button
-              asChild
-              size="lg"
-              className="wedding-button wedding-shimmer h-12 px-8 rounded-full text-sm sm:text-base font-semibold w-full sm:w-auto shadow-md cursor-pointer"
-              onMouseEnter={() => {
-                if (ctaRef.current) animatePulse(ctaRef.current);
-              }}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              className="w-full sm:w-auto"
             >
-              <Link ref={ctaRef} href="/cadastro">
-                Criar Rifa dos Noivos Grátis
-                <ArrowRightIcon className="size-4 ml-2" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="h-12 px-7 rounded-full border-border bg-card/80 text-foreground text-sm sm:text-base hover:bg-muted font-medium w-full sm:w-auto shadow-xs backdrop-blur-xs cursor-pointer"
+              <Button
+                asChild
+                size="lg"
+                className="wedding-button wedding-shimmer h-12 px-8 rounded-full text-sm sm:text-base font-semibold w-full shadow-md cursor-pointer border border-amber-400/30 shadow-[0_2px_10px_rgba(212,175,55,0.25),inset_0_1px_0_rgba(255,255,255,0.4)]"
+                onMouseEnter={() => {
+                  if (ctaRef.current) animatePulse(ctaRef.current);
+                }}
+              >
+                <Link ref={ctaRef} href="/cadastro" className="inline-flex items-center justify-center">
+                  Criar Rifa dos Noivos Grátis
+                  <ArrowRightIcon className="size-4 ml-2 translate-x-0.5" />
+                </Link>
+              </Button>
+            </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              className="w-full sm:w-auto"
             >
-              <Link href="/e/bruno-moreira" target="_blank">
-                Ver Exemplo ao Vivo
-              </Link>
-            </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="h-12 px-7 rounded-full border-stone-900/[0.08] bg-card/90 text-foreground text-sm sm:text-base hover:bg-muted font-medium w-full shadow-[0_1px_3px_rgba(44,38,30,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-xs cursor-pointer"
+              >
+                <Link href="/e/bruno-moreira" target="_blank">
+                  Ver Exemplo ao Vivo
+                </Link>
+              </Button>
+            </motion.div>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-5 text-xs text-muted-foreground font-medium pt-1">
@@ -276,15 +298,18 @@ export default function LandingPage() {
 
         {/* Clear, animated scroll indicator to explore Ato 2 */}
         <div className="pt-4 pb-2">
-          <button
+          <motion.button
             type="button"
+            whileHover={{ y: 2, scale: 1.02 }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             onClick={() => scrollToSection('bilhete', 1)}
             aria-label="Descer para o Ato 2: O Bilhete"
-            className="group inline-flex items-center gap-2 px-5 py-2 rounded-full border border-primary/30 bg-card hover:bg-primary/10 shadow-sm transition-all text-xs font-semibold text-primary cursor-pointer"
+            className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/30 bg-card hover:bg-primary/10 shadow-[0_2px_8px_rgba(44,38,30,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] transition-colors text-xs font-semibold text-primary cursor-pointer"
           >
             <span>Desça para ver o Ato 2: O Bilhete do Convidado</span>
-            <span className="text-base animate-bounce">↓</span>
-          </button>
+            <span className="text-base inline-block transition-transform duration-300 group-hover:translate-y-0.5">↓</span>
+          </motion.button>
         </div>
       </section>
 
@@ -344,8 +369,9 @@ export default function LandingPage() {
           {/* Live Simulator Card */}
           <div className="w-full max-w-lg mx-auto pt-4 text-left">
             <motion.div
-              className="receipt-card border-dashed border-2 wedding-card p-6 sm:p-8 flex flex-col justify-between bg-card shadow-md"
-              whileHover={{ scale: 0.995, y: -2 }}
+              className="receipt-card border-dashed border-2 border-stone-300 dark:border-stone-700 wedding-card p-6 sm:p-8 flex flex-col justify-between bg-card shadow-[0_2px_8px_rgba(44,38,30,0.04),0_12px_28px_-4px_rgba(44,38,30,0.06),inset_0_1px_0_rgba(255,255,255,0.9)] rounded-2xl"
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.99 }}
               transition={{ type: 'spring', stiffness: 350, damping: 25 }}
             >
               <div className="space-y-5">
@@ -436,12 +462,12 @@ export default function LandingPage() {
       {/* ACT 4: O TELÃO (Velvet Night Projection Experience) */}
       <section
         id="telao"
-        className="stage-act-telao relative min-h-[85vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20 text-center border-b border-border/50 bg-[#12100e] text-[#fbf9f6]"
+        className="stage-act-telao relative min-h-[85vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20 text-center border-b border-border/50 bg-[#161311] text-[#fbf9f6]"
       >
         <div className="max-w-4xl mx-auto space-y-6">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-white/5 px-4 py-1.5 text-xs font-semibold text-[#f5d77f]">
-            <TvIcon className="size-3.5 text-[#d4af37]" />
-            Ato 4 • A Pista de Dança
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-xs font-semibold text-[#f5d77f] shadow-[inset_0_1px_0_rgba(212,175,55,0.15)]">
+            <TvIcon className="size-3.5 text-[#d4af37] translate-y-[-0.5px]" />
+            <span className="leading-none">Ato 4 • A Pista de Dança</span>
           </div>
 
           <h2 className="font-heading text-3xl sm:text-5xl font-bold tracking-tight text-white leading-[1.15]">
@@ -457,8 +483,9 @@ export default function LandingPage() {
             <LiveTelaoPreview />
           </div>
 
-          <p className="text-xs text-stone-400 pt-2">
-            🥂 Atualização instantânea via Server-Sent Events e roleta ao vivo na hora do brinde
+          <p className="text-xs text-stone-400 pt-2 flex items-center justify-center gap-1.5">
+            <span>🥂</span>
+            <span>Atualização instantânea via Server-Sent Events e roleta ao vivo na hora do brinde</span>
           </p>
         </div>
       </section>
@@ -469,7 +496,7 @@ export default function LandingPage() {
         className="stage-act-finale relative min-h-[85vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-24 text-center border-b border-border/50 bg-secondary/20"
       >
         <div className="max-w-3xl mx-auto space-y-8">
-          <Badge variant="outline" className="rounded-full border-primary/30 bg-card px-4 py-1.5 text-xs font-semibold text-primary">
+          <Badge variant="outline" className="rounded-full border-primary/30 bg-card px-4 py-1.5 text-xs font-semibold text-primary shadow-xs">
             Ato 5 • A Celebração
           </Badge>
 
@@ -482,17 +509,31 @@ export default function LandingPage() {
           </p>
 
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button asChild size="lg" className="wedding-button wedding-shimmer h-14 px-10 rounded-full text-lg font-semibold shadow-xl cursor-pointer w-full sm:w-auto">
-              <Link href="/cadastro">
-                Criar Nossa Rifa Grátis
-                <ArrowRightIcon className="size-5 ml-2" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="h-14 px-8 rounded-full border-border bg-card text-foreground text-base hover:bg-muted font-medium w-full sm:w-auto shadow-xs cursor-pointer">
-              <Link href="/e/bruno-moreira" target="_blank">
-                Ver Demonstração
-              </Link>
-            </Button>
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              className="w-full sm:w-auto"
+            >
+              <Button asChild size="lg" className="wedding-button wedding-shimmer h-14 px-10 rounded-full text-lg font-semibold shadow-xl cursor-pointer w-full border border-amber-400/30 shadow-[0_4px_16px_rgba(212,175,55,0.3),inset_0_1px_0_rgba(255,255,255,0.4)]">
+                <Link href="/cadastro" className="inline-flex items-center justify-center">
+                  Criar Nossa Rifa Grátis
+                  <ArrowRightIcon className="size-5 ml-2 translate-x-0.5" />
+                </Link>
+              </Button>
+            </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              className="w-full sm:w-auto"
+            >
+              <Button asChild variant="outline" size="lg" className="h-14 px-8 rounded-full border-stone-900/[0.08] bg-card text-foreground text-base hover:bg-muted font-medium w-full shadow-[0_1px_3px_rgba(44,38,30,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] cursor-pointer">
+                <Link href="/e/bruno-moreira" target="_blank">
+                  Ver Demonstração
+                </Link>
+              </Button>
+            </motion.div>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground font-medium pt-4">
@@ -509,44 +550,91 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* PLATFORM BENEFITS GRID */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 border-b border-border/50" ref={bentoContainerRef}>
+      {/* PLATFORM BENEFITS EDITORIAL SHOWCASE */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 border-b border-border/50 bg-secondary/10" ref={bentoContainerRef}>
         <div className="mx-auto max-w-7xl">
-          <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-            <Badge variant="outline" className="rounded-full border-primary/30 bg-card px-4 py-1 text-xs font-semibold text-primary">
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+            <Badge variant="outline" className="rounded-full border-primary/30 bg-card px-4 py-1 text-xs font-semibold text-primary shadow-xs">
               Recursos da Plataforma
             </Badge>
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground leading-tight">
               Tudo o que você precisa para o grande dia
             </h2>
-            <p className="text-muted-foreground text-sm sm:text-base">
-              Pensado nos mínimos detalhes para os noivos, os padrinhos e todos os convidados.
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+              Do momento em que os padrinhos circulam pelas mesas até o clímax do brinde e sorteio no telão.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Card 1 */}
+            {/* Card 1 (Destaque Principal: Modo Padrinhos - col-span-1 lg:col-span-2) */}
             <motion.div
-              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between"
-              whileHover={{ y: -4, scale: 0.995 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between lg:col-span-2 border border-stone-900/[0.08] shadow-[0_1px_3px_rgba(44,38,30,0.03),0_8px_20px_-4px_rgba(44,38,30,0.05),inset_0_1px_0_rgba(255,255,255,0.85)] rounded-2xl"
+              whileHover={{ y: -3, scale: 1.004 }}
+              whileTap={{ scale: 0.99 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 28 }}
             >
-              <div>
-                <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
-                  <ShieldCheckIcon className="size-6" />
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div className="md:col-span-7 space-y-4">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary uppercase tracking-wider">
+                    <SmartphoneIcon className="size-3.5" />
+                    O Segredo da Arrecadação
+                  </div>
+                  <h3 className="font-heading text-2xl font-bold text-foreground">
+                    Modo Padrinhos: Ferramenta de Bolso
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Uma interface ultrarrápida pensada para os padrinhos circularem entre as mesas com um copo na mão. Registre pagamentos em dinheiro vivo ou via PIX em apenas 2 toques, enquanto o telão no salão atualiza automaticamente.
+                  </p>
+                  <div className="flex flex-wrap gap-4 pt-1 text-xs text-muted-foreground font-medium">
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2Icon className="size-3.5 text-primary" /> Baixa em 2 toques
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2Icon className="size-3.5 text-primary" /> Sem instalar aplicativo
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2Icon className="size-3.5 text-primary" /> Funciona em qualquer celular
+                    </span>
+                  </div>
                 </div>
-                <h3 className="font-heading text-xl font-bold text-foreground mb-2">Modo Padrinhos</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Uma ferramenta de bolso para os padrinhos circularem pelas mesas. Permite registrar pagamentos em dinheiro vivo ou via PIX com velocidade de 2 toques.
-                </p>
+
+                {/* Tactile Pocket Preview Mock */}
+                <div className="md:col-span-5 bg-card/90 rounded-xl p-4 border border-stone-200/90 dark:border-stone-800 shadow-[0_2px_12px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] space-y-3 select-none">
+                  <div className="flex items-center justify-between border-b border-dashed border-stone-200 dark:border-stone-800 pb-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-[11px] font-semibold text-foreground tracking-wide">Mesa 04 • Família Silva</span>
+                    </div>
+                    <span className="text-[10px] font-mono font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                      Padrinho Lucas
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-1">
+                    <div>
+                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Valor selecionado</div>
+                      <div className="font-heading text-lg font-bold text-foreground">2 cotas da sorte</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Total PIX</div>
+                      <div className="wedding-numeral text-lg font-bold text-primary tabular-nums">R$ 50,00</div>
+                    </div>
+                  </div>
+
+                  <div className="w-full py-2 px-3 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center gap-2 text-primary text-xs font-semibold">
+                    <CheckCircle2Icon className="size-3.5" />
+                    <span>Confirmado • Telão Sincronizado</span>
+                  </div>
+                </div>
               </div>
             </motion.div>
 
-            {/* Card 2 */}
+            {/* Card 2: PIX sem atrito */}
             <motion.div
-              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between"
-              whileHover={{ y: -4, scale: 0.995 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between border border-stone-900/[0.08] shadow-[0_1px_3px_rgba(44,38,30,0.03),0_8px_20px_-4px_rgba(44,38,30,0.05),inset_0_1px_0_rgba(255,255,255,0.85)] rounded-2xl"
+              whileHover={{ y: -3, scale: 1.006 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 28 }}
             >
               <div>
                 <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
@@ -554,16 +642,43 @@ export default function LandingPage() {
                 </div>
                 <h3 className="font-heading text-xl font-bold text-foreground mb-2">PIX sem atrito</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Leitura instantânea de QR Code com baixa imediata. Sem exigir download de aplicativo e sem constrangimento para o convidado.
+                  Leitura instantânea de QR Code com baixa imediata. Sem exigir download de aplicativo e sem constrangimento para o convidado na mesa.
                 </p>
+              </div>
+              <div className="pt-4 border-t border-border/50 text-xs font-medium text-primary flex items-center gap-1">
+                <span>Comprovante digital imediato</span>
+                <span className="translate-x-0.5">→</span>
               </div>
             </motion.div>
 
-            {/* Card 3 */}
+            {/* Card 3: Sorteio Auditável */}
             <motion.div
-              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between"
-              whileHover={{ y: -4, scale: 0.995 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between border border-stone-900/[0.08] shadow-[0_1px_3px_rgba(44,38,30,0.03),0_8px_20px_-4px_rgba(44,38,30,0.05),inset_0_1px_0_rgba(255,255,255,0.85)] rounded-2xl"
+              whileHover={{ y: -3, scale: 1.006 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 28 }}
+            >
+              <div>
+                <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                  <TvIcon className="size-6" />
+                </div>
+                <h3 className="font-heading text-xl font-bold text-foreground mb-2">Sorteio Auditável</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Algoritmo transparente e animação empolgante no telão da festa, garantindo lisura total e o ápice de diversão no salão na hora do brinde.
+                </p>
+              </div>
+              <div className="pt-4 border-t border-border/50 text-xs font-medium text-primary flex items-center gap-1">
+                <span>Conexão em 1 clique ao projetor</span>
+                <span className="translate-x-0.5">→</span>
+              </div>
+            </motion.div>
+
+            {/* Card 4: Harmonia Visual */}
+            <motion.div
+              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between border border-stone-900/[0.08] shadow-[0_1px_3px_rgba(44,38,30,0.03),0_8px_20px_-4px_rgba(44,38,30,0.05),inset_0_1px_0_rgba(255,255,255,0.85)] rounded-2xl"
+              whileHover={{ y: -3, scale: 1.006 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 28 }}
             >
               <div>
                 <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
@@ -574,56 +689,31 @@ export default function LandingPage() {
                   Paletas nobres inspiradas em convites de alta papelaria: Champagne, Rosé Floral e Noite de Gala. O sistema se adapta perfeitamente à sua decoração.
                 </p>
               </div>
-            </motion.div>
-
-            {/* Card 4 */}
-            <motion.div
-              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between"
-              whileHover={{ y: -4, scale: 0.995 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            >
-              <div>
-                <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
-                  <TvIcon className="size-6" />
-                </div>
-                <h3 className="font-heading text-xl font-bold text-foreground mb-2">Sorteio Auditável</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Algoritmo transparente e animação empolgante no telão da festa, garantindo lisura total e o ápice de diversão no salão.
-                </p>
+              <div className="pt-4 border-t border-border/50 text-xs font-medium text-primary flex items-center gap-1">
+                <span>Três temas de gala inclusos</span>
+                <span className="translate-x-0.5">→</span>
               </div>
             </motion.div>
 
-            {/* Card 5 */}
+            {/* Card 5: Sem Mensalidade */}
             <motion.div
-              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between"
-              whileHover={{ y: -4, scale: 0.995 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between border border-stone-900/[0.08] shadow-[0_1px_3px_rgba(44,38,30,0.03),0_8px_20px_-4px_rgba(44,38,30,0.05),inset_0_1px_0_rgba(255,255,255,0.85)] rounded-2xl"
+              whileHover={{ y: -3, scale: 1.006 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 28 }}
             >
               <div>
                 <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
                   <CoinsIcon className="size-6" />
                 </div>
-                <h3 className="font-heading text-xl font-bold text-foreground mb-2">Gestão em Tempo Real</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Acompanhe cada bilhete vendido e o valor total acumulado direto pelo celular dos noivos, com exportação fácil de relatórios.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Card 6 */}
-            <motion.div
-              className="gsap-bento wedding-card p-6 sm:p-8 flex flex-col justify-between"
-              whileHover={{ y: -4, scale: 0.995 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            >
-              <div>
-                <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
-                  <SparklesIcon className="size-6" />
-                </div>
                 <h3 className="font-heading text-xl font-bold text-foreground mb-2">Sem Mensalidade</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Crie sua rifa gratuitamente e pague apenas uma pequena taxa sobre as cotas recebidas. O saldo arrecadado cai direto na sua conta.
+                  Crie sua rifa gratuitamente e pague apenas uma pequena taxa sobre as cotas recebidas. O saldo arrecadado cai direto na conta dos noivos via PIX.
                 </p>
+              </div>
+              <div className="pt-4 border-t border-border/50 text-xs font-medium text-primary flex items-center gap-1">
+                <span>Taxa única de 4.9% sem mensalidades</span>
+                <span className="translate-x-0.5">→</span>
               </div>
             </motion.div>
           </div>
@@ -631,21 +721,21 @@ export default function LandingPage() {
       </section>
 
       {/* Marquee Ribbon - Continuous elegant tape */}
-      <div className="border-y border-border bg-card/80 py-4 backdrop-blur-sm overflow-hidden">
+      <div className="border-y border-stone-900/[0.08] bg-card/85 py-4 backdrop-blur-sm overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
         <Marquee speedSecs={35} pauseOnHover>
-          <span className="inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground px-8">
+          <span className="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground px-8">
             🥂 Celebre com elegância
           </span>
-          <span className="inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-widest text-primary px-8">
+          <span className="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.12em] text-primary px-8">
             ⚡ Baixa Instantânea via PIX
           </span>
-          <span className="inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground px-8">
+          <span className="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground px-8">
             📺 Diversão garantida no telão da pista
           </span>
-          <span className="inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-widest text-primary px-8">
+          <span className="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.12em] text-primary px-8">
             🤵 Ferramenta ágil para os padrinhos
           </span>
-          <span className="inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground px-8">
+          <span className="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground px-8">
             ✈️ Dinheiro direto para a Lua de Mel
           </span>
         </Marquee>
