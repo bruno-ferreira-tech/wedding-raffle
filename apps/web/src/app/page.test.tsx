@@ -35,12 +35,13 @@ describe('LandingPage', () => {
     expect(container.textContent).toContain('Pronto em 3 minutos');
   });
 
-  it('renders the 3-step Como funciona no grande dia section', () => {
+  it('renders the narrative festa timeline section', () => {
     const { container } = render(<LandingPage />);
-    expect(container.textContent).toContain('Como funciona no grande dia');
-    expect(container.textContent).toContain('QR Code nas Mesas');
-    expect(container.textContent).toContain('Padrinhos com Celular');
-    expect(container.textContent).toContain('Clímax no Telão');
+    expect(container.textContent).toContain('Na festa.');
+    expect(container.textContent).toContain('No salão. Em dois toques.');
+    expect(container.textContent).toContain('QR Code na mesa');
+    expect(container.textContent).toContain('Padrinho com o celular');
+    expect(container.textContent).toContain('Clímax no telão');
   });
 
   it('renders interactive raffle ticket with fine stationery styling and aria-label', () => {
