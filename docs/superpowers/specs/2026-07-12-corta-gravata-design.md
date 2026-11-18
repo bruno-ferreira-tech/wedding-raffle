@@ -131,28 +131,44 @@ Não há “desfazer sorteio” no MVP (evita drama). Se precisar: só via inter
 
 ## 9. Arquitetura técnica
 
+**Decisão (2026-07-12):** monorepo com **Next.js (front)** + **NestJS (API)**.  
+O plano anterior (API via Route Handlers do Next) foi **substituído** — o domínio, PIX, auth, SSE e sorteio vivem no Nest.
+
 **Stack**
-- Next.js (App Router) + TypeScript  
-- Postgres + Drizzle ORM  
+- `apps/web` — Next.js (App Router) + TypeScript — só UI  
+- `apps/api` — NestJS + TypeScript — REST + SSE + webhooks  
+- Postgres + Drizzle ORM (no Nest)  
 - `PaymentProvider` interface:  
   - `StripePixProvider` (primário se conta tiver PIX)  
   - `MercadoPagoPixProvider` (fallback BR)  
-- Deploy: Vercel + Neon (ou Postgres equivalente)  
-- Testes: Vitest para domínio (reserva, expiração, sorteio)
+  - `FakePaymentProvider` (demo local)  
+- Deploy: web (Vercel) + API (Railway/Fly/Render ou similar) + Neon  
+- Testes: Vitest/Jest no Nest para domínio (reserva, expiração, sorteio)
 
-**Módulos (limites claros)**
+**Layout**
+
+| Pasta | Papel |
+|-------|--------|
+| `apps/web` | Compra, pedido, tellão, padrinho, admin |
+| `apps/api` | Domínio, DB, PIX, auth, realtime, sorteio |
+
+**Módulos Nest (limites claros)**
 
 | Módulo | Responsabilidade |
 |--------|------------------|
-| `domain/numbers` | Estados, reserva atômica, liberação |
-| `domain/orders` | Criação, expiração, marcar pago |
-| `domain/draw` | Pool elegível, sorteio, ganhadores |
-| `payments/` | Interface + Stripe + MP + webhook adapters |
-| `realtime/` | Publicação de eventos (venda, fechamento, sorteio) |
-| `auth/` | Cookies de sessão padrinho/admin |
+| `numbers` | Estados, reserva atômica, liberação |
+| `orders` | Criação, expiração, marcar pago |
+| `draw` | Pool elegível, sorteio, ganhadores |
+| `payments` | Interface + Stripe + MP + Fake + webhooks |
+| `realtime` | SSE / bus de eventos |
+| `auth` | Cookies de sessão padrinho/admin |
+| `event-state` | Abrir/fechar vendas |
+
+**Front → API:** `NEXT_PUBLIC_API_URL` (ex. `http://localhost:3001`). CORS liberado para o origin do web.
 
 **Variáveis de ambiente (obrigatórias em prod — falhar alto se faltar)**  
-`DATABASE_URL`, `ADMIN_PASSWORD`, `PADRINHO_PASSWORD`, `PAYMENT_PROVIDER` (`stripe`|`mercadopago`), chaves do provider escolhido, `SESSION_SECRET`.
+API: `DATABASE_URL`, `ADMIN_PASSWORD`, `PADRINHO_PASSWORD`, `PAYMENT_PROVIDER` (`stripe`|`mercadopago`|`fake`), chaves do provider, `SESSION_SECRET`, `WEB_ORIGIN`.  
+Web: `NEXT_PUBLIC_API_URL`.
 
 ---
 

@@ -1,0 +1,18 @@
+/* ==============================================================================
+   tokens.css — Font family tokens
+   
+   Note: Spacing, shadows, and easing tokens now come from open-props-wedding.css.
+   Colors and component tokens are in globals.css (:root) and themes.css.
+   
+   Only font families are defined here because they're referenced by layout.tsx
+   which injects the actual font CSS variables from next/font/google.
+   The vars below act as fallback declarations when the Next.js font vars
+   haven't been injected yet (e.g., during SSR or in tests).
+   ============================================================================== */
+
+:root {
+  /* Font families — overridden at runtime by next/font/google in layout.tsx */
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+}

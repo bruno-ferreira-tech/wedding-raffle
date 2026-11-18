@@ -1,0 +1,403 @@
+.stage {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1.5rem, 5vw, 4rem);
+  background-color: #0d0c0b;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(180, 130, 60, 0.06) 0%, transparent 50%);
+  color: #fbf9f5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.vignette {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 85% 80% at 50% 40%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+  z-index: 1;
+}
+
+.grain {
+  display: none;
+}
+
+.scanline {
+  display: none;
+}
+
+.header,
+.counters,
+.feedSection,
+.winnersStrip {
+  position: relative;
+  z-index: 3;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.brand {
+  margin: 0;
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: clamp(2.5rem, 7vw, 4.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: #fdfbf7;
+}
+
+.live {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(26, 24, 22, 0.8);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #e5c158;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.liveDotOn,
+.liveDotOff {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.liveDotOn {
+  background: #e5c158;
+  box-shadow: 0 0 10px rgba(229, 193, 88, 0.7);
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+.liveDotOff {
+  background: #6b665f;
+}
+
+.counters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.counter {
+  padding: 1.5rem 1.75rem;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  background: #171513;
+  box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.7);
+  animation: fade-up 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.counterWide {
+  grid-column: 1 / -1;
+  margin-top: 0.25rem;
+  border-color: rgba(212, 175, 55, 0.45);
+  background: linear-gradient(180deg, #1c1916 0%, #151311 100%);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(212, 175, 55, 0.25);
+}
+
+.counterLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: clamp(0.72rem, 1.3vw, 0.82rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a8a095;
+}
+
+.counterValue {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.5rem, 6vw, 4.25rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.02em;
+  color: #fdfbf7;
+}
+
+.counterMoney {
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(3rem, 8vw, 5.25rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.02em;
+  color: #e5c158;
+}
+
+.feedSection {
+  max-width: 56rem;
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.feedTitle {
+  margin: 0 0 1.25rem;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d4af37;
+  font-weight: 700;
+}
+
+.feed {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: min(44vh, 30rem);
+  overflow: hidden;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  background: #141311;
+}
+
+.feedEmpty {
+  color: #8c857b;
+  font-size: 1.05rem;
+  padding: 2rem;
+  text-align: center;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-style: italic;
+}
+
+.feedItem {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 0.85rem 1.25rem;
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  animation: fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: all 0.3s ease;
+}
+
+.feedItemPulse {
+  background: rgba(212, 175, 55, 0.16);
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 20px -4px rgba(212, 175, 55, 0.3);
+}
+
+.feedNumber {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.25rem, 2.8vw, 1.75rem);
+  color: #e5c158;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: 0.02em;
+}
+
+.feedName {
+  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+  font-weight: 500;
+  color: #fdfbf7;
+}
+
+.winnersStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  animation: fade-up 0.6s ease 0.28s both;
+}
+
+.winnerChip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 9rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: #171513;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.winnerChipLabel {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #e5c158;
+  font-weight: 700;
+}
+
+.winnerChipNumber {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: #fdfbf7;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.winnerChipName {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #b3aba0;
+}
+
+.reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background: rgba(10, 9, 8, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: reveal-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.revealInner {
+  text-align: center;
+  padding: clamp(2.5rem, 6vw, 4.5rem);
+  border-radius: 2rem;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: #171513;
+  box-shadow: 
+    0 30px 80px -20px rgba(0, 0, 0, 0.9),
+    0 0 60px -10px rgba(212, 175, 55, 0.2),
+    inset 0 1px 0 rgba(212, 175, 55, 0.3);
+  max-width: 48rem;
+  width: 90vw;
+}
+
+.revealPrize {
+  margin: 0 0 1.5rem;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #e5c158;
+  font-weight: 700;
+  animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.revealCountdown {
+  margin: 0;
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(6.5rem, 24vw, 13rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: #e5c158;
+  animation: countdown-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.revealNumber {
+  margin: 0;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(5rem, 20vw, 10.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: #ffffff;
+  animation: number-reveal 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.revealName {
+  margin: 1.5rem 0 0;
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: clamp(2.25rem, 6vw, 4rem);
+  letter-spacing: -0.01em;
+  color: #fdfbf7;
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.92);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes countdown-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes number-reveal {
+  from {
+    opacity: 0;
+    transform: scale(1.15) translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 720px) {
+  .counters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .feed {
+    max-height: 36vh;
+  }
+}
+

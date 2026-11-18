@@ -1,5 +1,9 @@
 # Corta-Gravata Digital — Implementation Plan
 
+> **SUPERSEDED (2026-07-12):** Backend moved to NestJS. Use instead:  
+> `docs/superpowers/plans/2026-07-12-corta-gravata-nest-monorepo-implementation.md`  
+> Do **not** implement API Route Handlers in Next from this document.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Entregar um app Next.js de rifa do corta-gravata: compra PIX em lote, admin padrinho (marcar pago), tellão ao vivo e sorteio de N prêmios.

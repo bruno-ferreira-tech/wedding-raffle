@@ -1,0 +1,60 @@
+/* ==============================================================================
+   Open Props Wedding — Design Token Foundation
+   Open Props provides the scale; we map it to wedding-specific semantics.
+   https://open-props.style/
+   ============================================================================== */
+
+/* ==============================================================================
+   Open Props Wedding — Design Token Foundation
+   Full Open Props integration + designsystems.one tactile materials
+   https://open-props.style/
+   https://www.designsystems.one/
+   ============================================================================== */
+
+@import "open-props/style";
+@import "open-props/buttons";
+
+:root {
+  /* ── OPEN PROPS SURFACES (Sand & Stone warmth) ───────────────────────────── */
+  --surface-canvas: var(--sand-1, #faf8f5);
+  --surface-card: #ffffff;
+  --surface-elevated: var(--sand-0, #ffffff);
+  --surface-subtle: var(--sand-2, #f5f0ea);
+  
+  /* ── OPEN PROPS TYPOGRAPHY & COLORS ───────────────────────────────────────── */
+  --ink-primary: var(--stone-11, #262320);
+  --ink-muted: var(--stone-7, #78716c);
+  --ink-subtle: var(--stone-6, #a8a29e);
+  
+  --gold-primary: #b89047;
+  --gold-light: #e5c158;
+  --gold-glow: rgba(184, 144, 71, 0.25);
+  --gold-surface: rgba(184, 144, 71, 0.08);
+
+  /* ── OPEN PROPS SPACING & SCALE ───────────────────────────────────────────── */
+  --wedding-space-1: var(--size-1);   /* 4px */
+  --wedding-space-2: var(--size-2);   /* 8px */
+  --wedding-space-3: var(--size-3);   /* 12px */
+  --wedding-space-4: var(--size-4);   /* 16px */
+  --wedding-space-6: var(--size-6);   /* 24px */
+  --wedding-space-8: var(--size-8);   /* 32px */
+  --wedding-space-12: var(--size-12); /* 48px */
+  
+  /* ── OPEN PROPS EASINGS & SPRINGS ─────────────────────────────────────────── */
+  --wedding-ease-enter: var(--ease-spring-2);
+  --wedding-ease-exit: var(--ease-in-2);
+  --wedding-ease-bounce: var(--ease-elastic-2);
+  --wedding-ease-smooth: var(--ease-3);
+  --wedding-ease-snap: var(--ease-spring-4);
+
+  /* ── OPEN PROPS SHADOWS (Fine Stationery elevation) ───────────────────────── */
+  --wedding-shadow-card: var(--shadow-2);
+  --wedding-shadow-raised: var(--shadow-4);
+  --wedding-shadow-overlay: var(--shadow-6);
+  --wedding-shadow-button: var(--shadow-2);
+
+  /* ── FONT FAMILIES ────────────────────────────────────────────────────────── */
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+}

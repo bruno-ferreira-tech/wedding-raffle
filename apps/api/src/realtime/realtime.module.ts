@@ -1,0 +1,13 @@
+import { Module } from '@nestjs/common';
+import { EVENT_BUS, eventBus } from './bus';
+import { EventsController } from './events.controller';
+
+import { DbModule } from '../db/db.module';
+
+@Module({
+  imports: [DbModule],
+  controllers: [EventsController],
+  providers: [{ provide: EVENT_BUS, useValue: eventBus }],
+  exports: [EVENT_BUS],
+})
+export class RealtimeModule {}
